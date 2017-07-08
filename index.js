@@ -97,7 +97,7 @@ exports.handler = function(event, context, callback) {
   const alexa = Alexa.handler(event, context);
 
   alexa.appId = APP_ID;
-  alexa.dynamoDBTableName = 'Slots';
+  alexa.dynamoDBTableName = 'VideoPoker';
   alexa.registerHandlers(handlers, inGameHandlers, selectGameHandlers);
   alexa.execute();
 };

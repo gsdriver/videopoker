@@ -10,7 +10,7 @@ const resources = {
   'UNKNOWN_SELECT_INTENT_REPROMPT': 'Try saying Yes.',
   // Launch.js
   'LAUNCH_REPROMPT': 'Would you like to play {0}? ',
-  'LAUNCH_WELCOME': 'Welcome to Slot Machine. ',
+  'LAUNCH_WELCOME': 'Welcome to Video Poker. ',
   // Select.js
   'SELECT_WELCOME': 'Welcome to {0}. ',
   'SELECT_REPROMPT': 'You can bet up to {0} coins or say read high scores to hear the leader board.',
@@ -76,20 +76,13 @@ module.exports = {
       'seven': 'seven',
       'any bar': 'any bar',
       'bell': 'bell',
-      'diamond': 'diamond',
-      'chicken': 'chicken',
-      'pork': 'pork',
-      'veal': 'veal',
-      'turkey': 'turkey',
-      'steak': 'steak'};
+      'diamond': 'diamond'};
 
     return (symbolMap[symbol]) ? symbolMap[symbol] : symbol;
   },
   sayGame: function(game) {
-    const gameMap = {'basic': 'the standard fruit game',
-      'wild': 'wild cherry',
-      'progressive': 'progressive jackpot',
-      'steak': 'the meat game'};
+    const gameMap = {'jacks': 'jacks or better',
+      'deuces': 'deuces wild'};
 
     return (gameMap[game]) ? gameMap[game] : game;
   },

@@ -12,7 +12,7 @@ const speechUtils = require('alexa-speech-utils')();
 
 const games = {
   // Has 99.8% payout
-  'basic': {
+  'jacks': {
     'maxCoins': 5,
     'slots': 3,
     'symbols': ['cherry', 'lemon', 'orange', 'plum', 'bar'],
@@ -33,7 +33,7 @@ const games = {
     },
   },
   // 99.8% payout, no lower payouts but higher opportunity for jackpots
-  'wild': {
+  'deuces': {
     'maxCoins': 5,
     'slots': 3,
     'symbols': ['cherry', 'blank', 'bar', 'double bar', 'seven'],
@@ -56,32 +56,6 @@ const games = {
       'double bar|double bar|double bar': 20,
       'seven|seven|seven': 50,
       'cherry|cherry|cherry': 500,
-    },
-  },
-  'progressive': {
-    'maxCoins': 5,
-    'slots': 3,
-    'symbols': ['cherry', 'bell', 'orange', 'bar', 'diamond'],
-    'frequency': [
-      {'symbols': [6, 8, 8, 10, 2]},
-      {'symbols': [4, 8, 4, 6, 2]},
-      {'symbols': [22, 10, 6, 2, 1]},
-    ],
-    'progressive': {
-      'start': 500,
-      'rate': 0.05,
-      'match': 'diamond|diamond|diamond',
-    },
-    'special': 'PROGRESSIVE_SPECIAL',
-    'payouts': {
-      'cherry': 2,
-      'cherry|cherry': 4,
-      'bell|bell|bell': 5,
-      'orange|orange|orange': 10,
-      'bar|bar|bar': 15,
-      'diamond': 5,
-      'diamond|diamond': 10,
-      'diamond|diamond|diamond': 100,
     },
   },
 };
@@ -207,7 +181,7 @@ module.exports = {
     // If there is no progressive for this game, just return undefined
     if (rules && rules.progressive) {
       // Read from Dynamodb
-      dynamodb.getItem({TableName: 'Slots', Key: {userId: {S: 'game-' + attributes.currentGame}}},
+      dynamodb.getItem({TableName: 'VideoPoker', Key: {userId: {S: 'game-' + attributes.currentGame}}},
               (err, data) => {
         if (err || (data.Item === undefined)) {
           console.log(err);
@@ -233,7 +207,7 @@ module.exports = {
   incrementProgressive: function(attributes, coinsToAdd) {
     if (games[attributes.currentGame].progressive) {
       const params = {
-          TableName: 'Slots',
+          TableName: 'VideoPoker',
           Key: {userId: {S: 'game-' + attributes.currentGame}},
           AttributeUpdates: {coins: {
               Action: 'ADD',
@@ -251,7 +225,7 @@ module.exports = {
   // Note this function does not callback
   resetProgressive: function(game) {
     // Write to the DB, and reset the coins played to 0
-    dynamodb.putItem({TableName: 'Slots',
+    dynamodb.putItem({TableName: 'VideoPoker',
         Item: {userId: {S: 'game-' + game}, coins: {N: '0'}}},
         (err, data) => {
       // We don't take a callback, but if there's an error log it
@@ -266,7 +240,7 @@ module.exports = {
     const details = {userId: userId, amount: jackpot};
     const params = {Body: JSON.stringify(details),
       Bucket: 'garrett-alexa-usage',
-      Key: 'jackpots/slots/' + game + '-' + Date.now() + '.txt'};
+      Key: 'jackpots/videopoker/' + game + '-' + Date.now() + '.txt'};
 
     s3.putObject(params, (err, data) => {
       // Don't care about teh error
@@ -274,7 +248,7 @@ module.exports = {
         console.log(err, err.stack);
       }
       // Update number of progressive wins while you're at it
-      dynamodb.updateItem({TableName: 'Slots',
+      dynamodb.updateItem({TableName: 'VideoPoker',
           Key: {userId: {S: 'game-' + game}},
           AttributeUpdates: {jackpots: {
               Action: 'ADD',
@@ -290,7 +264,7 @@ module.exports = {
   saveNewUser: function() {
     // Brand new player - let's log this in our DB (async call)
     const params = {
-              TableName: 'Slots',
+              TableName: 'VideoPoker',
               Key: {userId: {S: 'game'}},
               AttributeUpdates: {newUsers: {
                   Action: 'ADD',
@@ -341,7 +315,7 @@ function getTopScoresFromS3(attributes, callback) {
   const game = attributes[attributes.currentGame];
 
   // Read the S3 buckets that has everyone's scores
-  s3.getObject({Bucket: 'garrett-alexa-usage', Key: 'SlotMachineScores2.txt'}, (err, data) => {
+  s3.getObject({Bucket: 'garrett-alexa-usage', Key: 'VideoPokerScores.txt'}, (err, data) => {
     if (err) {
       console.log(err, err.stack);
       callback(err, null);

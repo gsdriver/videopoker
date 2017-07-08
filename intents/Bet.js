@@ -1,5 +1,5 @@
 //
-// Handles outside bets - red, black, high, low, even, odd, column, and dozen
+// Handles betting coins
 //
 
 'use strict';
