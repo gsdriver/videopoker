@@ -46,11 +46,11 @@ const newGameHandlers = Alexa.CreateStateHandler('NEWGAME', {
     this.emitWithState('NewSession');
   },
   'BetIntent': Bet.handleIntent,
-  'DealIntent': Deal.handleFirstIntent,
+  'BetMaxIntent': Bet.handleMaxIntent,
   'RulesIntent': Rules.handleIntent,
   'SelectIntent': Select.handleIntent,
   'HighScoreIntent': HighScore.handleIntent,
-  'AMAZON.YesIntent': Deal.handleFirstIntent,
+  'AMAZON.YesIntent': Bet.handleIntent,
   'AMAZON.NoIntent': Exit.handleIntent,
   'AMAZON.HelpIntent': Help.handleIntent,
   'AMAZON.StopIntent': Exit.handleIntent,
@@ -71,10 +71,10 @@ const firstDealHandlers = Alexa.CreateStateHandler('FIRSTDEAL', {
   },
   'HoldIntent': Hold.handleIntent,
   'DiscardIntent': Discard.handleIntent,
-  'DealIntent': Deal.handleSecondIntent,
+  'DealIntent': Deal.handleIntent,
   'RulesIntent': Rules.handleIntent,
   'HighScoreIntent': HighScore.handleIntent,
-  'AMAZON.YesIntent': Deal.handleSecondIntent,
+  'AMAZON.YesIntent': Deal.handleIntent,
   'AMAZON.NoIntent': Exit.handleIntent,
   'AMAZON.HelpIntent': Help.handleIntent,
   'AMAZON.StopIntent': Exit.handleIntent,
@@ -123,7 +123,7 @@ exports.handler = function(event, context, callback) {
 
   const alexa = Alexa.handler(event, context);
 
-  alexa.appId = APP_ID;
+  alexa.APP_ID = APP_ID;
   alexa.dynamoDBTableName = 'VideoPoker';
   alexa.registerHandlers(handlers, newGameHandlers,
       firstDealHandlers, selectGameHandlers);

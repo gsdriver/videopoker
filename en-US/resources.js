@@ -20,10 +20,14 @@ const resources = {
   'HIGHSCORE_REPROMPT': 'What else can I help you with?',
   // From Hold.js
   'HOLD_CARDS': 'You held {0}. ',
+  'HOLD_INVALID_VALUE': 'Sorry, I can\'t hold {0}. ',
+  'HOLD_INVALID_NOVALUE': 'Sorry, I didn\'t hear a card to hold. ',
   'HOLD_REPROMPT': 'What else can I help you with?',
   'HOLD_FIRST_REPROMPT': 'Say hold to hold additional cards <break time=\"200ms\"/> discard to unmark this card as held <break time=\"200ms\"/> or deal to deal new cards.',
   // From Discard.js
   'DISCARD_CARDS': 'You discarded {0}. ',
+  'DISCARD_INVALID_VALUE': 'Sorry, I can\'t discard {0}. ',
+  'DISCARD_INVALID_NOVALUE': 'Sorry, I didn\'t hear a card to discard. ',
   'DISCARD_REPROMPT': 'Say hold to hold additional cards <break time=\"200ms\"/> or deal to deal new cards.',
   // From Bet.js
   'BET_INVALID_AMOUNT': 'I\'m sorry, {0} is not a valid amount to bet.',
@@ -31,27 +35,23 @@ const resources = {
   'BET_EXCEEDS_MAX': 'Sorry, this bet exceeds the maximum bet of {0}.',
   'BET_EXCEEDS_BANKROLL': 'Sorry, this bet exceeds your bankroll of {0}.',
   'BET_PLACED': 'You bet {0}. ',
-  'BET_PLACED_REPROMPT': 'Say spin to pull the handle.',
+  'BET_PLACED_REPROMPT': 'Say the cards you would like to hold.',
   // From Help.js
-  'HELP_COMMANDS': 'Say bet to insert coins <break time=\"200ms\"/> spin to pull the handle <break time=\"200ms\"/> read high scores to hear the leader board <break time=\"200ms\"/> or select a new machine to change to a different machine. ',
+  'HELP_COMMANDS': 'Say bet to insert coins <break time=\"200ms\"/> deal to deal cards <break time=\"200ms\"/> read high scores to hear the leader board <break time=\"200ms\"/> or select a new machine to change to a different machine. ',
   'HELP_REPROMPT': 'Check the Alexa companion app for the payout table.',
   'HELP_CARD_TITLE': 'Payout Table',
   'HELP_SELECT_TEXT': 'Say yes to select the offered machine, or no for a different machine. ',
   // From Rules.js
-  'RULES_REPROMPT': 'Say bet to insert coins or spin to pull the handle.',
+  'RULES_REPROMPT': 'Say bet to insert coins or deal to deal cards.',
   'RULES_CARD_TITLE': 'Payout Table',
-  // From Spin.js
-  'SPIN_NOBETS': 'Sorry, you have to place a bet before you can pull the handle.',
-  'SPIN_INVALID_REPROMPT': 'Place a bet',
-  'SPIN_CANTBET_LASTBETS': 'Sorry, your bankroll of {0} can\'t support your last set of bets.',
-  'SPIN_RESULT': ' {0}. ',
-  'SPIN_PROGRESSIVE_WINNER': 'You hit the progressive jackpot and won {0}! ',
-  'SPIN_WINNER': 'You matched {0} and won {1}. ',
-  'SPIN_LOSER': 'Sorry, you lost. ',
-  'SPIN_PLAY_AGAIN': 'Would you like to spin again?',
-  'SPIN_BUSTED': 'You lost all your money. Resetting to 1000 coins and clearing your bet. ',
-  'SPIN_BUSTED_REPROMPT': 'Place a bet.',
-  'SPIN_REPROMPT_AFTER_DEAL': 'Say the number of the cards you would like to hold.',
+  // From Deal.js
+  'DEAL_NOBETS': 'Sorry, you have to place a bet before you can pull the handle.',
+  'DEAL_INVALID_REPROMPT': 'Place a bet',
+  'DEAL_WINNER': 'You matched {0} and won {1}. ',
+  'DEAL_LOSER': 'Sorry, you lost. ',
+  'DEAL_PLAY_AGAIN': 'Would you like to play again?',
+  'DEAL_BUSTED': 'You lost all your money. Resetting to 1000 coins and clearing your bet. ',
+  'DEAL_BUSTED_REPROMPT': 'Place a bet.',
   'DEALT_CARDS': 'You got {0}. ',
   // From utils.js
   'ERROR_REPROMPT': 'What else can I help with?',
@@ -90,10 +90,17 @@ module.exports = {
     const suitNames = {'C': 'of clubs', 'D': 'of diamonds', 'H': 'of hearts', 'S': 'of spades'};
 
     if (withArticle === 'article') {
-      return (articleNames[card.rank] + ' ' + suitNames[card.suit]);
+      if (articleNames[card.rank] && suitNames[card.suit]) {
+        return (articleNames[card.rank] + ' ' + suitNames[card.suit]);
+      }
     } else {
-      return (names[card.rank] + ' ' + suitNames[card.suit]);
+      if (names[card.rank] && suitNames[card.suit]) {
+        return (names[card.rank] + ' ' + suitNames[card.suit]);
+      }
     }
+
+    // One or the other was invalid, so return undefined
+    return undefined;
   },
   ordinalMapping: function(ordinal) {
     const ordinals = {'first': [1], 'second': [2], 'third': [3], 'fourth': [4], 'fifth': [5],
@@ -102,9 +109,11 @@ module.exports = {
     return (ordinals[ordinal.toLowerCase()]);
   },
   getRank: function(rank) {
-    const ranks = {'ace': 'A', 'two': 2, 'three': 3, 'four': 4, 'five': 5, 'six': 6,
-        'seven': 7, 'eight': 8, 'nine': 9, 'ten': 10, 'jack': 'J', 'queen': 'Q', 'king': 'K',
-        '1': 'A', '2': 2, '3': 3, '4': 4, '5': 5, '6': 6, '7': 7, '8': 8, '9': 9, '10': 10};
+    const ranks = {'ace': 'A', 'two': '2', 'three': '3', 'four': '4', 'five': '5', 'six': '6',
+        'seven': '7', 'eight': '8', 'nine': '9', 'ten': '10', 'jack': 'J', 'queen': 'Q', 'king': 'K',
+        'aces': 'A', 'twos': '2', 'threes': '3', 'fours': '4', 'fives': '5', 'sixes': '6',
+        'sevens': '7', 'eights': '8', 'nines': '9', 'tens': '10', 'jacks': 'J', 'queens': 'Q', 'kings': 'K',
+        '1': 'A', '2': '2', '3': '3', '4': '4', '5': '5', '6': '6', '7': '7', '8': '8', '9': '9', '10': '10'};
 
     return (ranks[rank.toLowerCase()]);
   },

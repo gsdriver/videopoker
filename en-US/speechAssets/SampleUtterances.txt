@@ -8,6 +8,35 @@ BetIntent insert {Amount} dollars
 BetIntent put in {Amount} units
 BetIntent insert {Amount} units
 
+BetMaxIntent bet max coins
+BetMaxIntent place a bet for max coins
+BetMaxIntent put in max coins
+BetMaxIntent put in the max coins
+BetMaxIntent insert max coins
+BetMaxIntent insert the max coins
+BetMaxIntent put in max dollars
+BetMaxIntent put in the max dollars
+BetMaxIntent insert max dollars
+BetMaxIntent insert the max dollars
+BetMaxIntent put in the max units
+BetMaxIntent put in max units
+BetMaxIntent insert max units
+BetMaxIntent insert the max units
+BetMaxIntent bet maximum coins
+BetMaxIntent place a bet for maximum coins
+BetMaxIntent put in maximum coins
+BetMaxIntent put in the maximum coins
+BetMaxIntent insert maximum coins
+BetMaxIntent insert the maximum coins
+BetMaxIntent put in maximum dollars
+BetMaxIntent put in the maximum dollars
+BetMaxIntent insert maximum dollars
+BetMaxIntent insert the maximum dollars
+BetMaxIntent put in the maximum units
+BetMaxIntent put in maximum units
+BetMaxIntent insert maximum units
+BetMaxIntent insert the maximum units
+
 RulesIntent read rules
 RulesIntent read the rules
 RulesIntent what are the rules

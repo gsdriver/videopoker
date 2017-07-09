@@ -26,11 +26,15 @@ module.exports = {
     }
 
     if (!discardCards || (discardCards.length === 0)) {
-      error = res.strings.BET_INVALID_AMOUNT.replace('{0}', amount);
-      reprompt = res.strings.BET_INVALID_REPROMPT;
+      const cardText = utils.getCardSlotText(this.event.request.locale,
+            this.event.request.intent.slots);
+
+      error = (cardText) ? res.strings.DISCARD_INVALID_VALUE.replace('{0}', cardText)
+                         : res.strings.DISCARD_INVALID_NOVALUE;
+      reprompt = res.strings.DISCARD_REPROMPT;
     } else {
       // Mark each card as no longer held
-      holdCards.map((card) => {
+      discardCards.map((card) => {
         game.cards[card - 1].hold = undefined;
       });
     }
@@ -38,7 +42,7 @@ module.exports = {
     if (!error) {
       reprompt = res.strings.DISCARD_REPROMPT;
       speech = res.strings.DISCARD_CARDS.replace('{0}',
-              speechUtils.and(holdCards.map((index) => res.sayCard(game.cards[index - 1])),
+              speechUtils.and(discardCards.map((index) => res.sayCard(game.cards[index - 1])),
                 {locale: this.event.request.locale}));
       speech += reprompt;
     }

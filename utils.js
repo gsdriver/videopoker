@@ -12,39 +12,47 @@ const speechUtils = require('alexa-speech-utils')();
 const pokerrank = require('poker-ranking');
 
 const games = {
-  // Has 99.8% payout
   'jacks': {
     'maxCoins': 5,
     'wildCards': '',
     'minPair': 'J',
+    'progressive': {
+      'start': 4000,
+      'rate': 0.25,
+      'match': 'royalflush',
+    },
     'payouts': {
-      'royalflush': '250|500|750|1000|4000',
-      'straightflush': '50|100|150|200|250',
-      '4ofakind': '25|50|75|100|125',
-      'fullhouse': '9|18|27|36|45',
-      'flush': '6|12|18|24|30',
-      'straight': '4|8|12|16|20',
-      '3ofakind': '3|6|9|12|15',
-      '2pair': '2|4|6|8|10',
-      'minpair': '1|2|3|4|5',
+      'royalflush': 250,
+      'straightflush': 50,
+      '4ofakind': 25,
+      'fullhouse': 9,
+      'flush': 6,
+      'straight': 4,
+      '3ofakind': 3,
+      '2pair': 2,
+      'minpair': 1,
     },
   },
-  // 99.8% payout, no lower payouts but higher opportunity for jackpots
   'deuces': {
     'maxCoins': 5,
     'special': 'WILD_SPECIAL',
-    'wildCards': '2',
+    'wildCards': ['2'],
+    'progressive': {
+      'start': 4000,
+      'rate': 0.25,
+      'match': 'royalflushnatural',
+    },
     'payouts': {
-      'royalflushnatural': '250|500|750|1000|4000',
-      '4wild': '200|400|600|800|1000',
-      'royalflush': '25|50|75|100|125',
-      '5ofakind': '15|30|45|60|75',
-      'straightflush': '9|18|27|36|45',
-      '4ofakind': '5|10|15|20|25',
-      'fullhouse': '3|6|9|12|15',
-      'flush': '2|4|6|8|10',
-      'straight': '2|4|6|8|10',
-      '3ofakind': '1|2|3|4|5',
+      'royalflushnatural': 250,
+      '4wild': 200,
+      'royalflush': 25,
+      '5ofakind': 15,
+      'straightflush': 9,
+      '4ofakind': 5,
+      'fullhouse': 3,
+      'flush': 2,
+      'straight': 2,
+      '3ofakind': 1,
     },
   },
 };
@@ -64,7 +72,7 @@ module.exports = {
   getGame: function(name) {
     return games[name];
   },
-  determineWinner: function(attributes, bet, callback) {
+  determineWinner: function(attributes) {
     const game = attributes[attributes.currentGame];
     const rules = games[attributes.currentGame];
     let rank;
@@ -72,7 +80,7 @@ module.exports = {
 
     evaluateOptions.aceCanBeLow = true;
     if (rules.wildCards) {
-      evaluateOptions.wildCards = rules.wildCards.split('|');
+      evaluateOptions.wildCards = rules.wildCards;
     }
     if (rules.minPair) {
       evaluateOptions.minPair = rules.minPair;
@@ -86,7 +94,7 @@ module.exports = {
         let hasWild = false;
 
         game.cards.map((card) => {
-          if (rules.wildCards.split('|').indexOf(card.rank) > -1) {
+          if (rules.wildCards.indexOf(card.rank) > -1) {
             hasWild = true;
           }
         });
@@ -101,7 +109,7 @@ module.exports = {
         let numWild = 0;
 
         game.cards.map((card) => {
-          if (rules.wildCards.split('|').indexOf(card.rank) > -1) {
+          if (rules.wildCards.indexOf(card.rank) > -1) {
             numWild++;
           }
         });
@@ -112,15 +120,7 @@ module.exports = {
       }
     }
 
-    // OK, let's see if there's a payout associated with this
-    if (rules.payouts[rank]) {
-      // Hot diggity dog!
-      const payouts = rules.payouts[rank].split('|');
-      callback(payouts[bet - 1], rank);
-    } else {
-      // Nope
-      callback();
-    }
+    return rank;
   },
   getSelectedCards: function(locale, attributes, slots) {
     const res = require('./' + locale + '/resources');
@@ -162,6 +162,38 @@ module.exports = {
 
       return foundCards;
     }
+  },
+  // Returns the text of what they asked for
+  getCardSlotText: function(locale, slots) {
+    const res = require('./' + locale + '/resources');
+
+    // You can say the card in lots of different ways
+    if (slots.CardNumber && slots.CardNumber.value) {
+      return slots.CardNumber.value;
+    }
+    if (slots.CardOrdinal && slots.CardOrdinal.value) {
+      return slots.CardOrdinal.value;
+    }
+    if (slots.CardRank && slots.CardRank.value) {
+      const rank = res.getRank(slots.CardRank.value);
+      if (slots.CardSuit && slots.CardSuit.value) {
+        const suit = res.getSuit(slots.CardSuit.value);
+        const card = res.sayCard({rank: rank, suit: suit});
+
+        // Let's see if we can say this card
+        if (card) {
+          return card;
+        } else {
+          // Just spit back what they said
+          return (slots.CardRank.value + ' ' + slots.CardSuit.value);
+        }
+      } else {
+        return slots.CardRank.value;
+      }
+    }
+
+    // Didn't find anything
+    return undefined;
   },
   readAvailableGames: function(locale, currentGame, currentFirst, callback) {
     const res = require('./' + locale + '/resources');

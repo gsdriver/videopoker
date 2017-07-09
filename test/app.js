@@ -10,6 +10,7 @@ function BuildEvent(argv)
 {
   // Templates that can fill in the intent
   var bet = {'name': 'BetIntent', 'slots': {'Amount': {'name': 'Amount', 'value': ''}}};
+  var betMax = {'name': 'BetMaxIntent', 'slots': {}};
   var deal = {'name': 'DealIntent', 'slots': {}};
   var select = {'name': 'SelectIntent', 'slots': {}};
   var rules = {'name': 'RulesIntent', 'slots': {'Rules': {'name': 'Rules', 'value': ''}}};
@@ -116,23 +117,25 @@ function BuildEvent(argv)
       holdCard.slots.CardSuit.value = argv[4];
     }
   } else if (argv[2] == 'discardnumber') {
-    lambda.request.intent = holdNumber;
+    lambda.request.intent = discardNumber;
     if (argv.length > 3) {
-      holdNumber.slots.CardNumber.value = argv[3];
+      discardNumber.slots.CardNumber.value = argv[3];
     }
   } else if (argv[2] == 'discardordinal') {
-    lambda.request.intent = holdOrdinal;
+    lambda.request.intent = discardOrdinal;
     if (argv.length > 3) {
-      holdOrdinal.slots.CardOrdinal.value = argv[3];
+      discardOrdinal.slots.CardOrdinal.value = argv[3];
     }
   } else if (argv[2] == 'discardcard') {
-    lambda.request.intent = holdCard;
+    lambda.request.intent = discardCard;
     if (argv.length > 3) {
-      holdCard.slots.CardRank.value = argv[3];
+      discardCard.slots.CardRank.value = argv[3];
     }
     if (argv.length > 4) {
-      holdCard.slots.CardSuit.value = argv[4];
+      discardCard.slots.CardSuit.value = argv[4];
     }
+  } else if (argv[2] == 'betmax') {
+    lambda.request.intent = betMax;
   } else if (argv[2] == 'deal') {
     lambda.request.intent = deal;
   } else if (argv[2] == 'select') {

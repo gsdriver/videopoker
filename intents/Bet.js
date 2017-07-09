@@ -5,6 +5,7 @@
 'use strict';
 
 const utils = require('../utils');
+const speechUtils = require('alexa-speech-utils')();
 
 module.exports = {
   handleIntent: function() {
@@ -12,7 +13,7 @@ module.exports = {
     // of either the last bet amount or 1 unit
     let reprompt;
     let speechError;
-    let ssml;
+    let speech;
     let amount;
     const res = require('../' + this.event.request.locale + '/resources');
     const game = this.attributes[this.attributes.currentGame];
@@ -42,17 +43,60 @@ module.exports = {
     }
 
     if (!speechError) {
-      // Place the bet - clear the last one if they already bet
-      if (game.bet) {
-        game.bankroll += game.bet;
-      }
       game.bet = amount;
       game.bankroll -= game.bet;
+      speech = res.strings.BET_PLACED.replace('{0}', utils.readCoins(this.event.request.locale, amount));
+
+      // Deal out 5 new cards
+      initializeCards(game);
+      this.handler.state = 'FIRSTDEAL';
+      speech += res.strings.DEALT_CARDS.replace('{0}',
+              speechUtils.and(game.cards.map((card) => res.sayCard(card)),
+                {pause: '300ms', locale: this.event.request.locale}));
+
       reprompt = res.strings.BET_PLACED_REPROMPT;
-      ssml = res.strings.BET_PLACED.replace('{0}', utils.readCoins(this.event.request.locale, amount));
-      ssml += reprompt;
+      speech += reprompt;
     }
 
-    utils.emitResponse(this.emit, this.event.request.locale, speechError, null, ssml, reprompt);
+    utils.emitResponse(this.emit, this.event.request.locale, speechError, null, speech, reprompt);
+  },
+  handleMaxIntent: function() {
+    const game = this.attributes[this.attributes.currentGame];
+    const rules = utils.getGame(this.attributes.currentGame);
+
+    // Set last bet and forward
+    game.lastbet = rules.maxCoins;
+    this.emitWithState('BetIntent');
   },
 };
+
+function initializeCards(game) {
+  // Start by initializing the deck
+  let i;
+  let rank;
+  const deck = [];
+  const suits = ['C', 'D', 'H', 'S'];
+  const ranks = ['0', 'A', '2', '3', '4', '5', '6', '7', '8', '9', '10', 'J', 'Q', 'K', 'A'];
+
+  for (rank = 1; rank <= 13; rank++) {
+    suits.map((item) => {
+      deck.push({'rank': ranks[rank], 'suit': item});
+    });
+  }
+
+  // OK, let's shuffle the deck - we'll do this by going thru
+  // 520 of cards times, and swap random pairs each iteration
+  // Yeah, there are probably more elegant solutions but this should do the job
+  for (i = 0; i < 520; i++) {
+    const card1 = Math.floor(Math.random() * 52);
+    const card2 = Math.floor(Math.random() * 52);
+
+    const tempCard = deck[card1];
+    deck[card1] = deck[card2];
+    deck[card2] = tempCard;
+  }
+
+  // Top 5 go into hand, next 5 in reserve
+  game.cards = deck.slice(0, 5);
+  game.reserve = deck.slice(6, 11);
+}
