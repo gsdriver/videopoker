@@ -20,6 +20,10 @@ function BuildEvent(argv)
   var stop = {'name': 'AMAZON.StopIntent', 'slots': {}};
   var cancel = {'name': 'AMAZON.CancelIntent', 'slots': {}};
   var highScore = {'name': 'HighScoreIntent', 'slots': {}};
+  var holdNumber = {'name': 'HoldIntent', 'slots': {'CardNumber': {'name': 'CardNumber', 'value': ''}}};
+  var holdOrdinal = {'name': 'HoldIntent', 'slots': {'CardOrdinal': {'name': 'CardOrdinal', 'value': ''}}};
+  var holdCard = {'name': 'HoldIntent', 'slots': {'CardRank': {'name': 'CardRank', 'value': ''},
+          'CardSuit': {'name': 'CardSuit', 'value': ''}}};
 
   var lambda = {
     "session": {
@@ -88,6 +92,24 @@ function BuildEvent(argv)
     lambda.request.intent = rules;
     if (argv.length > 3) {
       rules.slots.Rules.value = argv[3];
+    }
+  } else if (argv[2] == 'holdnumber') {
+    lambda.request.intent = holdNumber;
+    if (argv.length > 3) {
+      holdNumber.slots.CardNumber.value = argv[3];
+    }
+  } else if (argv[2] == 'holdordinal') {
+    lambda.request.intent = holdOrdinal;
+    if (argv.length > 3) {
+      holdOrdinal.slots.CardOrdinal.value = argv[3];
+    }
+  } else if (argv[2] == 'holdcard') {
+    lambda.request.intent = holdCard;
+    if (argv.length > 3) {
+      holdCard.slots.CardRank.value = argv[3];
+    }
+    if (argv.length > 4) {
+      holdCard.slots.CardSuit.value = argv[4];
     }
   } else if (argv[2] == 'spin') {
     lambda.request.intent = spin;

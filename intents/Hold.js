@@ -18,15 +18,21 @@ module.exports = {
     const game = this.attributes[this.attributes.currentGame];
 
     // See which card(s) were selected
-    const holdCards = getCards(this.event.request.intent.slots);
+    const holdCards = getCards(this.event.request.locale, this.attributes,
+            this.event.request.intent.slots);
     if (!holdCards || (holdCards.length === 0)) {
       error = res.strings.BET_INVALID_AMOUNT.replace('{0}', amount);
       reprompt = res.strings.BET_INVALID_REPROMPT;
+    } else {
+      // Mark each card as held
+      holdCards.map((card) => {
+        game.cards[card - 1].hold = true;
+      });
     }
 
     if (!error) {
       speech = res.strings.HOLD_CARDS.replace('{0}',
-              speechUtils.and(holdCards.map((index) => res.sayCard(game.cards[index])),
+              speechUtils.and(holdCards.map((index) => res.sayCard(game.cards[index - 1])),
                 {locale: this.event.request.locale}));
     }
 
@@ -60,14 +66,14 @@ function getCards(locale, attributes, slots) {
       // Make sure this is in the hand
       for (index = 0; index < game.cards.length; index++) {
         if ((game.cards[index].rank === rank) && (game.cards[index].suit === suit)) {
-          foundCards.push(index);
+          foundCards.push(index + 1);
         }
       }
     } else {
       // Select all cards of this rank
       for (index = 0; index < game.cards.length; index++) {
         if (game.cards[index].rank === rank) {
-          foundCards.push(index);
+          foundCards.push(index + 1);
         }
       }
     }

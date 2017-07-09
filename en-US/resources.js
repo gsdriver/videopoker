@@ -46,6 +46,7 @@ const resources = {
   'SPIN_PLAY_AGAIN': 'Would you like to spin again?',
   'SPIN_BUSTED': 'You lost all your money. Resetting to 1000 coins and clearing your bet. ',
   'SPIN_BUSTED_REPROMPT': 'Place a bet.',
+  'SPIN_REPROMPT_AFTER_DEAL': 'Say the number of the cards you would like to hold.',
   'DEALT_CARDS': 'You got {0}. ',
   // From utils.js
   'ERROR_REPROMPT': 'What else can I help with?',
@@ -74,9 +75,13 @@ module.exports = {
 
     return (gameMap[game]) ? gameMap[game] : game;
   },
-  readCard: function(card, withArticle) {
-    const names = ['none', 'ace', 'two', 'three', 'four', 'five', 'six', 'seven', 'eight', 'nine', 'ten', 'jack', 'queen', 'king'];
-    const articleNames = ['none', 'an ace', 'a two', 'a three', 'a four', 'a five', 'a six', 'a seven', 'an eight', 'a nine', 'a ten', 'a jack', 'a queen', 'a king'];
+  sayCard: function(card, withArticle) {
+    const names = {'A': 'ace', '2': 'two', '3': 'three', '4': 'four', '5': 'five',
+            '6': 'six', '7': 'seven', '8': 'eight', '9': 'nine', '10': 'ten',
+            'J': 'jack', 'Q': 'queen', 'K': 'king'};
+    const articleNames = {'A': 'an ace', '2': 'a two', '3': 'a three', '4': 'a four', '5': 'a five',
+            '6': 'a six', '7': 'a seven', '8': 'an eight', '9': 'a nine', '10': 'a ten',
+            'J': 'a jack', 'Q': 'a queen', 'K': 'a king'};
     const suitNames = {'C': 'of clubs', 'D': 'of diamonds', 'H': 'of hearts', 'S': 'of spades'};
 
     if (withArticle === 'article') {
@@ -92,9 +97,9 @@ module.exports = {
     return (ordinals[ordinal.toLowerCase()]);
   },
   getRank: function(rank) {
-    const ranks = {'ace': 1, 'two': 2, 'three': 3, 'four': 4, 'five': 5, 'six': 6,
-        'seven': 7, 'eight': 8, 'nine': 9, 'ten': 10, 'jack': 11, 'queen': 12, 'king': 13,
-        '1': 1, '2': 2, '3': 3, '4': 4, '5': 5, '6': 6, '7': 7, '8': 8, '9': 9, '10': 10};
+    const ranks = {'ace': 'A', 'two': 2, 'three': 3, 'four': 4, 'five': 5, 'six': 6,
+        'seven': 7, 'eight': 8, 'nine': 9, 'ten': 10, 'jack': 'J', 'queen': 'Q', 'king': 'K',
+        '1': 'A', '2': 2, '3': 3, '4': 4, '5': 5, '6': 6, '7': 7, '8': 8, '9': 9, '10': 10};
 
     return (ranks[rank.toLowerCase()]);
   },
@@ -103,5 +108,23 @@ module.exports = {
         'heart': 'H', 'hearts': 'H', 'spade': 'S', 'spades': 'S'};
 
     return (suits[suit.toLowerCase()]);
+  },
+  readPayoutHand: function(hand) {
+    const payouts = {
+      'royalflush': 'royal flush',
+      'straightflush': 'straight flush',
+      '4ofakind': 'four of a kind',
+      'fullhouse': 'full house',
+      'flush': 'flush',
+      'straight': 'straight',
+      '3ofakind': 'three of a kind',
+      '2pair': 'two pair',
+      'minpair': 'jacks or better',
+      'royalflushnatural': 'royal flush with no wild cards',
+      '4wild': 'four deuces',
+      '5ofakind': 'five of a kind',
+    };
+
+    return (payouts[hand] ? payouts[hand] : hand);
   },
 };

@@ -8,16 +8,15 @@ const utils = require('../utils');
 const speechUtils = require('alexa-speech-utils')();
 
 module.exports = {
-  handleIntent: function() {
+  // First time spinning - deal initial cards
+  handleFirstIntent: function() {
     // When you spin, you either have to have bets or prior bets
     let bet;
     let speechError;
     let speech = '';
     const res = require('../' + this.event.request.locale + '/resources');
     const game = this.attributes[this.attributes.currentGame];
-    const rules = utils.getGame(this.attributes.currentGame);
-    let i;
-    let newCards;
+    const reprompt = res.strings.SPIN_REPROMPT_AFTER_DEAL;
 
     if (!game.bet && !game.lastbet) {
       speechError = res.strings.SPIN_NOBETS;
@@ -40,61 +39,83 @@ module.exports = {
         }
       }
 
-      // What we do depends on whether this is the first or second spin
-      if (this.handler.state === 'NEWGAME') {
-        // Deal out 5 new cards
-        initializeCards(game);
-        for (i = 0; i < 5; i++) {
-          game.cards = game.deck.pop();
-        }
-        newCards = game.cards;
-      } else {
-        // Discard the non-held cards and replace from the deck
-        newCards = [];
-      }
-
-      // Read the cards
+      // Deal out 5 new cards
+      game.bet = bet;
+      initializeCards(game);
+      this.handler.state = 'FIRSTDEAL';
       speech += res.strings.DEALT_CARDS.replace('{0}',
-              speechUtils.and(newCards.map((card) => res.sayCard(card)),
-                {locale: this.event.request.locale}));
+              speechUtils.and(game.cards.map((card) => res.sayCard(card)),
+                {pause: '300ms', locale: this.event.request.locale}));
+      speech += reprompt;
+      utils.emitResponse(this.emit, this.event.request.locale,
+                          null, null, speech, reprompt);
+    }
+  },
+  handleSecondIntent: function() {
+    let speech = '';
+    const res = require('../' + this.event.request.locale + '/resources');
+    const game = this.attributes[this.attributes.currentGame];
+    const rules = utils.getGame(this.attributes.currentGame);
+    let i;
+    const newCards = [];
+    let newCard;
+    let reprompt = res.strings.SPIN_PLAY_AGAIN;
 
-      // Time to determine payout?
-      if (this.handler.state === 'FIRSTDEAL') {
-        utils.determinePayout(this.attributes, bet, (amount, payout) => {
-          if (amount >= (50 * bet)) {
-            speech += '<audio src=\"https://s3-us-west-2.amazonaws.com/alexasoundclips/jackpot.mp3\"/> ';
-            game.jackpot = (game.jackpot) ? (game.jackpot + 1) : 1;
-            utils.writeJackpotDetails(this.event.session.user.userId,
-                this.attributes.currentGame, amount);
-          }
-        });
+    // They shouldn't be able to get this far without a bet
+    if (!game.bet) {
+      this.handler.state = 'NEWGAME';
+      utils.emitResponse(this.emit, this.event.request.locale,
+          res.strings.SPIN_NOBETS, null, null,
+          res.strings.SPIN_INVALID_REPROMPT);
+      return;
+    }
+
+    // Discard the non-held cards and replace from the deck
+    for (i = 0; i < game.cards.length; i++) {
+      if (!game.cards[i].hold) {
+        newCard = game.reserve.pop();
+        game.cards[i] = newCard;
+        newCards.push(newCard);
+      }
+    }
+
+    // Read the cards that were dealt
+    speech += res.strings.DEALT_CARDS.replace('{0}',
+            speechUtils.and(newCards.map((card) => res.sayCard(card)),
+              {pause: '300ms', locale: this.event.request.locale}));
+
+    utils.determineWinner(this.attributes, game.bet, (amount, payout) => {
+      if (amount >= (50 * game.bet)) {
+        speech += '<audio src=\"https://s3-us-west-2.amazonaws.com/alexasoundclips/jackpot.mp3\"/> ';
+        game.jackpot = (game.jackpot) ? (game.jackpot + 1) : 1;
+        utils.writeJackpotDetails(this.event.session.user.userId,
+            this.attributes.currentGame, amount);
       }
 
-      // Now let's determine the payouts
-      let matchedPayout;
-
-      if (matchedPayout) {
-        game.bankroll += (bet * rules.payouts[matchedPayout]);
-        speech += res.strings.SPIN_WINNER.replace('{0}', utils.readPayout(this.event.request.locale, rules, matchedPayout)).replace('{1}', utils.readCoins(this.event.request.locale, bet * rules.payouts[matchedPayout]));
+      if (amount) {
+        game.bankroll += amount;
+        speech += res.strings.SPIN_WINNER
+            .replace('{0}', utils.readPayout(this.event.request.locale, rules, payout))
+            .replace('{1}', utils.readCoins(this.event.request.locale, amount));
       } else {
-        // Sorry, you lost
         speech += res.strings.SPIN_LOSER;
       }
 
       // If they have no units left, reset the bankroll
+      game.lastbet = game.bet;
       if (game.bankroll < 1) {
         game.bankroll = 1000;
-        lastbet = undefined;
+        game.lastbet = undefined;
         speech += res.strings.SPIN_BUSTED;
         reprompt = res.strings.SPIN_BUSTED_REPROMPT;
       } else {
-        if (game.bankroll < lastbet) {
+        if (game.bankroll < game.lastbet) {
           // They still have money left, but if they don't have enough to support
           // the last set of bets again, then reset it to 1 coin
-          lastbet = 1;
+          game.lastbet = 1;
         }
 
-        speech += res.strings.READ_BANKROLL.replace('{0}', utils.readCoins(locale, game.bankroll));
+        speech += res.strings.READ_BANKROLL.replace('{0}', utils.readCoins(this.event.request.locale, game.bankroll));
       }
 
       // Keep track of spins
@@ -108,12 +129,12 @@ module.exports = {
       }
 
       // And reprompt
-      game.lastbet = lastbet;
+      this.handler.state = 'NEWGAME';
       game.bet = undefined;
       speech += reprompt;
       utils.emitResponse(this.emit, this.event.request.locale,
                           null, null, speech, reprompt);
-    }
+    });
   },
 };
 
@@ -137,12 +158,13 @@ function initializeCards(game) {
   for (i = 0; i < 520; i++) {
     const card1 = Math.floor(Math.random() * 52);
     const card2 = Math.floor(Math.random() * 52);
-    const tempCard = game.deck.cards[card1];
 
+    const tempCard = deck[card1];
     deck[card1] = deck[card2];
     deck[card2] = tempCard;
   }
 
-  // After that, we only need the top 10 cards
-  game.cards = deck.slice(0, 10);
+  // Top 5 go into hand, next 5 in reserve
+  game.cards = deck.slice(0, 5);
+  game.reserve = deck.slice(6, 11);
 }

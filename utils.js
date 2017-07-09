@@ -68,11 +68,16 @@ module.exports = {
     const game = attributes[attributes.currentGame];
     const rules = games[attributes.currentGame];
     let rank;
+    const evaluateOptions = {};
 
-    rank = pokerrank.evaluateHand(game.cards.map((card) => card.rank + card.suit), {
-      aceCanBeLow: true,
-      wildCards: rules.wildCards.slice('|'),
-      minPair: rules.minPair});
+    evaluateOptions.aceCanBeLow = true;
+    if (rules.wildCards) {
+      evaluateOptions.wildCards = rules.wildCards.split('|');
+    }
+    if (rules.minPair) {
+      evaluateOptions.minPair = rules.minPair;
+    }
+    rank = pokerrank.evaluateHand(game.cards.map((card) => card.rank + card.suit), evaluateOptions);
 
     // Override for some special cases
     if (rules.payouts['royalflushnatural']) {
@@ -81,7 +86,7 @@ module.exports = {
         let hasWild = false;
 
         game.cards.map((card) => {
-          if (rules.wildCards.slice('|').indexOf(card.rank) > -1) {
+          if (rules.wildCards.split('|').indexOf(card.rank) > -1) {
             hasWild = true;
           }
         });
@@ -96,7 +101,7 @@ module.exports = {
         let numWild = 0;
 
         game.cards.map((card) => {
-          if (rules.wildCards.slice('|').indexOf(card.rank) > -1) {
+          if (rules.wildCards.split('|').indexOf(card.rank) > -1) {
             numWild++;
           }
         });
@@ -110,8 +115,8 @@ module.exports = {
     // OK, let's see if there's a payout associated with this
     if (rules.payouts[rank]) {
       // Hot diggity dog!
-      const payouts = rules.payouts[rank].slice('|');
-      callback(payouts[bet], rank);
+      const payouts = rules.payouts[rank].split('|');
+      callback(payouts[bet - 1], rank);
     } else {
       // Nope
       callback();
@@ -157,7 +162,8 @@ module.exports = {
     return speechUtils.numberOfItems(coins, res.strings.SINGLE_COIN, res.strings.PLURAL_COIN);
   },
   readPayout: function(locale, game, payout) {
-    return readPayoutInternal(locale, game, payout, ' <break time=\"200ms\"/> ');
+    const res = require('./' + locale + '/resources');
+    return (res.readPayoutHand(payout) + ' <break time=\"200ms\"/> ');
   },
   readPayoutTable: function(locale, game) {
     const res = require('./' + locale + '/resources');
@@ -173,7 +179,7 @@ module.exports = {
     for (payout in game.payouts) {
       if (payout) {
         // Special case if it's the progressive
-        text += readPayoutInternal(locale, game, payout, ' ');
+        text += res.readPayoutHand(payout) + ' ';
         text += readPayoutAmountInternal(locale, game, payout);
         text += '\n';
       }
@@ -320,25 +326,6 @@ module.exports = {
     });
   },
 };
-
-function readPayoutInternal(locale, game, payout, pause) {
-  const res = require('./' + locale + '/resources');
-  const slots = payout.split('|');
-  let text = '';
-  let i;
-
-  for (i = 0; i < slots.length; i++) {
-    text += res.saySymbol(slots[i]);
-    text += pause;
-  }
-
-  for (i = slots.length; i < game.slots; i++) {
-    text += res.strings.ANY_SLOT;
-    text += pause;
-  }
-
-  return text;
-}
 
 function readPayoutAmountInternal(locale, game, payout) {
   let text;
