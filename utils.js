@@ -122,6 +122,47 @@ module.exports = {
       callback();
     }
   },
+  getSelectedCards: function(locale, attributes, slots) {
+    const res = require('./' + locale + '/resources');
+    let index;
+    const game = attributes[attributes.currentGame];
+
+    // You can say the card in lots of different ways
+    if (slots.CardNumber && slots.CardNumber.value) {
+      index = parseInt(slots.CardNumber.value);
+      if (isNaN(index) || (index < 1) || (index > 5)) {
+        return [];
+      } else {
+        return [index];
+      }
+    }
+    if (slots.CardOrdinal && slots.CardOrdinal.value) {
+      return res.ordinalMapping(slots.CardOrdinal.value);
+    }
+    if (slots.CardRank && slots.CardRank.value) {
+      const foundCards = [];
+      const rank = res.getRank(slots.CardRank.value);
+      if (slots.CardSuit && slots.CardSuit.value) {
+        const suit = res.getSuit(slots.CardSuit.value);
+
+        // Make sure this is in the hand
+        for (index = 0; index < game.cards.length; index++) {
+          if ((game.cards[index].rank === rank) && (game.cards[index].suit === suit)) {
+            foundCards.push(index + 1);
+          }
+        }
+      } else {
+        // Select all cards of this rank
+        for (index = 0; index < game.cards.length; index++) {
+          if (game.cards[index].rank === rank) {
+            foundCards.push(index + 1);
+          }
+        }
+      }
+
+      return foundCards;
+    }
+  },
   readAvailableGames: function(locale, currentGame, currentFirst, callback) {
     const res = require('./' + locale + '/resources');
     let speech;

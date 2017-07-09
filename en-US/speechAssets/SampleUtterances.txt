@@ -75,11 +75,31 @@ HoldIntent play {CardNumber}
 HoldIntent play the {CardRank} of {CardSuit}
 HoldIntent play {CardRank} of {CardSuit}
 
-SpinIntent spin the wheel
-SpinIntent spin
-SpinIntent pull the handle
-SpinIntent push the button
-SpinIntent play
+DiscardIntent discard the {CardOrdinal} card
+DiscardIntent discard {CardOrdinal} card
+DiscardIntent discard card {CardNumber}
+DiscardIntent discard {CardNumber}
+DiscardIntent discard the {CardRank} of {CardSuit}
+DiscardIntent discard {CardRank} of {CardSuit}
+DiscardIntent remove the {CardOrdinal} card
+DiscardIntent remove {CardOrdinal} card
+DiscardIntent remove card {CardNumber}
+DiscardIntent remove {CardNumber}
+DiscardIntent remove the {CardRank} of {CardSuit}
+DiscardIntent remove {CardRank} of {CardSuit}
+DiscardIntent throw out the {CardOrdinal} card
+DiscardIntent throw out {CardOrdinal} card
+DiscardIntent throw out card {CardNumber}
+DiscardIntent throw out {CardNumber}
+DiscardIntent throw out the {CardRank} of {CardSuit}
+DiscardIntent throw out {CardRank} of {CardSuit}
+
+DealIntent deal the cards
+DealIntent deal cards
+DealIntent deal
+DealIntent pull the handle
+DealIntent push the button
+DealIntent play
 
 HighScoreIntent read high scores
 HighScoreIntent tell me high scores

@@ -7,8 +7,9 @@
 const AWS = require('aws-sdk');
 const Alexa = require('alexa-sdk');
 const Bet = require('./intents/Bet');
-const Spin = require('./intents/Spin');
+const Deal = require('./intents/Deal');
 const Hold = require('./intents/Hold');
+const Discard = require('./intents/Discard');
 const Rules = require('./intents/Rules');
 const HighScore = require('./intents/HighScore');
 const Help = require('./intents/Help');
@@ -45,11 +46,11 @@ const newGameHandlers = Alexa.CreateStateHandler('NEWGAME', {
     this.emitWithState('NewSession');
   },
   'BetIntent': Bet.handleIntent,
-  'SpinIntent': Spin.handleFirstIntent,
+  'DealIntent': Deal.handleFirstIntent,
   'RulesIntent': Rules.handleIntent,
   'SelectIntent': Select.handleIntent,
   'HighScoreIntent': HighScore.handleIntent,
-  'AMAZON.YesIntent': Spin.handleFirstIntent,
+  'AMAZON.YesIntent': Deal.handleFirstIntent,
   'AMAZON.NoIntent': Exit.handleIntent,
   'AMAZON.HelpIntent': Help.handleIntent,
   'AMAZON.StopIntent': Exit.handleIntent,
@@ -69,10 +70,11 @@ const firstDealHandlers = Alexa.CreateStateHandler('FIRSTDEAL', {
     this.emitWithState('NewSession');
   },
   'HoldIntent': Hold.handleIntent,
-  'SpinIntent': Spin.handleSecondIntent,
+  'DiscardIntent': Discard.handleIntent,
+  'DealIntent': Deal.handleSecondIntent,
   'RulesIntent': Rules.handleIntent,
   'HighScoreIntent': HighScore.handleIntent,
-  'AMAZON.YesIntent': Spin.handleSecondIntent,
+  'AMAZON.YesIntent': Deal.handleSecondIntent,
   'AMAZON.NoIntent': Exit.handleIntent,
   'AMAZON.HelpIntent': Help.handleIntent,
   'AMAZON.StopIntent': Exit.handleIntent,
@@ -90,7 +92,7 @@ const handlers = {
   'NewSession': function() {
     // Initialize attributes and route the request
     if (!this.attributes.currentGame) {
-      this.attributes.currentGame = 'basic';
+      this.attributes.currentGame = 'jacks';
       utils.saveNewUser();
     }
 
@@ -101,6 +103,7 @@ const handlers = {
       };
     }
 
+    this.attributes.firstHold = true;
     this.emit('LaunchRequest');
   },
   'LaunchRequest': Launch.handleIntent,

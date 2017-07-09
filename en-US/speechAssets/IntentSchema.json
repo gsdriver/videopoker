@@ -34,7 +34,7 @@
       "intent": "RulesIntent"
     },
     {
-      "intent": "SpinIntent"
+      "intent": "DealIntent"
     },
     {
       "intent": "SelectIntent"

@@ -10,7 +10,7 @@ function BuildEvent(argv)
 {
   // Templates that can fill in the intent
   var bet = {'name': 'BetIntent', 'slots': {'Amount': {'name': 'Amount', 'value': ''}}};
-  var spin = {'name': 'SpinIntent', 'slots': {}};
+  var deal = {'name': 'DealIntent', 'slots': {}};
   var select = {'name': 'SelectIntent', 'slots': {}};
   var rules = {'name': 'RulesIntent', 'slots': {'Rules': {'name': 'Rules', 'value': ''}}};
   var reset = {'name': 'ResetIntent', 'slots': {}};
@@ -23,6 +23,10 @@ function BuildEvent(argv)
   var holdNumber = {'name': 'HoldIntent', 'slots': {'CardNumber': {'name': 'CardNumber', 'value': ''}}};
   var holdOrdinal = {'name': 'HoldIntent', 'slots': {'CardOrdinal': {'name': 'CardOrdinal', 'value': ''}}};
   var holdCard = {'name': 'HoldIntent', 'slots': {'CardRank': {'name': 'CardRank', 'value': ''},
+          'CardSuit': {'name': 'CardSuit', 'value': ''}}};
+  var discardNumber = {'name': 'DiscardIntent', 'slots': {'CardNumber': {'name': 'CardNumber', 'value': ''}}};
+  var discardOrdinal = {'name': 'DiscardIntent', 'slots': {'CardOrdinal': {'name': 'CardOrdinal', 'value': ''}}};
+  var discardCard = {'name': 'DiscardIntent', 'slots': {'CardRank': {'name': 'CardRank', 'value': ''},
           'CardSuit': {'name': 'CardSuit', 'value': ''}}};
 
   var lambda = {
@@ -111,8 +115,26 @@ function BuildEvent(argv)
     if (argv.length > 4) {
       holdCard.slots.CardSuit.value = argv[4];
     }
-  } else if (argv[2] == 'spin') {
-    lambda.request.intent = spin;
+  } else if (argv[2] == 'discardnumber') {
+    lambda.request.intent = holdNumber;
+    if (argv.length > 3) {
+      holdNumber.slots.CardNumber.value = argv[3];
+    }
+  } else if (argv[2] == 'discardordinal') {
+    lambda.request.intent = holdOrdinal;
+    if (argv.length > 3) {
+      holdOrdinal.slots.CardOrdinal.value = argv[3];
+    }
+  } else if (argv[2] == 'discardcard') {
+    lambda.request.intent = holdCard;
+    if (argv.length > 3) {
+      holdCard.slots.CardRank.value = argv[3];
+    }
+    if (argv.length > 4) {
+      holdCard.slots.CardSuit.value = argv[4];
+    }
+  } else if (argv[2] == 'deal') {
+    lambda.request.intent = deal;
   } else if (argv[2] == 'select') {
     lambda.request.intent = select;
   } else if (argv[2] == 'launch') {

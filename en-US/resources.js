@@ -20,6 +20,11 @@ const resources = {
   'HIGHSCORE_REPROMPT': 'What else can I help you with?',
   // From Hold.js
   'HOLD_CARDS': 'You held {0}. ',
+  'HOLD_REPROMPT': 'What else can I help you with?',
+  'HOLD_FIRST_REPROMPT': 'Say hold to hold additional cards <break time=\"200ms\"/> discard to unmark this card as held <break time=\"200ms\"/> or deal to deal new cards.',
+  // From Discard.js
+  'DISCARD_CARDS': 'You discarded {0}. ',
+  'DISCARD_REPROMPT': 'Say hold to hold additional cards <break time=\"200ms\"/> or deal to deal new cards.',
   // From Bet.js
   'BET_INVALID_AMOUNT': 'I\'m sorry, {0} is not a valid amount to bet.',
   'BET_INVALID_REPROMPT': 'What else can I help you with?',

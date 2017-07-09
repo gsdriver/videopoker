@@ -1,5 +1,5 @@
 //
-// Handles holding of cards after the first deal
+// Handles discarding of cards after the first deal
 //
 
 'use strict';
@@ -18,28 +18,29 @@ module.exports = {
     const game = this.attributes[this.attributes.currentGame];
 
     // See which card(s) were selected
-    const holdCards = utils.getSelectedCards(this.event.request.locale,
+    let discardCards = utils.getSelectedCards(this.event.request.locale,
             this.attributes, this.event.request.intent.slots);
-    if (!holdCards || (holdCards.length === 0)) {
+    if (!discardCards || (discardCards.length === 0)) {
+      // Use the last held cards
+      discardCards = game.lastHeld;
+    }
+
+    if (!discardCards || (discardCards.length === 0)) {
       error = res.strings.BET_INVALID_AMOUNT.replace('{0}', amount);
       reprompt = res.strings.BET_INVALID_REPROMPT;
     } else {
-      // Mark each card as held
+      // Mark each card as no longer held
       holdCards.map((card) => {
-        game.cards[card - 1].hold = true;
+        game.cards[card - 1].hold = undefined;
       });
     }
 
     if (!error) {
-      reprompt = (this.attributes.firstHold)
-              ? res.strings.HOLD_FIRST_REPROMPT
-              : res.strings.HOLD_REPROMPT;
-      game.lastHeld = holdCards;
-      this.attributes.firstHold = false;
-      speech = res.strings.HOLD_CARDS.replace('{0}',
+      reprompt = res.strings.DISCARD_REPROMPT;
+      speech = res.strings.DISCARD_CARDS.replace('{0}',
               speechUtils.and(holdCards.map((index) => res.sayCard(game.cards[index - 1])),
                 {locale: this.event.request.locale}));
-      speech+= reprompt;
+      speech += reprompt;
     }
 
     utils.emitResponse(this.emit, this.event.request.locale, error, null, speech, reprompt);
