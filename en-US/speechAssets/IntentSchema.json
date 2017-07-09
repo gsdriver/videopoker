@@ -31,6 +31,27 @@
       ]
     },
     {
+      "intent": "DiscardIntent",
+      "slots": [
+        {
+          "name": "CardNumber",
+          "type": "AMAZON.Number"
+        },
+        {
+          "name": "CardOrdinal",
+          "type": "LIST_OF_ORDINALS"
+        },
+        {
+          "name": "CardRank",
+          "type": "LIST_OF_CARD_RANKS"
+        },
+        {
+          "name": "CardSuit",
+          "type": "LIST_OF_CARD_SUITS"
+        }
+      ]
+    },
+    {
       "intent": "RulesIntent"
     },
     {
