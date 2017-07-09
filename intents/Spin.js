@@ -15,6 +15,7 @@ module.exports = {
     const res = require('../' + this.event.request.locale + '/resources');
     const game = this.attributes[this.attributes.currentGame];
     const rules = utils.getGame(this.attributes.currentGame);
+    let i;
 
     if (!game.bet && !game.lastbet) {
       speechError = res.strings.SPIN_NOBETS;
@@ -37,39 +38,23 @@ module.exports = {
         }
       }
 
-      // Pick random numbers based on the rules of the game
-      const spinResult = [];
-      let i;
-
-      for (i = 0; i < rules.slots; i++) {
-        let spin;
-        let j;
-        let total = 0;
-
-        rules.frequency[i].symbols.map((item) => {
-          total = total + item;
-        });
-        spin = Math.floor(Math.random() * total);
-
-        for (j = 0; j < rules.frequency[i].symbols.length; j++) {
-          if (spin < rules.frequency[i].symbols[j]) {
-            // This is it!
-            spinResult.push(rules.symbols[j]);
-            break;
-          }
-
-          // Nope, go to the next one
-          spin -= rules.frequency[i].symbols[j];
+      // What we do depends on whether this is the first or second spin
+      if (this.handler.state === 'NEWGAME') {
+        // Deal out 5 new cards
+        initializeCards(game);
+        for (i = 0; i < 5; i++) {
+          game.cards = game.deck.pop();
         }
+      } else {
+        // Discard the non-held cards and replace from the deck
       }
 
-      let spinText = '<audio src=\"https://s3-us-west-2.amazonaws.com/alexasoundclips/pullandspin.mp3\"/> ';
+      // Read the cards
 
-      for (i = 0; i < spinResult.length; i++) {
-        spinText += '<audio src="https://s3-us-west-2.amazonaws.com/alexasoundclips/slotstop.mp3"/><break time=\"200ms\"/> ';
-        spinText += res.saySymbol(spinResult[i]);
+      // Time to determine payout?
+      if (this.handler.state === 'FIRSTDEAL') {
+        utils.determinePayout(game.cards, rules);
       }
-      speech += res.strings.SPIN_RESULT.replace('{0}', spinText);
 
       // Now let's determine the payouts
       let matchedPayout;
@@ -202,4 +187,34 @@ function updateGamePostPayout(locale, game, bet, callback) {
   game.bet = undefined;
   speech += reprompt;
   callback(speech, reprompt);
+}
+
+function initializeCards(game) {
+  // Start by initializing the deck
+  let i;
+  let rank;
+  const deck = [];
+  const suits = ['C', 'D', 'H', 'S'];
+  const ranks = ['0', 'A', '2', '3', '4', '5', '6', '7', '8', '9', '10', 'J', 'Q', 'K', 'A'];
+
+  for (rank = 1; rank <= 13; rank++) {
+    suits.map((item) => {
+      deck.push({'rank': ranks[rank], 'suit': item});
+    });
+  }
+
+  // OK, let's shuffle the deck - we'll do this by going thru
+  // 520 of cards times, and swap random pairs each iteration
+  // Yeah, there are probably more elegant solutions but this should do the job
+  for (i = 0; i < 520; i++) {
+    const card1 = Math.floor(Math.random() * 52);
+    const card2 = Math.floor(Math.random() * 52);
+    const tempCard = game.deck.cards[card1];
+
+    deck[card1] = deck[card2];
+    deck[card2] = tempCard;
+  }
+
+  // After that, we only need the top 10 cards
+  game.cards = deck.slice(0, 10);
 }

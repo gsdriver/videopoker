@@ -27,7 +27,7 @@ module.exports = {
   },
   handleYesIntent: function() {
     // Great, they picked a game
-    this.handler.state = 'INGAME';
+    this.handler.state = 'NEWGAME';
     selectedGame(this.emit, this.event.request.locale, this.attributes);
   },
   handleNoIntent: function() {
@@ -35,7 +35,7 @@ module.exports = {
     this.attributes.choices.shift();
     if (this.attributes.choices.length === 1) {
       // OK, we're going with this one
-      this.handler.state = 'INGAME';
+      this.handler.state = 'NEWGAME';
       selectedGame(this.emit, this.event.request.locale, this.attributes);
     } else {
       const res = require('../' + this.event.request.locale + '/resources');

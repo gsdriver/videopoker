@@ -56,6 +56,25 @@ SelectIntent switch to a new machine
 SelectIntent switch to another machine
 SelectIntent switch to another game
 
+HoldIntent hold the {CardOrdinal} card
+HoldIntent hold {CardOrdinal} card
+HoldIntent hold card {CardNumber}
+HoldIntent hold {CardNumber}
+HoldIntent hold the {CardRank} of {CardSuit}
+HoldIntent hold {CardRank} of {CardSuit}
+HoldIntent keep the {CardOrdinal} card
+HoldIntent keep {CardOrdinal} card
+HoldIntent keep card {CardNumber}
+HoldIntent keep {CardNumber}
+HoldIntent keep the {CardRank} of {CardSuit}
+HoldIntent keep {CardRank} of {CardSuit}
+HoldIntent play the {CardOrdinal} card
+HoldIntent play {CardOrdinal} card
+HoldIntent play card {CardNumber}
+HoldIntent play {CardNumber}
+HoldIntent play the {CardRank} of {CardSuit}
+HoldIntent play {CardRank} of {CardSuit}
+
 SpinIntent spin the wheel
 SpinIntent spin
 SpinIntent pull the handle

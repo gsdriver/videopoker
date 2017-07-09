@@ -8,6 +8,7 @@ const AWS = require('aws-sdk');
 const Alexa = require('alexa-sdk');
 const Bet = require('./intents/Bet');
 const Spin = require('./intents/Spin');
+const Hold = require('./intents/Hold');
 const Rules = require('./intents/Rules');
 const HighScore = require('./intents/HighScore');
 const Help = require('./intents/Help');
@@ -16,7 +17,7 @@ const Launch = require('./intents/Launch');
 const Select = require('./intents/Select');
 const utils = require('./utils');
 
-const APP_ID = 'amzn1.ask.skill.dcc3c959-8c93-4e9a-9cdf-ccdccd5733fd';
+const APP_ID = 'amzn1.ask.skill.8f0ddee1-51b3-496a-9424-524436770828';
 
 // Handlers for our skill
 const selectGameHandlers = Alexa.CreateStateHandler('SELECTGAME', {
@@ -38,7 +39,7 @@ const selectGameHandlers = Alexa.CreateStateHandler('SELECTGAME', {
   },
 });
 
-const inGameHandlers = Alexa.CreateStateHandler('INGAME', {
+const newGameHandlers = Alexa.CreateStateHandler('NEWGAME', {
   'NewSession': function() {
     this.handler.state = '';
     this.emitWithState('NewSession');
@@ -47,6 +48,29 @@ const inGameHandlers = Alexa.CreateStateHandler('INGAME', {
   'SpinIntent': Spin.handleIntent,
   'RulesIntent': Rules.handleIntent,
   'SelectIntent': Select.handleIntent,
+  'HighScoreIntent': HighScore.handleIntent,
+  'AMAZON.YesIntent': Spin.handleIntent,
+  'AMAZON.NoIntent': Exit.handleIntent,
+  'AMAZON.HelpIntent': Help.handleIntent,
+  'AMAZON.StopIntent': Exit.handleIntent,
+  'AMAZON.CancelIntent': Exit.handleIntent,
+  'SessionEndedRequest': function() {
+    this.emit(':saveState', true);
+  },
+  'Unhandled': function() {
+    const res = require('./' + this.event.request.locale + '/resources');
+    this.emit(':ask', res.strings.UNKNOWN_INTENT, res.strings.UNKNOWN_INTENT_REPROMPT);
+  },
+});
+
+const firstDealHandlers = Alexa.CreateStateHandler('FIRSTDEAL', {
+  'NewSession': function() {
+    this.handler.state = '';
+    this.emitWithState('NewSession');
+  },
+  'HoldIntent': Hold.handleIntent,
+  'SpinIntent': Spin.handleIntent,
+  'RulesIntent': Rules.handleIntent,
   'HighScoreIntent': HighScore.handleIntent,
   'AMAZON.YesIntent': Spin.handleIntent,
   'AMAZON.NoIntent': Exit.handleIntent,
@@ -98,6 +122,7 @@ exports.handler = function(event, context, callback) {
 
   alexa.appId = APP_ID;
   alexa.dynamoDBTableName = 'VideoPoker';
-  alexa.registerHandlers(handlers, inGameHandlers, selectGameHandlers);
+  alexa.registerHandlers(handlers, newGameHandlers,
+      firstDealHandlers, selectGameHandlers);
   alexa.execute();
 };

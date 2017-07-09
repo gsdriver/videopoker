@@ -9,53 +9,41 @@ AWS.config.update({region: 'us-east-1'});
 const dynamodb = new AWS.DynamoDB({apiVersion: '2012-08-10'});
 const s3 = new AWS.S3({apiVersion: '2006-03-01'});
 const speechUtils = require('alexa-speech-utils')();
+const pokerrank = require('poker-ranking');
 
 const games = {
   // Has 99.8% payout
   'jacks': {
     'maxCoins': 5,
-    'slots': 3,
-    'symbols': ['cherry', 'lemon', 'orange', 'plum', 'bar'],
-    'frequency': [
-      {'symbols': [6, 8, 8, 10, 2]},
-      {'symbols': [4, 8, 4, 6, 4]},
-      {'symbols': [24, 10, 6, 2, 1]},
-    ],
+    'wildCards': '',
     'payouts': {
-      'cherry': 2,
-      'cherry|cherry': 4,
-      'lemon|lemon|lemon': 8,
-      'orange|orange|orange': 10,
-      'plum|plum|plum': 15,
-      'bar': 5,
-      'bar|bar': 10,
-      'bar|bar|bar': 100,
+      'royalflush': '250|500|750|1000|4000',
+      'straightflush': '50|100|150|200|250',
+      '4ofakind': '25|50|75|100|125',
+      'fullhouse': '9|18|27|36|45',
+      'flush': '6|12|18|24|30',
+      'straight': '4|8|12|16|20',
+      '3ofakind': '3|6|9|12|15',
+      '2pair': '2|4|6|8|10',
+      'jackpair': '1|2|3|4|5',
     },
   },
   // 99.8% payout, no lower payouts but higher opportunity for jackpots
   'deuces': {
     'maxCoins': 5,
-    'slots': 3,
-    'symbols': ['cherry', 'blank', 'bar', 'double bar', 'seven'],
-    'frequency': [
-      {'symbols': [3, 16, 10, 4, 6]},
-      {'symbols': [2, 16, 5, 2, 1]},
-      {'symbols': [1, 20, 8, 4, 1]},
-    ],
-    'substitutes': {
-      'bar': ['any bar'],
-      'double bar': ['any bar'],
-      'cherry': ['bar', 'double bar', 'seven'],
-    },
     'special': 'WILD_SPECIAL',
+    'wildCards': '2',
     'payouts': {
-      'cherry': 5,
-      'cherry|cherry': 10,
-      'any bar|any bar|any bar': 5,
-      'bar|bar|bar': 10,
-      'double bar|double bar|double bar': 20,
-      'seven|seven|seven': 50,
-      'cherry|cherry|cherry': 500,
+      'royalflushnatural': '250|500|750|1000|4000',
+      '4wild': '200|400|600|800|1000',
+      'royalflush': '25|50|75|100|125',
+      '5ofakind': '15|30|45|60|75',
+      'straightflush': '9|18|27|36|45',
+      '4ofakind': '5|10|15|20|25',
+      'fullhouse': '3|6|9|12|15',
+      'flush': '2|4|6|8|10',
+      'straight': '2|4|6|8|10',
+      '3ofakind': '1|2|3|4|5',
     },
   },
 };
@@ -74,6 +62,69 @@ module.exports = {
   },
   getGame: function(name) {
     return games[name];
+  },
+  determineWinner: function(attributes) {
+    const game = attributes[attributes.currentGame];
+    const rules = games[attributes.currentGame];
+    let rank;
+
+    rank = pokerrank.evaluateHand(game.cards.map((card) => card.rank + card.suit),
+              {aceCanBeLow: true, wildCards: rules.wildCards.slice('|')});
+
+    // Override for some special cases
+    if (rules.payouts['jackpair']) {
+      if (rank === 'pair') {
+        // If the pair is pair of jacks or better, mark as 'jackpair'
+        let faceCards = [0, 0, 0, 0];
+        const faceCardMap = ['J', 'Q', 'K', 'A'];
+
+        game.cards.map((card) => {
+          if (faceCardMap.indexOf(card.rank) > -1) {
+            faceCards[faceCardMap.indexOf(card.rank) + 1]++;
+          } else if (rules.wildCards.slice('|').indexOf(card.rank) > -1) {
+            faceCards = faceCards.map((value) => {
+              return (value + 1);
+            });
+          }
+        });
+        if (faceCards.indexOf(2) > -1) {
+          rank = 'jackpair';
+        }
+      }
+    }
+    if (rules.payouts['royalflushnatural']) {
+      if (rank === 'royalflush') {
+        // If it's a natural, then mark as such
+        let hasWild = false;
+
+        game.cards.map((card) => {
+          if (rules.wildCards.slice('|').indexOf(card.rank) > -1) {
+            hasWild = true;
+          }
+        });
+        if (!hasWild) {
+          rank = 'royalflushnatural';
+        }
+      }
+    }
+    if (rules.payouts['4wild']) {
+      if (rank === '5ofakind') {
+        // If this is really 4 wild cards, mark it as such
+        let numWild = 0;
+
+        game.cards.map((card) => {
+          if (rules.wildCards.slice('|').indexOf(card.rank) > -1) {
+            numWild++;
+          }
+        });
+
+        if (numWild === 4) {
+          rank = '4wild';
+        }
+      }
+    }
+
+    return rank;
   },
   readAvailableGames: function(locale, currentGame, currentFirst, callback) {
     const res = require('./' + locale + '/resources');
