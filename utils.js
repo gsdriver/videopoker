@@ -16,6 +16,7 @@ const games = {
   'jacks': {
     'maxCoins': 5,
     'wildCards': '',
+    'minPair': 'J',
     'payouts': {
       'royalflush': '250|500|750|1000|4000',
       'straightflush': '50|100|150|200|250',
@@ -25,7 +26,7 @@ const games = {
       'straight': '4|8|12|16|20',
       '3ofakind': '3|6|9|12|15',
       '2pair': '2|4|6|8|10',
-      'jackpair': '1|2|3|4|5',
+      'minpair': '1|2|3|4|5',
     },
   },
   // 99.8% payout, no lower payouts but higher opportunity for jackpots
@@ -63,35 +64,17 @@ module.exports = {
   getGame: function(name) {
     return games[name];
   },
-  determineWinner: function(attributes) {
+  determineWinner: function(attributes, bet, callback) {
     const game = attributes[attributes.currentGame];
     const rules = games[attributes.currentGame];
     let rank;
 
-    rank = pokerrank.evaluateHand(game.cards.map((card) => card.rank + card.suit),
-              {aceCanBeLow: true, wildCards: rules.wildCards.slice('|')});
+    rank = pokerrank.evaluateHand(game.cards.map((card) => card.rank + card.suit), {
+      aceCanBeLow: true,
+      wildCards: rules.wildCards.slice('|'),
+      minPair: rules.minPair});
 
     // Override for some special cases
-    if (rules.payouts['jackpair']) {
-      if (rank === 'pair') {
-        // If the pair is pair of jacks or better, mark as 'jackpair'
-        let faceCards = [0, 0, 0, 0];
-        const faceCardMap = ['J', 'Q', 'K', 'A'];
-
-        game.cards.map((card) => {
-          if (faceCardMap.indexOf(card.rank) > -1) {
-            faceCards[faceCardMap.indexOf(card.rank) + 1]++;
-          } else if (rules.wildCards.slice('|').indexOf(card.rank) > -1) {
-            faceCards = faceCards.map((value) => {
-              return (value + 1);
-            });
-          }
-        });
-        if (faceCards.indexOf(2) > -1) {
-          rank = 'jackpair';
-        }
-      }
-    }
     if (rules.payouts['royalflushnatural']) {
       if (rank === 'royalflush') {
         // If it's a natural, then mark as such
@@ -124,7 +107,15 @@ module.exports = {
       }
     }
 
-    return rank;
+    // OK, let's see if there's a payout associated with this
+    if (rules.payouts[rank]) {
+      // Hot diggity dog!
+      const payouts = rules.payouts[rank].slice('|');
+      callback(payouts[bet], rank);
+    } else {
+      // Nope
+      callback();
+    }
   },
   readAvailableGames: function(locale, currentGame, currentFirst, callback) {
     const res = require('./' + locale + '/resources');

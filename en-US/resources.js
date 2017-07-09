@@ -18,6 +18,8 @@ const resources = {
   'EXIT_GAME': '{0} Goodbye.',
   // From HighScore.js
   'HIGHSCORE_REPROMPT': 'What else can I help you with?',
+  // From Hold.js
+  'HOLD_CARDS': 'You held {0}. ',
   // From Bet.js
   'BET_INVALID_AMOUNT': 'I\'m sorry, {0} is not a valid amount to bet.',
   'BET_INVALID_REPROMPT': 'What else can I help you with?',
@@ -44,6 +46,7 @@ const resources = {
   'SPIN_PLAY_AGAIN': 'Would you like to spin again?',
   'SPIN_BUSTED': 'You lost all your money. Resetting to 1000 coins and clearing your bet. ',
   'SPIN_BUSTED_REPROMPT': 'Place a bet.',
+  'DEALT_CARDS': 'You got {0}. ',
   // From utils.js
   'ERROR_REPROMPT': 'What else can I help with?',
   'ANY_SLOT': 'any',
@@ -65,25 +68,40 @@ const resources = {
 
 module.exports = {
   strings: resources,
-  saySymbol: function(symbol) {
-    const symbolMap = {'cherry': 'cherry',
-      'lemon': 'lemon',
-      'orange': 'orange',
-      'plum': 'plum',
-      'bar': 'bar',
-      'blank': 'blank',
-      'double bar': 'double bar',
-      'seven': 'seven',
-      'any bar': 'any bar',
-      'bell': 'bell',
-      'diamond': 'diamond'};
-
-    return (symbolMap[symbol]) ? symbolMap[symbol] : symbol;
-  },
   sayGame: function(game) {
     const gameMap = {'jacks': 'jacks or better',
       'deuces': 'deuces wild'};
 
     return (gameMap[game]) ? gameMap[game] : game;
+  },
+  readCard: function(card, withArticle) {
+    const names = ['none', 'ace', 'two', 'three', 'four', 'five', 'six', 'seven', 'eight', 'nine', 'ten', 'jack', 'queen', 'king'];
+    const articleNames = ['none', 'an ace', 'a two', 'a three', 'a four', 'a five', 'a six', 'a seven', 'an eight', 'a nine', 'a ten', 'a jack', 'a queen', 'a king'];
+    const suitNames = {'C': 'of clubs', 'D': 'of diamonds', 'H': 'of hearts', 'S': 'of spades'};
+
+    if (withArticle === 'article') {
+      return (articleNames[card.rank] + ' ' + suitNames[card.suit]);
+    } else {
+      return (names[card.rank] + ' ' + suitNames[card.suit]);
+    }
+  },
+  ordinalMapping: function(ordinal) {
+    const ordinals = {'first': [1], 'second': [2], 'third': [3], 'fourth': [4], 'fifth': [5],
+        'all': [1, 2, 3, 4, 5]};
+
+    return (ordinals[ordinal.toLowerCase()]);
+  },
+  getRank: function(rank) {
+    const ranks = {'ace': 1, 'two': 2, 'three': 3, 'four': 4, 'five': 5, 'six': 6,
+        'seven': 7, 'eight': 8, 'nine': 9, 'ten': 10, 'jack': 11, 'queen': 12, 'king': 13,
+        '1': 1, '2': 2, '3': 3, '4': 4, '5': 5, '6': 6, '7': 7, '8': 8, '9': 9, '10': 10};
+
+    return (ranks[rank.toLowerCase()]);
+  },
+  getSuit: function(suit) {
+    const suits = {'club': 'C', 'clubs': 'C', 'diamond': 'D', 'diamonds': 'D',
+        'heart': 'H', 'hearts': 'H', 'spade': 'S', 'spades': 'S'};
+
+    return (suits[suit.toLowerCase()]);
   },
 };
