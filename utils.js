@@ -14,7 +14,6 @@ const pokerrank = require('poker-ranking');
 const games = {
   'jacks': {
     'maxCoins': 5,
-    'wildCards': '',
     'minPair': 'J',
     'progressive': {
       'start': 4000,
@@ -32,6 +31,7 @@ const games = {
       '2pair': 2,
       'minpair': 1,
     },
+    'suggest': suggestJacksOrBetter,
   },
   'deuces': {
     'maxCoins': 5,
@@ -54,6 +54,7 @@ const games = {
       'straight': 2,
       '3ofakind': 1,
     },
+    'suggest': suggestDeucesWild,
   },
 };
 
@@ -479,4 +480,71 @@ function getTopScoresFromS3(attributes, callback) {
       }
     }
   });
+}
+
+
+// From http://www.thegamblersedge.com/vpoker/vpokerstrat96JoB.htm
+function suggestJacksOrBetter(locale, attributes) {
+  const game = attributes[attributes.currentGame];
+  const rules = games[attributes.currentGame];
+  let rank;
+  const evaluateOptions = {};
+  const holdCards = [];
+  const res = require('./' + locale + '/resources');
+
+  evaluateOptions.aceCanBeLow = true;
+  if (rules.wildCards) {
+    evaluateOptions.wildCards = rules.wildCards;
+  }
+  if (rules.minPair) {
+    evaluateOptions.minPair = rules.minPair;
+  }
+
+  // See what they have first
+  rank = module.exports.determineWinner(attributes);
+  switch (rank) {
+    case 'royalflush':
+    case 'straightflush':
+    case 'flush':
+    case 'fullhouse':
+    case 'straight':
+      // Hold them all
+      return res.strings.SUGGEST_HOLD_ALL;
+      break;
+    case '4ofakind':
+    case '2pair':
+      // Hold all but the one that doesn't match
+      break;
+    case '3ofakind':
+      // Hold the trips
+      break;
+    case 'minpair':
+    case 'pair':
+      // Hold the pair
+      break;
+  }
+
+  if (!holdCards.length) {
+    // Let's check other cases
+    // Is it a 4-card straight?
+    evaluateOptions.cardsToEvaluate = 4;
+    rank = pokerrank.evaluateHand(game.cards.map((card) => card.rank + card.suit), evaluateOptions);
+    if ((rank === 'straight') || (rank === 'flush') || (rank === 'straightflush')) {
+      // Keep the 4 that match
+    }
+  }
+
+// 4 Card Straight Flush - inside draw
+// 3 Card Royal
+// Ten, Jack, Queen and King any suit
+// 3 Card Straight Flush - sequential order
+// 3 Card Straight Flush - non sequential order
+// 2 Card Royal
+// 4 Card Straight - non sequential - 3 high cards
+// High cards - Ten thru Ace
+  return 'Do whatever feels right. ';
+}
+
+function suggestDeucesWild(locale, attributes) {
+  return 'Do whatever feels right. ';
 }

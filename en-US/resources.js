@@ -71,6 +71,7 @@ const resources = {
   'SAY_DISCARD': 'discard to unmark a held card',
   'SAY_HIGHSCORE': 'read high scores to hear the leader board',
   'YOU_CAN_SAY': 'You can say {0}.',
+  'SUGGEST_HOLD_ALL': 'You should hold all your cards. ',
   // General
   'SINGLE_COIN': 'coin',
   'PLURAL_COIN': 'coins',
