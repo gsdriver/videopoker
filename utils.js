@@ -62,7 +62,7 @@ module.exports = {
     if (error) {
       const res = require('./' + locale + '/resources');
       console.log('Speech error: ' + error);
-      emit(':ask', error, res.ERROR_REPROMPT);
+      emit(':ask', error, res.GENERIC_REPROMPT);
     } else if (response) {
       emit(':tell', response);
     } else {
@@ -229,6 +229,46 @@ module.exports = {
     speech += speechUtils.and(choiceText, {locale: locale});
     speech += '. ';
     callback(speech, choices);
+  },
+  readAvailableActions(locale, attributes, state) {
+    const res = require('./' + locale + '/resources');
+    const game = attributes[attributes.currentGame];
+    let speech;
+    const actions = [];
+
+    switch (state) {
+      case 'SELECTGAME':
+        actions.push(res.strings.SAY_YES);
+        actions.push(res.strings.SAY_NO);
+        actions.push(res.strings.SAY_HIGHSCORE);
+        break;
+      case 'NEWGAME':
+        actions.push(res.strings.SAY_BET);
+        actions.push(res.strings.SAY_DEAL);
+        actions.push(res.strings.SAY_HIGHSCORE);
+        break;
+      case 'FIRSTDEAL':
+        let held = 0;
+        game.cards.map((card) => held += (card.hold) ? 1 : 0);
+        if (held < 5) {
+          actions.push(res.strings.SAY_HOLD);
+        }
+        if (held) {
+          actions.push(res.strings.SAY_DISCARD);
+        }
+        actions.push(res.strings.SAY_DEAL);
+        actions.push(res.strings.SAY_HIGHSCORE);
+        break;
+      default:
+        speech = '';
+        break;
+    }
+
+    if (actions.length) {
+      speech = res.strings.YOU_CAN_SAY
+        .replace('{0}', speechUtils.or(actions, {locale: locale, pause: '200ms'}));
+    }
+    return speech;
   },
   readCoins: function(locale, coins) {
     const res = require('./' + locale + '/resources');

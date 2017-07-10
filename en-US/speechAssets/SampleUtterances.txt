@@ -130,6 +130,19 @@ DealIntent pull the handle
 DealIntent push the button
 DealIntent play
 
+SuggestIntent what should I do
+SuggestIntent give suggestion
+SuggestIntent give me suggestion
+SuggestIntent give me a suggestion
+SuggestIntent for suggestion
+SuggestIntent for a suggestion
+SuggestIntent suggest action
+SuggestIntent suggest play
+SuggestIntent suggest move
+SuggestIntent suggest a move
+SuggestIntent suggest an action
+SuggestIntent suggest a play
+
 HighScoreIntent read high scores
 HighScoreIntent tell me high scores
 HighScoreIntent what are the high scores

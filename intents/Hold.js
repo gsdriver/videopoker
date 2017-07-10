@@ -26,7 +26,7 @@ module.exports = {
 
       error = (cardText) ? res.strings.HOLD_INVALID_VALUE.replace('{0}', cardText)
                          : res.strings.HOLD_INVALID_NOVALUE;
-      reprompt = res.strings.HOLD_REPROMPT;
+      reprompt = res.strings.GENERIC_REPROMPT;
     } else {
       // Mark each card as held
       holdCards.map((card) => {
@@ -37,7 +37,7 @@ module.exports = {
     if (!error) {
       reprompt = (this.attributes.firstHold)
               ? res.strings.HOLD_FIRST_REPROMPT
-              : res.strings.HOLD_REPROMPT;
+              : res.strings.GENERIC_REPROMPT;
       game.lastHeld = holdCards;
       this.attributes.firstHold = false;
       speech = res.strings.HOLD_CARDS.replace('{0}',

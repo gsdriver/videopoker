@@ -15,9 +15,11 @@ function BuildEvent(argv)
   var select = {'name': 'SelectIntent', 'slots': {}};
   var rules = {'name': 'RulesIntent', 'slots': {'Rules': {'name': 'Rules', 'value': ''}}};
   var reset = {'name': 'ResetIntent', 'slots': {}};
+  var suggest = {'name': 'SuggestIntent', 'slots': {}};
   var yes = {'name': 'AMAZON.YesIntent', 'slots': {}};
   var no = {'name': 'AMAZON.NoIntent', 'slots': {}};
   var help = {'name': 'AMAZON.HelpIntent', 'slots': {}};
+  var repeat = {'name': 'AMAZON.RepeatIntent', 'slots': {}};
   var stop = {'name': 'AMAZON.StopIntent', 'slots': {}};
   var cancel = {'name': 'AMAZON.CancelIntent', 'slots': {}};
   var highScore = {'name': 'HighScoreIntent', 'slots': {}};
@@ -146,6 +148,10 @@ function BuildEvent(argv)
     lambda.request.intent = highScore;
   } else if (argv[2] == 'help') {
     lambda.request.intent = help;
+  } else if (argv[2] == 'suggest') {
+    lambda.request.intent = suggest;
+  } else if (argv[2] == 'repeat') {
+    lambda.request.intent = repeat;
   } else if (argv[2] == 'stop') {
     lambda.request.intent = stop;
   } else if (argv[2] == 'cancel') {

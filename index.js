@@ -12,6 +12,8 @@ const Hold = require('./intents/Hold');
 const Discard = require('./intents/Discard');
 const Rules = require('./intents/Rules');
 const HighScore = require('./intents/HighScore');
+const Repeat = require('./intents/Repeat');
+const Suggest = require('./intents/Suggest');
 const Help = require('./intents/Help');
 const Exit = require('./intents/Exit');
 const Launch = require('./intents/Launch');
@@ -27,6 +29,7 @@ const selectGameHandlers = Alexa.CreateStateHandler('SELECTGAME', {
     this.emitWithState('NewSession');
   },
   'AMAZON.HelpIntent': Help.handleIntent,
+  'AMAZON.RepeatIntent': Repeat.handleIntent,
   'AMAZON.YesIntent': Select.handleYesIntent,
   'AMAZON.NoIntent': Select.handleNoIntent,
   'AMAZON.StopIntent': Exit.handleIntent,
@@ -47,12 +50,14 @@ const newGameHandlers = Alexa.CreateStateHandler('NEWGAME', {
   },
   'BetIntent': Bet.handleIntent,
   'BetMaxIntent': Bet.handleMaxIntent,
+  'DealIntent': Bet.handleIntent,
   'RulesIntent': Rules.handleIntent,
   'SelectIntent': Select.handleIntent,
   'HighScoreIntent': HighScore.handleIntent,
   'AMAZON.YesIntent': Bet.handleIntent,
   'AMAZON.NoIntent': Exit.handleIntent,
   'AMAZON.HelpIntent': Help.handleIntent,
+  'AMAZON.RepeatIntent': Repeat.handleIntent,
   'AMAZON.StopIntent': Exit.handleIntent,
   'AMAZON.CancelIntent': Exit.handleIntent,
   'SessionEndedRequest': function() {
@@ -74,9 +79,11 @@ const firstDealHandlers = Alexa.CreateStateHandler('FIRSTDEAL', {
   'DealIntent': Deal.handleIntent,
   'RulesIntent': Rules.handleIntent,
   'HighScoreIntent': HighScore.handleIntent,
+  'SuggestIntent': Suggest.handleIntent,
   'AMAZON.YesIntent': Deal.handleIntent,
   'AMAZON.NoIntent': Exit.handleIntent,
   'AMAZON.HelpIntent': Help.handleIntent,
+  'AMAZON.RepeatIntent': Repeat.handleIntent,
   'AMAZON.StopIntent': Exit.handleIntent,
   'AMAZON.CancelIntent': Exit.handleIntent,
   'SessionEndedRequest': function() {

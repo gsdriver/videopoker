@@ -64,7 +64,13 @@
       "intent": "SelectIntent"
     },
     {
+      "intent": "SuggestIntent"
+    },
+    {
       "intent": "HighScoreIntent"
+    },
+    {
+      "intent": "AMAZON.RepeatIntent"
     },
     {
       "intent": "AMAZON.YesIntent"

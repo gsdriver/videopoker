@@ -32,14 +32,14 @@ module.exports = {
 
     if (isNaN(amount) || (amount == 0)) {
       speechError = res.strings.BET_INVALID_AMOUNT.replace('{0}', amount);
-      reprompt = res.strings.BET_INVALID_REPROMPT;
+      reprompt = res.strings.GENERIC_REPROMPT;
     } else if (amount > rules.maxCoins) {
       speechError = res.strings.BET_EXCEEDS_MAX.replace('{0}', utils.readCoins(this.event.request.locale, rules.maxCoins));
-      reprompt = res.strings.BET_INVALID_REPROMPT;
+      reprompt = res.strings.GENERIC_REPROMPT;
     } else if (amount > game.bankroll) {
       // Oops, you can't bet this much
       speechError = res.strings.BET_EXCEEDS_BANKROLL.replace('{0}', utils.readCoins(this.event.request.locale, game.bankroll));
-      reprompt = res.strings.BET_INVALID_REPROMPT;
+      reprompt = res.strings.GENERIC_REPROMPT;
     }
 
     if (!speechError) {

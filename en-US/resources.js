@@ -16,13 +16,10 @@ const resources = {
   'SELECT_REPROMPT': 'You can bet up to {0} coins or say read high scores to hear the leader board.',
   // From Exit.js
   'EXIT_GAME': '{0} Goodbye.',
-  // From HighScore.js
-  'HIGHSCORE_REPROMPT': 'What else can I help you with?',
   // From Hold.js
   'HOLD_CARDS': 'You held {0}. ',
   'HOLD_INVALID_VALUE': 'Sorry, I can\'t hold {0}. ',
   'HOLD_INVALID_NOVALUE': 'Sorry, I didn\'t hear a card to hold. ',
-  'HOLD_REPROMPT': 'What else can I help you with?',
   'HOLD_FIRST_REPROMPT': 'Say hold to hold additional cards <break time=\"200ms\"/> discard to unmark this card as held <break time=\"200ms\"/> or deal to deal new cards.',
   // From Discard.js
   'DISCARD_CARDS': 'You discarded {0}. ',
@@ -31,7 +28,6 @@ const resources = {
   'DISCARD_REPROMPT': 'Say hold to hold additional cards <break time=\"200ms\"/> or deal to deal new cards.',
   // From Bet.js
   'BET_INVALID_AMOUNT': 'I\'m sorry, {0} is not a valid amount to bet.',
-  'BET_INVALID_REPROMPT': 'What else can I help you with?',
   'BET_EXCEEDS_MAX': 'Sorry, this bet exceeds the maximum bet of {0}.',
   'BET_EXCEEDS_BANKROLL': 'Sorry, this bet exceeds your bankroll of {0}.',
   'BET_PLACED': 'You bet {0}. ',
@@ -41,11 +37,14 @@ const resources = {
   'HELP_REPROMPT': 'Check the Alexa companion app for the payout table.',
   'HELP_CARD_TITLE': 'Payout Table',
   'HELP_SELECT_TEXT': 'Say yes to select the offered machine, or no for a different machine. ',
+  // From Repeat.js
+  'REPEAT_NEW_GAME': 'You are playing {0} with {1} coins. ',
+  'HELD_CARDS': 'You selected to hold {0}. ',
   // From Rules.js
   'RULES_REPROMPT': 'Say bet to insert coins or deal to deal cards.',
   'RULES_CARD_TITLE': 'Payout Table',
   // From Deal.js
-  'DEAL_NOBETS': 'Sorry, you have to place a bet before you can pull the handle.',
+  'DEAL_NOBETS': 'Sorry, you have to place a bet before you can deal cards.',
   'DEAL_INVALID_REPROMPT': 'Place a bet',
   'DEAL_WINNER': 'You matched {0} and won {1}. ',
   'DEAL_LOSER': 'Sorry, you lost. ',
@@ -54,7 +53,6 @@ const resources = {
   'DEAL_BUSTED_REPROMPT': 'Place a bet.',
   'DEALT_CARDS': 'You got {0}. ',
   // From utils.js
-  'ERROR_REPROMPT': 'What else can I help with?',
   'ANY_SLOT': 'any',
   'PAYOUT_PAYS': 'pays {0} coins.',
   'PAYOUT_PROGRESSIVE': 'pays the progessive jackpot.',
@@ -65,11 +63,20 @@ const resources = {
   'AVAILABLE_GAMES': 'We have {0} different games <break time=\"200ms\"/> ',
   'WILD_SPECIAL': 'Cherries are wild. ',
   'PROGRESSIVE_SPECIAL': 'Diamond diamond diamond wins the progressive jackpot when the maximum number of coins are played. ',
+  'SAY_YES': 'yes',
+  'SAY_NO': 'no',
+  'SAY_BET': 'bet',
+  'SAY_DEAL': 'deal cards',
+  'SAY_HOLD': 'hold to hold a card',
+  'SAY_DISCARD': 'discard to unmark a held card',
+  'SAY_HIGHSCORE': 'read high scores to hear the leader board',
+  'YOU_CAN_SAY': 'You can say {0}.',
   // General
   'SINGLE_COIN': 'coin',
   'PLURAL_COIN': 'coins',
   'READ_BANKROLL': 'You have {0}. ',
   'PROGRESSIVE_JACKPOT': 'The progressive jackpot is currently {0} coins. Bet {1} coins to win the progressive jackpot. ',
+  'GENERIC_REPROMPT': 'What else can I help you with?',
 };
 
 module.exports = {
