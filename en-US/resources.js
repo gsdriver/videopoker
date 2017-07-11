@@ -72,6 +72,9 @@ const resources = {
   'SAY_HIGHSCORE': 'read high scores to hear the leader board',
   'YOU_CAN_SAY': 'You can say {0}.',
   'SUGGEST_HOLD_ALL': 'You should hold all your cards. ',
+  'SUGGEST_HOLD_MATCHING': 'You should hold the {0}. ',
+  'SUGGEST_HOLD_CARDS': 'You should hold {0}. ',
+  'SUGGEST_DISCARD_ALL': 'You shouldn\'t hold any of your cards. ',
   // General
   'SINGLE_COIN': 'coin',
   'PLURAL_COIN': 'coins',
@@ -87,6 +90,12 @@ module.exports = {
       'deuces': 'deuces wild'};
 
     return (gameMap[game]) ? gameMap[game] : game;
+  },
+  pluralCardRanks: function(card) {
+    const names = {'A': 'aces', '2': 'twos', '3': 'threes', '4': 'fours', '5': 'fives',
+            '6': 'sixes', '7': 'sevens', '8': 'eights', '9': 'nines', '10': 'tens',
+            'J': 'jacks', 'Q': 'queens', 'K': 'kings'};
+    return names[card.rank];
   },
   sayCard: function(card, withArticle) {
     const names = {'A': 'ace', '2': 'two', '3': 'three', '4': 'four', '5': 'five',

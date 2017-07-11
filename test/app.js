@@ -3,7 +3,11 @@ var mainApp = require('../index');
 const attributeFile = 'attributes.txt';
 
 const AWS = require('aws-sdk');
-AWS.config.update({region: 'us-east-1'});
+if (process.env.RUN_DB_LOCAL) {
+  AWS.config.update({region: 'us-west-2', endpoint: 'http://localhost:8000'});
+} else {
+  AWS.config.update({region: 'us-east-1'});
+}
 const dynamodb = new AWS.DynamoDB({apiVersion: '2012-08-10'});
 
 function BuildEvent(argv)
@@ -200,6 +204,29 @@ myResponse.succeed = function(result) {
 myResponse.fail = function(e) {
   console.log(e);
 }
+
+/* function createTable(callback)
+{
+    var dynamodb = new AWS.DynamoDB();
+    var params = {
+            TableName : "VideoPoker",
+            KeySchema: [
+            { AttributeName: "userId", KeyType: "HASH"},
+        ],
+        AttributeDefinitions: [
+            { AttributeName: "userId", AttributeType: "S" },
+        ],
+        ProvisionedThroughput: {
+            ReadCapacityUnits: 5,
+            WriteCapacityUnits: 5
+       }
+    };
+
+    dynamodb.createTable(params, callback);
+}
+
+createTable();
+return; */
 
 // Build the event object and call the app
 if ((process.argv.length == 3) && (process.argv[2] == 'clear')) {

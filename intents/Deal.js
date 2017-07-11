@@ -36,10 +36,12 @@ module.exports = {
       }
     }
 
-    // Read the cards that were dealt
-    speech += res.strings.DEALT_CARDS.replace('{0}',
-            speechUtils.and(newCards.map((card) => res.sayCard(card)),
-              {pause: '300ms', locale: this.event.request.locale}));
+    // Read the cards that were dealt (if any)
+    if (newCards.length > 0) {
+      speech += res.strings.DEALT_CARDS.replace('{0}',
+              speechUtils.and(newCards.map((card) => res.sayCard(card)),
+                {pause: '300ms', locale: this.event.request.locale}));
+    }
 
     // OK, let's see if there's a payout associated with this
     const rank = utils.determineWinner(this.attributes);
