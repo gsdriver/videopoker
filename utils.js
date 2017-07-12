@@ -519,10 +519,10 @@ function suggestJacksOrBetter(locale, attributes) {
   // 4 Card Royal
   evaluateOptions.cardsToEvaluate = 4;
   const fourHandRank = pokerrank.evaluateHand(evalCards, evaluateOptions);
-  if (fourHandRank === 'flush') {
+  if (fourHandRank === 'royalflush') {
     holdCards = getPartialRoyal(game.cards, 4);
     if (holdCards) {
-      return res.strings.SUGGEST_HOLD_MATCHING.replace('{0}', speechUtils.and(
+      return res.strings.SUGGEST_HOLD_CARDS.replace('{0}', speechUtils.and(
                 holdCards.map((card) => res.sayCard(card)), {locale: locale}));
     }
   }
@@ -540,7 +540,7 @@ function suggestJacksOrBetter(locale, attributes) {
 
   // 4 Card Straight Flush - open both ends
   if (fourHandRank === 'straightflush') {
-    return res.strings.SUGGEST_HOLD_MATCHING.replace('{0}', speechUtils.and(
+    return res.strings.SUGGEST_HOLD_CARDS.replace('{0}', speechUtils.and(
               findCardsOfMatchingSuit(game.cards, 4)
               .map((card) => res.sayCard(card)), {locale: locale}));
   }
@@ -679,9 +679,9 @@ function suggestJacksOrBetter(locale, attributes) {
     holdCards = findCardsOfMatchingSuit(game.cards, 3);
     evaluateOptions.wildCards = [];
 
-    for (i = 0; i < cards.length; i++) {
-      if (cards[i].suit !== holdCards[0].suit) {
-        evaluateOptions.wildCards.push(cards[i].rank + cards[i].suit);
+    for (i = 0; i < game.cards.length; i++) {
+      if (game.cards[i].suit !== holdCards[0].suit) {
+        evaluateOptions.wildCards.push(game.cards[i].rank + game.cards[i].suit);
       }
     }
     evaluateOptions.cardsToEvaluate = 5;
