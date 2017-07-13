@@ -490,13 +490,12 @@ function suggestJacksOrBetter(locale, attributes) {
   const res = require('./' + locale + '/resources');
   let i;
   let j;
-  let matches;
-  let holdCards;
   const evalCards = game.cards.map((card) => card.rank + card.suit);
   const royalRank = ['10', 'J', 'Q', 'K', 'A'];
 
   // See if they have a made hand
   evaluateOptions.aceCanBeLow = true;
+  evaluateOptions.getDetails = true;
   if (rules.wildCards) {
     evaluateOptions.wildCards = rules.wildCards;
   }
@@ -507,158 +506,120 @@ function suggestJacksOrBetter(locale, attributes) {
 
   // Royal Flush
   // Straight Flush
-  if ((fullHandRank === 'royalflush') || (fullHandRank === 'straightflush')) {
-    return res.strings.SUGGEST_HOLD_ALL;
-  }
-
   // 4 of a Kind
-  if (fullHandRank === '4ofakind') {
-    return getMatchedRankText(game.cards, locale);
+  if ((fullHandRank.match === 'royalflush') || (fullHandRank.match === 'straightflush')
+      || (fullHandRank.match === '4ofakind')) {
+    return sayCardsToHold(locale, fullHandRank.cards);
   }
 
   // 4 Card Royal
   evaluateOptions.cardsToEvaluate = 4;
   const fourHandRank = pokerrank.evaluateHand(evalCards, evaluateOptions);
-  if (fourHandRank === 'royalflush') {
-    holdCards = getPartialRoyal(game.cards, 4);
-    if (holdCards) {
-      return res.strings.SUGGEST_HOLD_CARDS.replace('{0}', speechUtils.and(
-                holdCards.map((card) => res.sayCard(card)), {locale: locale}));
-    }
+  if (fourHandRank.match === 'royalflush') {
+    return sayCardsToHold(locale, fourHandRank.cards);
   }
 
   // Full House
   // Flush
   // 3 of a Kind
   // Straight
-  if ((fullHandRank === 'fullhouse') || (fullHandRank === 'flush' || (fullHandRank === 'straight'))) {
-    return res.strings.SUGGEST_HOLD_ALL;
-  }
-  if (fullHandRank === '3ofakind') {
-    return getMatchedRankText(game.cards, locale);
+  if ((fullHandRank.match === 'fullhouse') || (fullHandRank.match === 'flush')
+    || (fullHandRank.match === 'straight') || (fullHandRank.match === '3ofakind')) {
+    return sayCardsToHold(locale, fullHandRank.cards);
   }
 
   // 4 Card Straight Flush - open both ends
-  if (fourHandRank === 'straightflush') {
-    return res.strings.SUGGEST_HOLD_CARDS.replace('{0}', speechUtils.and(
-              findCardsOfMatchingSuit(game.cards, 4)
-              .map((card) => res.sayCard(card)), {locale: locale}));
+  // Two Pairs
+  if (fourHandRank.match === 'straightflush') {
+    return sayCardsToHold(locale, fourHandRank.cards);
   }
 
   // Two Pairs
-  if (fullHandRank === '2pair') {
-    // Hold the two pair - first find what they are
-    matches = [];
-    for (i = 0; i < game.cards.length; i++) {
-      for (j = 0; j < game.cards.length; j++) {
-        if ((i !== j) && (game.cards[i].rank === game.cards[j].rank)) {
-          if (!matches.length ||
-            ((matches.length === 1) && (matches[0].rank !== game.cards[i].rank))) {
-            matches.push(game.cards[i]);
-          }
-        }
-      }
-    }
-
-    return res.strings.SUGGEST_HOLD_MATCHING.replace('{0}', speechUtils.and(
-              matches.map((card) => res.pluralCardRanks(card)), {locale: locale}));
+  if (fullHandRank.match === '2pair') {
+    return sayCardsToHold(locale, fullHandRank.cards);
   }
 
   // 4 Card Straight Flush - inside draw
-  if (fourHandRank === 'flush') {
-    holdCards = findCardsOfMatchingSuit(game.cards, 4);
+  if (fourHandRank.match === 'flush') {
     for (i = 0; i < game.cards.length; i++) {
-      if (game.cards[i].suit !== holdCards[0].suit) {
+      if (game.cards[i].suit !== fourHandRank.cards[0].suit) {
         evaluateOptions.wildCards = [game.cards[i].rank + game.cards[i].suit];
       }
     }
     evaluateOptions.cardsToEvaluate = 5;
-    if (pokerrank.evaluateHand(evalCards, evaluateOptions) === 'straightflush') {
-      return res.strings.SUGGEST_HOLD_CARDS.replace('{0}', speechUtils.and(
-                holdCards.map((card) => res.sayCard(card)), {locale: locale}));
+    if (pokerrank.evaluateHand(evalCards, evaluateOptions).match === 'straightflush') {
+      return sayCardsToHold(locale, fourHandRank.cards);
     }
   }
 
   // Pair of Jacks, Queens, Kings or Aces
-  if (fullHandRank === 'minpair') {
-    return getMatchedRankText(game.cards, locale);
+  if (fullHandRank.match === 'minpair') {
+    return sayCardsToHold(locale, fullHandRank.cards);
   }
 
   // 3 Card Royal
-  holdCards = getPartialRoyal(game.cards, 3);
-  if (holdCards) {
-    return res.strings.SUGGEST_HOLD_CARDS.replace('{0}', speechUtils.and(
-              holdCards.map((card) => res.sayCard(card)), {locale: locale}));
+  evaluateOptions.cardsToEvaluate = 3;
+  evaluateOptions.wildCards = [];
+  const threeHandRank = pokerrank.evaluateHand(evalCards, evaluateOptions);
+  if ((threeHandRank.match === 'flush') || (threeHandRank.match === 'royalflush')) {
+    // Make sure these cards are royal
+    let royalCount = 0;
+    const royalCards = ['1', 'J', 'Q', 'K', 'A'];
+
+    threeHandRank.cards.map((card) => {
+      if (royalCards.indexOf(card.substring(0, 1)) > -1) {
+        royalCount++;
+      }
+    });
+    if (royalCount === 3) {
+      return sayCardsToHold(locale, threeHandRank.cards);
+    }
   }
 
   // 4 Card Flush
-  if (fourHandRank === 'flush') {
-    return res.strings.SUGGEST_HOLD_CARDS.replace('{0}', speechUtils.and(
-              findCardsOfMatchingSuit(game.cards, 4)
-              .map((card) => res.sayCard(card)), {locale: locale}));
+  if (fourHandRank.match === 'flush') {
+    return sayCardsToHold(locale, fourHandRank.cards);
   }
 
   // Ten, Jack, Queen and King any suit
-  if (fourHandRank === 'straight') {
-    holdCards = [];
-    const toKeep = ['10', 'J', 'Q', 'K'];
+  if (fourHandRank.match === 'straight') {
+    const keepers = ['10', 'J', 'Q', 'K'];
+    let toKeep = 0;
 
     game.cards.map((card) => {
-      if (toKeep.indexOf(card.rank) > -1) {
-        holdCards.push(card);
+      if (keepers.indexOf(card.rank) > -1) {
+        toKeep++;
       }
     });
 
-    if (holdCards.length === 4) {
-      return res.strings.SUGGEST_HOLD_CARDS.replace('{0}', speechUtils.and(
-              holdCards.map((card) => res.sayCard(card)), {locale: locale}));
+    if (toKeep === 4) {
+      return sayCardsToHold(locale, fourHandRank.cards);
     }
   }
 
   // Low Pair - Two through Ten
-  if (fullHandRank === 'pair') {
-    return getMatchedRankText(game.cards, locale);
+  if (fullHandRank.match === 'pair') {
+    return sayCardsToHold(locale, fullHandRank.cards);
   }
 
   // 4 Card Straight - sequential order
-  if (fourHandRank === 'straight') {
-    // Mark each card wild until we get a 5-card straight
-    holdCards = [];
-    evaluateOptions.cardsToEvaluate = 5;
-    for (i = 0; i < game.cards.length; i++) {
-      evaluateOptions.wildCards = [game.cards[i].rank + game.cards[i].suit];
-      if (pokerrank.evaluateHand(evalCards, evaluateOptions) === 'straight') {
-        // This is the card to discard - so hold the others
-        for (j = 0; j < game.cards.length; j++) {
-          if (j !== i) {
-            holdCards.push(game.cards[j]);
-          }
-        }
-        break;
-      }
-    }
-
-    return res.strings.SUGGEST_HOLD_CARDS.replace('{0}', speechUtils.and(
-            holdCards.map((card) => res.sayCard(card)), {locale: locale}));
+  if (fourHandRank.match === 'straight') {
+    return sayCardsToHold(locale, fourHandRank.cards);
   }
 
   // 3 Card Straight Flush - sequential order
-  evaluateOptions.cardsToEvaluate = 3;
-  evaluateOptions.wildCards = [];
-  const threeHandRank = pokerrank.evaluateHand(evalCards, evaluateOptions);
-  if (threeHandRank === 'straightflush') {
-    return res.strings.SUGGEST_HOLD_CARDS.replace('{0}', speechUtils.and(
-              findCardsOfMatchingSuit(game.cards, 3)
-              .map((card) => res.sayCard(card)), {locale: locale}));
+  if (threeHandRank.match === 'straightflush') {
+    return sayCardsToHold(locale, threeHandRank.cards);
   }
 
   // 4 Card Straight - non sequential order
   // Mark each card wild and see if we hit a straight
-  holdCards = [];
+  // Note if we got this far, we don't have a pair
+  const holdCards = [];
   evaluateOptions.cardsToEvaluate = 5;
   for (i = 0; i < game.cards.length; i++) {
     evaluateOptions.wildCards = [game.cards[i].rank + game.cards[i].suit];
-    if (pokerrank.evaluateHand(evalCards, evaluateOptions) === 'straight') {
+    if (pokerrank.evaluateHand(evalCards, evaluateOptions).match === 'straight') {
       // This is the card to discard - so hold the others
       for (j = 0; j < game.cards.length; j++) {
         if (j !== i) {
@@ -669,33 +630,33 @@ function suggestJacksOrBetter(locale, attributes) {
     }
   }
   if (holdCards.length) {
-    return res.strings.SUGGEST_HOLD_CARDS.replace('{0}', speechUtils.and(
-            holdCards.map((card) => res.sayCard(card)), {locale: locale}));
+    return sayCardsToHold(locale, holdCards.map((card) => card.rank + card.suit));
   }
 
   // 3 Card Straight Flush - non sequential order
-  if (threeHandRank === 'flush') {
+  if (threeHandRank.match === 'flush') {
     // Is it also a non-sequential straight?  Mark the non-flush cards wild and see what happens
-    holdCards = findCardsOfMatchingSuit(game.cards, 3);
-    evaluateOptions.wildCards = [];
+    const flushSuit = threeHandRank.cards[0].substring(threeHandRank.cards[0].length - 1,
+                  threeHandRank.cards[0].length);
 
+    evaluateOptions.wildCards = [];
     for (i = 0; i < game.cards.length; i++) {
-      if (game.cards[i].suit !== holdCards[0].suit) {
+      if (game.cards[i].suit !== flushSuit) {
         evaluateOptions.wildCards.push(game.cards[i].rank + game.cards[i].suit);
       }
     }
     evaluateOptions.cardsToEvaluate = 5;
-    if (pokerrank.evaluateHand(evalCards, evaluateOptions) === 'straightflush') {
-      return res.strings.SUGGEST_HOLD_CARDS.replace('{0}', speechUtils.and(
-                holdCards.map((card) => res.sayCard(card)), {locale: locale}));
+    if (pokerrank.evaluateHand(evalCards, evaluateOptions).match === 'straightflush') {
+      return sayCardsToHold(locale, threeHandRank.cards);
     }
   }
 
   // 2 Card Royal
-  holdCards = getPartialRoyal(game.cards, 2);
-  if (holdCards) {
-    return res.strings.SUGGEST_HOLD_CARDS.replace('{0}', speechUtils.and(
-              holdCards.map((card) => res.sayCard(card)), {locale: locale}));
+  evaluateOptions.cardsToEvaluate = 2;
+  evaluateOptions.wildCards = [];
+  const twoHandRank = pokerrank.evaluateHand(evalCards, evaluateOptions);
+  if (twoHandRank.match === 'royalflush') {
+    return sayCardsToHold(locale, twohandRank.cards);
   }
 
   // 4 Card Straight - non sequential - 3 high cards (isn't this caught above?)
@@ -710,66 +671,76 @@ function suggestJacksOrBetter(locale, attributes) {
     }
   });
   if (highCards.length > 0) {
-    return res.strings.SUGGEST_HOLD_CARDS.replace('{0}', speechUtils.and(
-            highCards.map((card) => res.sayCard(card)), {locale: locale}));
+    return sayCardsToHold(locale, highCards.map((card) => card.rank + card.suit));
   }
 
   // Nothing
   return res.strings.SUGGEST_DISCARD_ALL;
 }
 
+function sayCardsToHold(locale, evalCards) {
+  const res = require('./' + locale + '/resources');
+  let result;
+  const cards = [];
+
+  evalCards.map((card) => {
+    if (card.substring(0, 2) === '10') {
+      cards.push({rank: '10', suit: card.substring(2, 3)});
+    } else {
+      cards.push({rank: card.substring(0, 1), suit: card.substring(1, 2)});
+    }
+  });
+
+  if (cards.length === 5) {
+    result = res.strings.SUGGEST_HOLD_ALL;
+  } else if (cards.length > 1) {
+    let match = cards[0].rank;
+
+    cards.map((card) => {
+      if (card.rank !== match) {
+        match = undefined;
+      }
+    });
+
+    if (match) {
+      result = res.strings.SUGGEST_HOLD_MATCHING.replace('{0}', res.pluralCardRanks(cards[0]));
+    }
+  }
+
+  // Two pairs?
+  if (!result && (cards.length === 4)) {
+    // Is this two and two?
+    const pairOne = [];
+    const pairTwo = [];
+
+    cards.map((card) => {
+      if (pairOne.length > 0) {
+        if (card.rank === pairOne[0].rank) {
+          pairOne.push(card);
+        } else if (!pairTwo.length
+            || (card.rank === pairTwo[0].rank)) {
+          pairTwo.push(card);
+        }
+      } else {
+        pairOne.push(card);
+      }
+    });
+
+    if ((pairOne.length === 2) && (pairTwo.length === 2)) {
+      result = res.strings.SUGGEST_HOLD_MATCHING.replace('{0}',
+            speechUtils.and([res.pluralCardRanks(pairOne[0]),
+                res.pluralCardRanks(pairTwo[0])], {locale: locale}));
+    }
+  }
+
+  if (!result) {
+    result = res.strings.SUGGEST_HOLD_CARDS.replace('{0}', speechUtils.and(
+              cards.map((card) => res.sayCard(card)), {locale: locale}));
+  }
+
+  return result;
+}
+
 function suggestDeucesWild(locale, attributes) {
   return 'Do whatever feels right. ';
-}
-
-function findCardsOfMatchingSuit(cards, toMatch) {
-  const holdCards = [];
-  const suits = ['C', 'D', 'H', 'S'];
-  const matches = [0, 0, 0, 0];
-
-  cards.map((card) => matches[suits.indexOf(card.suit)]++);
-  cards.map((card) => {
-    if (matches[suits.indexOf(card.suit)] === toMatch) {
-      holdCards.push(card);
-    }
-  });
-
-  return holdCards;
-}
-
-function getMatchedRankText(cards, locale) {
-  // Hold the matches - first find the matching card
-  let match;
-  let i;
-  let j;
-  const res = require('./' + locale + '/resources');
-
-  for (i = 0; i < cards.length; i++) {
-    for (j = 0; j < cards.length; j++) {
-      if ((i !== j) && (cards[i].rank === cards[j].rank)) {
-        // This is it!
-        match = cards[i];
-        break;
-      }
-    }
-  }
-  return res.strings.SUGGEST_HOLD_MATCHING.replace('{0}', res.pluralCardRanks(match));
-}
-
-function getPartialRoyal(cards, cardsToEvaluate) {
-  // Are the flush cards all royal?
-  const royalRank = ['10', 'J', 'Q', 'K', 'A'];
-  const royalCards = [];
-  cards.map((card) => {
-    if (royalRank.indexOf(card.rank) > -1) {
-      royalCards.push(card);
-    }
-  });
-
-  const holdCards = findCardsOfMatchingSuit(royalCards, cardsToEvaluate);
-  if (holdCards.length) {
-    return holdCards;
-  }
-
-  return undefined;
 }
