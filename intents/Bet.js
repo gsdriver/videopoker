@@ -18,12 +18,15 @@ module.exports = {
     const res = require('../' + this.event.request.locale + '/resources');
     const game = this.attributes[this.attributes.currentGame];
     const rules = utils.getGame(this.attributes.currentGame);
-    const amountSlot = this.event.request.intent.slots.Amount;
+    let amountValue;
 
     // Default to one coin
-    if (amountSlot && amountSlot.value) {
+    if (this.even.request.intent.slots
+        && this.event.request.intent.slots.Amount
+        && this.event.request.intent.slots.Amount.value) {
       // If the bet amount isn't an integer, we'll use the default value (1 unit)
-      amount = parseInt(amountSlot.value);
+      amountValue = this.event.request.intent.slots.Amount.value;
+      amount = parseInt(amountValue);
     } else if (game.lastbet) {
       amount = game.lastbet;
     } else {
@@ -31,7 +34,7 @@ module.exports = {
     }
 
     if (isNaN(amount) || (amount == 0)) {
-      speechError = res.strings.BET_INVALID_AMOUNT.replace('{0}', amount);
+      speechError = res.strings.BET_INVALID_AMOUNT.replace('{0}', amountValue);
       reprompt = res.strings.GENERIC_REPROMPT;
     } else if (amount > rules.maxCoins) {
       speechError = res.strings.BET_EXCEEDS_MAX.replace('{0}', utils.readCoins(this.event.request.locale, rules.maxCoins));
