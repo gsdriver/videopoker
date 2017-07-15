@@ -21,7 +21,7 @@ module.exports = {
     let amountValue;
 
     // Default to one coin
-    if (this.even.request.intent.slots
+    if (this.event.request.intent.slots
         && this.event.request.intent.slots.Amount
         && this.event.request.intent.slots.Amount.value) {
       // If the bet amount isn't an integer, we'll use the default value (1 unit)
