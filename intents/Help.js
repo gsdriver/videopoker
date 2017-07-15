@@ -9,25 +9,30 @@ const utils = require('../utils');
 module.exports = {
   handleIntent: function() {
     const res = require('../' + this.event.request.locale + '/resources');
+    let speech = '';
     const game = this.attributes[this.attributes.currentGame];
-    const rules = utils.getGame(this.attributes.currentGame);
-    let speech;
+    const reprompt = utils.readAvailableActions(this.event.request.locale,
+              this.attributes, this.handler.state);
 
-    if (this.handler.state == 'SELECTGAME') {
-      // If selecting a game, help string is different
-      const reprompt = res.strings.LAUNCH_REPROMPT.replace('{0}', res.sayGame(this.attributes.choices[0]));
-
-      speech = res.strings.HELP_SELECT_TEXT;
-      speech += reprompt;
-      utils.emitResponse(this.emit, this.event.request.locale, null, null, speech, reprompt);
-    } else {
-      const reprompt = res.strings.HELP_REPROMPT;
-
-      speech = res.strings.READ_BANKROLL.replace('{0}', utils.readCoins(this.event.request.locale, game.bankroll));
-      speech += res.strings.HELP_COMMANDS;
-      speech += reprompt;
-
-      this.emit(':askWithCard', speech, reprompt, res.strings.HELP_CARD_TITLE, utils.readPayoutTable(this.event.request.locale, rules));
+    switch (this.handler.state) {
+      case 'SELECTGAME':
+        speech = res.strings.HELP_SELECTGAME;
+        break;
+      case 'NEWGAME':
+        speech = res.strings.HELP_STATUS
+            .replace('{0}', res.sayGame(this.attributes.currentGame))
+            .replace('{1}', utils.readCoins(this.event.request.locale, game.bankroll));
+        speech += reprompt;
+        break;
+      case 'FIRSTDEAL':
+        speech = res.strings.HELP_STATUS
+            .replace('{0}', res.sayGame(this.attributes.currentGame))
+            .replace('{1}', utils.readCoins(this.event.request.locale, game.bankroll));
+        speech += utils.readHand(this.event.request.locale, game);
+        speech += reprompt;
+        break;
     }
+
+    utils.emitResponse(this.emit, this.event.request.locale, null, null, speech, reprompt);
   },
 };

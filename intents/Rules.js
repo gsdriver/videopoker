@@ -1,5 +1,5 @@
 //
-// Handles stop, which will exit the skill
+// Reads the payout table
 //
 
 'use strict';
@@ -11,10 +11,10 @@ module.exports = {
     const res = require('../' + this.event.request.locale + '/resources');
     const rules = utils.getGame(this.attributes.currentGame);
     let speech = '';
-    const reprompt = res.strings.RULES_REPROMPT;
+    const reprompt = res.strings.GENERIC_REPROMPT;
     let payout;
 
-    // Wild symbols
+    // Any special message for this game
     if (rules.special) {
       speech += res.strings[rules.special];
     }

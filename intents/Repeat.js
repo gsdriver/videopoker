@@ -5,7 +5,6 @@
 'use strict';
 
 const utils = require('../utils');
-const speechUtils = require('alexa-speech-utils')();
 
 module.exports = {
   handleIntent: function() {
@@ -45,23 +44,7 @@ module.exports = {
         break;
       case 'FIRSTDEAL':
         // Read the hand and any held cards
-        const heldCards = [];
-
-        speech = res.strings.DEALT_CARDS.replace('{0}',
-                speechUtils.and(game.cards.map((card) => res.sayCard(card)),
-                  {pause: '300ms', locale: this.event.request.locale}));
-
-        game.cards.map((card) => {
-          if (card.hold) {
-            heldCards.push(card);
-          }
-        });
-        if (heldCards.length) {
-          speech += res.strings.HELD_CARDS.replace('{0}',
-                speechUtils.and(heldCards.map((card) => res.sayCard(card)),
-                  {pause: '300ms', locale: this.event.request.locale}));
-        }
-
+        speech = utils.readHand(this.event.request.locale, game);
         reprompt = utils.readAvailableActions(this.event.request.locale,
                   this.attributes, this.handler.state);
         speech += reprompt;
