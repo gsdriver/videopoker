@@ -46,6 +46,7 @@ module.exports = {
     }
 
     if (!speechError) {
+      utils.incrementProgressive(this.attributes, amount);
       game.bet = amount;
       game.bankroll -= game.bet;
       speech = res.strings.BET_PLACED.replace('{0}', utils.readCoins(this.event.request.locale, amount));

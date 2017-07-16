@@ -48,6 +48,7 @@ const resources = {
   // From Deal.js
   'DEAL_NOBETS': 'Sorry, you have to place a bet before you can deal cards.',
   'DEAL_INVALID_REPROMPT': 'Place a bet',
+  'DEAL_PROGRESSIVE_WINNER': 'You hit the progressive jackpot and won {0}! ',
   'DEAL_WINNER': 'You matched {0} and won {1}. ',
   'DEAL_LOSER': 'Sorry, you lost. ',
   'DEAL_PLAY_AGAIN': 'Would you like to play again?',
