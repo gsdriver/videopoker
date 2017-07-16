@@ -76,7 +76,9 @@ const firstDealHandlers = Alexa.CreateStateHandler('FIRSTDEAL', {
     this.emitWithState('NewSession');
   },
   'HoldIntent': Hold.handleIntent,
+  'HoldAllIntent': Hold.handleAllIntent,
   'DiscardIntent': Discard.handleIntent,
+  'DiscardAllIntent': Discard.handleAllIntent,
   'DealIntent': Deal.handleIntent,
   'RulesIntent': Rules.handleIntent,
   'HighScoreIntent': HighScore.handleIntent,

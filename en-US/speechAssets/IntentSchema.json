@@ -16,43 +16,57 @@
       "intent": "HoldIntent",
       "slots": [
         {
-          "name": "CardNumber",
-          "type": "AMAZON.Number"
+          "name": "FirstCard",
+          "type": "LIST_OF_CARD_SELECTION"
         },
         {
-          "name": "CardOrdinal",
-          "type": "LIST_OF_ORDINALS"
+          "name": "SecondCard",
+          "type": "LIST_OF_CARD_SELECTION"
         },
         {
-          "name": "CardRank",
-          "type": "LIST_OF_CARD_RANKS"
+          "name": "ThirdCard",
+          "type": "LIST_OF_CARD_SELECTION"
         },
         {
-          "name": "CardSuit",
-          "type": "LIST_OF_CARD_SUITS"
+          "name": "FourthCard",
+          "type": "LIST_OF_CARD_SELECTION"
+        },
+        {
+          "name": "FifthCard",
+          "type": "LIST_OF_CARD_SELECTION"
         }
       ]
+    },
+    {
+      "intent": "HoldAllIntent"
     },
     {
       "intent": "DiscardIntent",
       "slots": [
         {
-          "name": "CardNumber",
-          "type": "AMAZON.Number"
+          "name": "FirstCard",
+          "type": "LIST_OF_CARD_SELECTION"
         },
         {
-          "name": "CardOrdinal",
-          "type": "LIST_OF_ORDINALS"
+          "name": "SecondCard",
+          "type": "LIST_OF_CARD_SELECTION"
         },
         {
-          "name": "CardRank",
-          "type": "LIST_OF_CARD_RANKS"
+          "name": "ThirdCard",
+          "type": "LIST_OF_CARD_SELECTION"
         },
         {
-          "name": "CardSuit",
-          "type": "LIST_OF_CARD_SUITS"
+          "name": "FourthCard",
+          "type": "LIST_OF_CARD_SELECTION"
+        },
+        {
+          "name": "FifthCard",
+          "type": "LIST_OF_CARD_SELECTION"
         }
       ]
+    },
+    {
+      "intent": "DiscardAllIntent"
     },
     {
       "intent": "RulesIntent"

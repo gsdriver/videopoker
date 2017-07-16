@@ -16,24 +16,26 @@ module.exports = {
     let speech;
     const res = require('../' + this.event.request.locale + '/resources');
     const game = this.attributes[this.attributes.currentGame];
+    let discardCards;
 
-    // See which card(s) were selected
-    let discardCards = utils.getSelectedCards(this.event.request.locale,
-            this.attributes, this.event.request.intent.slots);
-    if (!discardCards || (discardCards.length === 0)) {
-      // Use the last held cards
-      discardCards = game.lastHeld;
+    if (this.attributes.allSelected) {
+      discardCards = [1, 2, 3, 4, 5];
+      this.attributes.allSelected = undefined;
+    } else {
+      // See which card(s) were selected
+      const selected = utils.getSelectedCards(this.event.request.locale,
+              this.attributes, false, this.event.request.intent.slots);
+      if (selected.error) {
+        error = selected.error;
+        reprompt = res.strings.HOLD_NOTFOUND_REPROMPT.replace('{0}', res.sayCard(game.cards[0]));
+        error += reprompt;
+      } else {
+        discardCards = selected.cards;
+      }
     }
 
-    if (!discardCards || (discardCards.length === 0)) {
-      const cardText = utils.getCardSlotText(this.event.request.locale,
-            this.event.request.intent.slots);
-
-      error = (cardText) ? res.strings.DISCARD_INVALID_VALUE.replace('{0}', cardText)
-                         : res.strings.DISCARD_INVALID_NOVALUE;
-      reprompt = res.strings.DISCARD_REPROMPT;
-    } else {
-      // Mark each card as no longer held
+    if (discardCards) {
+      // Mark each card as held
       discardCards.map((card) => {
         game.cards[card - 1].hold = undefined;
       });
@@ -48,5 +50,9 @@ module.exports = {
     }
 
     utils.emitResponse(this.emit, this.event.request.locale, error, null, speech, reprompt);
+  },
+  handleAllIntent: function() {
+    this.attributes.allSelected = true;
+    this.emitWithState('DiscardIntent');
   },
 };

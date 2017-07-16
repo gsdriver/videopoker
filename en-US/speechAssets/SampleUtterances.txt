@@ -85,43 +85,171 @@ SelectIntent switch to a new machine
 SelectIntent switch to another machine
 SelectIntent switch to another game
 
-HoldIntent hold the {CardOrdinal} card
-HoldIntent hold {CardOrdinal} card
-HoldIntent hold card {CardNumber}
-HoldIntent hold {CardNumber}
-HoldIntent hold the {CardRank} of {CardSuit}
-HoldIntent hold {CardRank} of {CardSuit}
-HoldIntent keep the {CardOrdinal} card
-HoldIntent keep {CardOrdinal} card
-HoldIntent keep card {CardNumber}
-HoldIntent keep {CardNumber}
-HoldIntent keep the {CardRank} of {CardSuit}
-HoldIntent keep {CardRank} of {CardSuit}
-HoldIntent play the {CardOrdinal} card
-HoldIntent play {CardOrdinal} card
-HoldIntent play card {CardNumber}
-HoldIntent play {CardNumber}
-HoldIntent play the {CardRank} of {CardSuit}
-HoldIntent play {CardRank} of {CardSuit}
+HoldIntent hold the {FirstCard}
+HoldIntent hold the {FirstCard} card
+HoldIntent hold the {FirstCard} and {SecondCard}
+HoldIntent hold the {FirstCard} and {SecondCard} cards
+HoldIntent hold the {FirstCard} card and {SecondCard} card
+HoldIntent hold the {FirstCard} and {SecondCard} and {ThirdCard}
+HoldIntent hold the {FirstCard} {SecondCard} and {ThirdCard}
+HoldIntent hold the {FirstCard} and {SecondCard} and {ThirdCard} cards
+HoldIntent hold the {FirstCard} {SecondCard} and {ThirdCard} cards
+HoldIntent hold the {FirstCard} card and {SecondCard} card and {ThirdCard} card
+HoldIntent hold the {FirstCard} card {SecondCard} card and {ThirdCard} card
+HoldIntent hold the {FirstCard} and {SecondCard} and {ThirdCard} and {FourthCard}
+HoldIntent hold the {FirstCard} {SecondCard} {ThirdCard} and {FourthCard}
+HoldIntent hold the {FirstCard} and {SecondCard} and {ThirdCard} and {FourthCard} cards
+HoldIntent hold the {FirstCard} {SecondCard} {ThirdCard} and {FourthCard} cards
+HoldIntent hold the {FirstCard} card and {SecondCard} card and {ThirdCard} card and {FourthCard} card
+HoldIntent hold the {FirstCard} card {SecondCard} card {ThirdCard} and {FourthCard} card
+HoldIntent hold the {FirstCard} and {SecondCard} and {ThirdCard} and {FourthCard} and {FifthCard}
+HoldIntent hold the {FirstCard} {SecondCard} {ThirdCard} {FourthCard} and {FifthCard}
+HoldIntent hold the {FirstCard} and {SecondCard} and {ThirdCard} and {FourthCard} and {FifthCard} cards
+HoldIntent hold the {FirstCard} {SecondCard} {ThirdCard} {FourthCard} and {FifthCard} cards
+HoldIntent hold the {FirstCard} card and {SecondCard} card and {ThirdCard} card and {FourthCard} and {FifthCard} card
+HoldIntent hold the {FirstCard} card {SecondCard} card {ThirdCard} and {FourthCard} and {FifthCard} card
+HoldIntent keep the {FirstCard}
+HoldIntent keep the {FirstCard} card
+HoldIntent keep the {FirstCard} and {SecondCard}
+HoldIntent keep the {FirstCard} and {SecondCard} cards
+HoldIntent keep the {FirstCard} card and {SecondCard} card
+HoldIntent keep the {FirstCard} and {SecondCard} and {ThirdCard}
+HoldIntent keep the {FirstCard} {SecondCard} and {ThirdCard}
+HoldIntent keep the {FirstCard} and {SecondCard} and {ThirdCard} cards
+HoldIntent keep the {FirstCard} {SecondCard} and {ThirdCard} cards
+HoldIntent keep the {FirstCard} card and {SecondCard} card and {ThirdCard} card
+HoldIntent keep the {FirstCard} card {SecondCard} card and {ThirdCard} card
+HoldIntent keep the {FirstCard} and {SecondCard} and {ThirdCard} and {FourthCard}
+HoldIntent keep the {FirstCard} {SecondCard} {ThirdCard} and {FourthCard}
+HoldIntent keep the {FirstCard} and {SecondCard} and {ThirdCard} and {FourthCard} cards
+HoldIntent keep the {FirstCard} {SecondCard} {ThirdCard} and {FourthCard} cards
+HoldIntent keep the {FirstCard} card and {SecondCard} card and {ThirdCard} card and {FourthCard} card
+HoldIntent keep the {FirstCard} card {SecondCard} card {ThirdCard} and {FourthCard} card
+HoldIntent keep the {FirstCard} and {SecondCard} and {ThirdCard} and {FourthCard} and {FifthCard}
+HoldIntent keep the {FirstCard} {SecondCard} {ThirdCard} {FourthCard} and {FifthCard}
+HoldIntent keep the {FirstCard} and {SecondCard} and {ThirdCard} and {FourthCard} and {FifthCard} cards
+HoldIntent keep the {FirstCard} {SecondCard} {ThirdCard} {FourthCard} and {FifthCard} cards
+HoldIntent keep the {FirstCard} card and {SecondCard} card and {ThirdCard} card and {FourthCard} and {FifthCard} card
+HoldIntent keep the {FirstCard} card {SecondCard} card {ThirdCard} and {FourthCard} and {FifthCard} card
+HoldIntent select the {FirstCard}
+HoldIntent select the {FirstCard} card
+HoldIntent select the {FirstCard} and {SecondCard}
+HoldIntent select the {FirstCard} and {SecondCard} cards
+HoldIntent select the {FirstCard} card and {SecondCard} card
+HoldIntent select the {FirstCard} and {SecondCard} and {ThirdCard}
+HoldIntent select the {FirstCard} {SecondCard} and {ThirdCard}
+HoldIntent select the {FirstCard} and {SecondCard} and {ThirdCard} cards
+HoldIntent select the {FirstCard} {SecondCard} and {ThirdCard} cards
+HoldIntent select the {FirstCard} card and {SecondCard} card and {ThirdCard} card
+HoldIntent select the {FirstCard} card {SecondCard} card and {ThirdCard} card
+HoldIntent select the {FirstCard} and {SecondCard} and {ThirdCard} and {FourthCard}
+HoldIntent select the {FirstCard} {SecondCard} {ThirdCard} and {FourthCard}
+HoldIntent select the {FirstCard} and {SecondCard} and {ThirdCard} and {FourthCard} cards
+HoldIntent select the {FirstCard} {SecondCard} {ThirdCard} and {FourthCard} cards
+HoldIntent select the {FirstCard} card and {SecondCard} card and {ThirdCard} card and {FourthCard} card
+HoldIntent select the {FirstCard} card {SecondCard} card {ThirdCard} and {FourthCard} card
+HoldIntent select the {FirstCard} and {SecondCard} and {ThirdCard} and {FourthCard} and {FifthCard}
+HoldIntent select the {FirstCard} {SecondCard} {ThirdCard} {FourthCard} and {FifthCard}
+HoldIntent select the {FirstCard} and {SecondCard} and {ThirdCard} and {FourthCard} and {FifthCard} cards
+HoldIntent select the {FirstCard} {SecondCard} {ThirdCard} {FourthCard} and {FifthCard} cards
+HoldIntent select the {FirstCard} card and {SecondCard} card and {ThirdCard} card and {FourthCard} and {FifthCard} card
+HoldIntent select the {FirstCard} card {SecondCard} card {ThirdCard} and {FourthCard} and {FifthCard} card
 
-DiscardIntent discard the {CardOrdinal} card
-DiscardIntent discard {CardOrdinal} card
-DiscardIntent discard card {CardNumber}
-DiscardIntent discard {CardNumber}
-DiscardIntent discard the {CardRank} of {CardSuit}
-DiscardIntent discard {CardRank} of {CardSuit}
-DiscardIntent remove the {CardOrdinal} card
-DiscardIntent remove {CardOrdinal} card
-DiscardIntent remove card {CardNumber}
-DiscardIntent remove {CardNumber}
-DiscardIntent remove the {CardRank} of {CardSuit}
-DiscardIntent remove {CardRank} of {CardSuit}
-DiscardIntent throw out the {CardOrdinal} card
-DiscardIntent throw out {CardOrdinal} card
-DiscardIntent throw out card {CardNumber}
-DiscardIntent throw out {CardNumber}
-DiscardIntent throw out the {CardRank} of {CardSuit}
-DiscardIntent throw out {CardRank} of {CardSuit}
+HoldAllIntent hold all cards
+HoldAllIntent hold all of the cards
+HoldAllIntent hold them all
+HoldAllIntent hold all
+HoldAllIntent keep all cards
+HoldAllIntent keep all of the cards
+HoldAllIntent keep them all
+HoldAllIntent keep all
+HoldAllIntent select all cards
+HoldAllIntent select all of the cards
+HoldAllIntent select them all
+HoldAllIntent select all
+
+DiscardIntent discard the {FirstCard}
+DiscardIntent discard the {FirstCard} card
+DiscardIntent discard the {FirstCard} and {SecondCard}
+DiscardIntent discard the {FirstCard} and {SecondCard} cards
+DiscardIntent discard the {FirstCard} card and {SecondCard} card
+DiscardIntent discard the {FirstCard} and {SecondCard} and {ThirdCard}
+DiscardIntent discard the {FirstCard} {SecondCard} and {ThirdCard}
+DiscardIntent discard the {FirstCard} and {SecondCard} and {ThirdCard} cards
+DiscardIntent discard the {FirstCard} {SecondCard} and {ThirdCard} cards
+DiscardIntent discard the {FirstCard} card and {SecondCard} card and {ThirdCard} card
+DiscardIntent discard the {FirstCard} card {SecondCard} card and {ThirdCard} card
+DiscardIntent discard the {FirstCard} and {SecondCard} and {ThirdCard} and {FourthCard}
+DiscardIntent discard the {FirstCard} {SecondCard} {ThirdCard} and {FourthCard}
+DiscardIntent discard the {FirstCard} and {SecondCard} and {ThirdCard} and {FourthCard} cards
+DiscardIntent discard the {FirstCard} {SecondCard} {ThirdCard} and {FourthCard} cards
+DiscardIntent discard the {FirstCard} card and {SecondCard} card and {ThirdCard} card and {FourthCard} card
+DiscardIntent discard the {FirstCard} card {SecondCard} card {ThirdCard} and {FourthCard} card
+DiscardIntent discard the {FirstCard} and {SecondCard} and {ThirdCard} and {FourthCard} and {FifthCard}
+DiscardIntent discard the {FirstCard} {SecondCard} {ThirdCard} {FourthCard} and {FifthCard}
+DiscardIntent discard the {FirstCard} and {SecondCard} and {ThirdCard} and {FourthCard} and {FifthCard} cards
+DiscardIntent discard the {FirstCard} {SecondCard} {ThirdCard} {FourthCard} and {FifthCard} cards
+DiscardIntent discard the {FirstCard} card and {SecondCard} card and {ThirdCard} card and {FourthCard} and {FifthCard} card
+DiscardIntent discard the {FirstCard} card {SecondCard} card {ThirdCard} and {FourthCard} and {FifthCard} card
+DiscardIntent remove the {FirstCard}
+DiscardIntent remove the {FirstCard} card
+DiscardIntent remove the {FirstCard} and {SecondCard}
+DiscardIntent remove the {FirstCard} and {SecondCard} cards
+DiscardIntent remove the {FirstCard} card and {SecondCard} card
+DiscardIntent remove the {FirstCard} and {SecondCard} and {ThirdCard}
+DiscardIntent remove the {FirstCard} {SecondCard} and {ThirdCard}
+DiscardIntent remove the {FirstCard} and {SecondCard} and {ThirdCard} cards
+DiscardIntent remove the {FirstCard} {SecondCard} and {ThirdCard} cards
+DiscardIntent remove the {FirstCard} card and {SecondCard} card and {ThirdCard} card
+DiscardIntent remove the {FirstCard} card {SecondCard} card and {ThirdCard} card
+DiscardIntent remove the {FirstCard} and {SecondCard} and {ThirdCard} and {FourthCard}
+DiscardIntent remove the {FirstCard} {SecondCard} {ThirdCard} and {FourthCard}
+DiscardIntent remove the {FirstCard} and {SecondCard} and {ThirdCard} and {FourthCard} cards
+DiscardIntent remove the {FirstCard} {SecondCard} {ThirdCard} and {FourthCard} cards
+DiscardIntent remove the {FirstCard} card and {SecondCard} card and {ThirdCard} card and {FourthCard} card
+DiscardIntent remove the {FirstCard} card {SecondCard} card {ThirdCard} and {FourthCard} card
+DiscardIntent remove the {FirstCard} and {SecondCard} and {ThirdCard} and {FourthCard} and {FifthCard}
+DiscardIntent remove the {FirstCard} {SecondCard} {ThirdCard} {FourthCard} and {FifthCard}
+DiscardIntent remove the {FirstCard} and {SecondCard} and {ThirdCard} and {FourthCard} and {FifthCard} cards
+DiscardIntent remove the {FirstCard} {SecondCard} {ThirdCard} {FourthCard} and {FifthCard} cards
+DiscardIntent remove the {FirstCard} card and {SecondCard} card and {ThirdCard} card and {FourthCard} and {FifthCard} card
+DiscardIntent remove the {FirstCard} card {SecondCard} card {ThirdCard} and {FourthCard} and {FifthCard} card
+DiscardIntent throw out the {FirstCard}
+DiscardIntent throw out the {FirstCard} card
+DiscardIntent throw out the {FirstCard} and {SecondCard}
+DiscardIntent throw out the {FirstCard} and {SecondCard} cards
+DiscardIntent throw out the {FirstCard} card and {SecondCard} card
+DiscardIntent throw out the {FirstCard} and {SecondCard} and {ThirdCard}
+DiscardIntent throw out the {FirstCard} {SecondCard} and {ThirdCard}
+DiscardIntent throw out the {FirstCard} and {SecondCard} and {ThirdCard} cards
+DiscardIntent throw out the {FirstCard} {SecondCard} and {ThirdCard} cards
+DiscardIntent throw out the {FirstCard} card and {SecondCard} card and {ThirdCard} card
+DiscardIntent throw out the {FirstCard} card {SecondCard} card and {ThirdCard} card
+DiscardIntent throw out the {FirstCard} and {SecondCard} and {ThirdCard} and {FourthCard}
+DiscardIntent throw out the {FirstCard} {SecondCard} {ThirdCard} and {FourthCard}
+DiscardIntent throw out the {FirstCard} and {SecondCard} and {ThirdCard} and {FourthCard} cards
+DiscardIntent throw out the {FirstCard} {SecondCard} {ThirdCard} and {FourthCard} cards
+DiscardIntent throw out the {FirstCard} card and {SecondCard} card and {ThirdCard} card and {FourthCard} card
+DiscardIntent throw out the {FirstCard} card {SecondCard} card {ThirdCard} and {FourthCard} card
+DiscardIntent throw out the {FirstCard} and {SecondCard} and {ThirdCard} and {FourthCard} and {FifthCard}
+DiscardIntent throw out the {FirstCard} {SecondCard} {ThirdCard} {FourthCard} and {FifthCard}
+DiscardIntent throw out the {FirstCard} and {SecondCard} and {ThirdCard} and {FourthCard} and {FifthCard} cards
+DiscardIntent throw out the {FirstCard} {SecondCard} {ThirdCard} {FourthCard} and {FifthCard} cards
+DiscardIntent throw out the {FirstCard} card and {SecondCard} card and {ThirdCard} card and {FourthCard} and {FifthCard} card
+DiscardIntent throw out the {FirstCard} card {SecondCard} card {ThirdCard} and {FourthCard} and {FifthCard} card
+
+DiscardAllIntent discard all cards
+DiscardAllIntent discard all of the cards
+DiscardAllIntent discard them all
+DiscardAllIntent discard all
+DiscardAllIntent remove all cards
+DiscardAllIntent remove all of the cards
+DiscardAllIntent remove them all
+DiscardAllIntent remove all
+DiscardAllIntent throw out all cards
+DiscardAllIntent throw out all of the cards
+DiscardAllIntent throw out them all
+DiscardAllIntent throw out all
 
 DealIntent deal the cards
 DealIntent deal cards

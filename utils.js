@@ -64,7 +64,7 @@ module.exports = {
     if (error) {
       const res = require('./' + locale + '/resources');
       console.log('Speech error: ' + error);
-      emit(':ask', error, res.GENERIC_REPROMPT);
+      emit(':ask', error, (reprompt) ? reprompt : res.GENERIC_REPROMPT);
     } else if (response) {
       emit(':tell', response);
     } else {
@@ -124,78 +124,75 @@ module.exports = {
 
     return rank;
   },
-  getSelectedCards: function(locale, attributes, slots) {
+  getSelectedCards: function(locale, attributes, holding, slots) {
     const res = require('./' + locale + '/resources');
     let index;
     const game = attributes[attributes.currentGame];
+    const cardIndex = [];
+    const slotValues = ['FirstCard', 'SecondCard', 'ThirdCard', 'FourthCard', 'FifthCard'];
+    let error;
 
-    // You can say the card in lots of different ways
-    if (slots.CardNumber && slots.CardNumber.value) {
-      index = parseInt(slots.CardNumber.value);
-      if (isNaN(index) || (index < 1) || (index > 5)) {
-        return [];
-      } else {
-        return [index];
-      }
-    }
-    if (slots.CardOrdinal && slots.CardOrdinal.value) {
-      return res.ordinalMapping(slots.CardOrdinal.value);
-    }
-    if (slots.CardRank && slots.CardRank.value) {
-      const foundCards = [];
-      const rank = res.getRank(slots.CardRank.value);
-      if (slots.CardSuit && slots.CardSuit.value) {
-        const suit = res.getSuit(slots.CardSuit.value);
+    slotValues.map((slot) => {
+      if (slots[slot] && slots[slot].value) {
+        const ordinal = res.ordinalMapping(slots[slot].value);
+        const card = res.getCardFromString(slots[slot].value);
 
-        // Make sure this is in the hand
-        for (index = 0; index < game.cards.length; index++) {
-          if ((game.cards[index].rank === rank) && (game.cards[index].suit === suit)) {
-            foundCards.push(index + 1);
+        if (ordinal) {
+          cardIndex.push(ordinal);
+        } else if (card) {
+          const foundCards = [];
+          if (card.rank && card.suit) {
+            // Find this specific card in the hand
+            for (index = 0; index < game.cards.length; index++) {
+              if ((game.cards[index].rank === card.rank)
+                && (game.cards[index].suit === card.suit)) {
+                foundCards.push(index + 1);
+              }
+            }
+          } else if (card.rank) {
+            // Select all cards of this rank
+            for (index = 0; index < game.cards.length; index++) {
+              if (game.cards[index].rank === card.rank) {
+                foundCards.push(index + 1);
+              }
+            }
+          } else if (card.suit) {
+            // Select all cards of this suit
+            for (index = 0; index < game.cards.length; index++) {
+              if (game.cards[index].suit === card.suit) {
+                foundCards.push(index + 1);
+              }
+            }
           }
-        }
-      } else {
-        // Select all cards of this rank
-        for (index = 0; index < game.cards.length; index++) {
-          if (game.cards[index].rank === rank) {
-            foundCards.push(index + 1);
+
+          // If we didn't find a card, error out
+          if (foundCards.length) {
+            foundCards.map((card) => cardIndex.push(card));
+          } else {
+            error = ((holding)
+              ? res.strings.CARD_NOT_FOUND_HOLD
+              : res.strings.CARD_NOT_FOUND_DICSARD)
+                .replace('{0}', slots[slot].value);
           }
-        }
-      }
-
-      return foundCards;
-    }
-  },
-  // Returns the text of what they asked for
-  getCardSlotText: function(locale, slots) {
-    const res = require('./' + locale + '/resources');
-
-    // You can say the card in lots of different ways
-    if (slots.CardNumber && slots.CardNumber.value) {
-      return slots.CardNumber.value;
-    }
-    if (slots.CardOrdinal && slots.CardOrdinal.value) {
-      return slots.CardOrdinal.value;
-    }
-    if (slots.CardRank && slots.CardRank.value) {
-      const rank = res.getRank(slots.CardRank.value);
-      if (slots.CardSuit && slots.CardSuit.value) {
-        const suit = res.getSuit(slots.CardSuit.value);
-        const card = res.sayCard({rank: rank, suit: suit});
-
-        // Let's see if we can say this card
-        if (card) {
-          return card;
         } else {
-          // Just spit back what they said
-          return (slots.CardRank.value + ' ' + slots.CardSuit.value);
+          // Error with this card
+          error = ((holding)
+            ? res.strings.CARD_NOT_FOUND_HOLD
+            : res.strings.CARD_NOT_FOUND_DICSARD)
+              .replace('{0}', slots[slot].value);
         }
-      } else {
-        return slots.CardRank.value;
       }
+    });
+
+    // You have to have specified at least one card
+    if ((cardIndex.length === 0) && !error) {
+      error = (holding)
+        ? res.strings.NO_CARD_SPECIFIED_HOLD
+        : res.strings.NO_CARD_SPECIFIED_DISCARD;
     }
 
-    // Didn't find anything
-    return undefined;
+    // Return what we found
+    return {error: error, cards: cardIndex};
   },
   readAvailableGames: function(locale, currentGame, currentFirst, callback) {
     const res = require('./' + locale + '/resources');

@@ -27,14 +27,18 @@ function BuildEvent(argv)
   var stop = {'name': 'AMAZON.StopIntent', 'slots': {}};
   var cancel = {'name': 'AMAZON.CancelIntent', 'slots': {}};
   var highScore = {'name': 'HighScoreIntent', 'slots': {}};
-  var holdNumber = {'name': 'HoldIntent', 'slots': {'CardNumber': {'name': 'CardNumber', 'value': ''}}};
-  var holdOrdinal = {'name': 'HoldIntent', 'slots': {'CardOrdinal': {'name': 'CardOrdinal', 'value': ''}}};
-  var holdCard = {'name': 'HoldIntent', 'slots': {'CardRank': {'name': 'CardRank', 'value': ''},
-          'CardSuit': {'name': 'CardSuit', 'value': ''}}};
-  var discardNumber = {'name': 'DiscardIntent', 'slots': {'CardNumber': {'name': 'CardNumber', 'value': ''}}};
-  var discardOrdinal = {'name': 'DiscardIntent', 'slots': {'CardOrdinal': {'name': 'CardOrdinal', 'value': ''}}};
-  var discardCard = {'name': 'DiscardIntent', 'slots': {'CardRank': {'name': 'CardRank', 'value': ''},
-          'CardSuit': {'name': 'CardSuit', 'value': ''}}};
+  var hold = {'name': 'HoldIntent', 'slots': {'FirstCard': {'name': 'FirstCard', 'value': ''},
+    'SecondCard': {'name': 'SecondCard', 'value': ''},
+    'ThirdCard': {'name': 'ThirdCard', 'value': ''},
+    'FourthCard': {'name': 'FourthCard', 'value': ''},
+    'FifthCard': {'name': 'FifthCard', 'value': ''}}};
+  var holdall = {'name': 'HoldAllIntent', 'slots': {}};
+  var discard = {'name': 'DiscardIntent', 'slots': {'FirstCard': {'name': 'FirstCard', 'value': ''},
+    'SecondCard': {'name': 'SecondCard', 'value': ''},
+    'ThirdCard': {'name': 'ThirdCard', 'value': ''},
+    'FourthCard': {'name': 'FourthCard', 'value': ''},
+    'FifthCard': {'name': 'FifthCard', 'value': ''}}};
+  var discardall = {'name': 'DiscardAllIntent', 'slots': {}};
 
   var lambda = {
     "session": {
@@ -104,42 +108,44 @@ function BuildEvent(argv)
     if (argv.length > 3) {
       rules.slots.Rules.value = argv[3];
     }
-  } else if (argv[2] == 'holdnumber') {
-    lambda.request.intent = holdNumber;
+  } else if (argv[2] == 'hold') {
+    lambda.request.intent = hold;
     if (argv.length > 3) {
-      holdNumber.slots.CardNumber.value = argv[3];
-    }
-  } else if (argv[2] == 'holdordinal') {
-    lambda.request.intent = holdOrdinal;
-    if (argv.length > 3) {
-      holdOrdinal.slots.CardOrdinal.value = argv[3];
-    }
-  } else if (argv[2] == 'holdcard') {
-    lambda.request.intent = holdCard;
-    if (argv.length > 3) {
-      holdCard.slots.CardRank.value = argv[3];
+      hold.slots.FirstCard.value = argv[3];
     }
     if (argv.length > 4) {
-      holdCard.slots.CardSuit.value = argv[4];
+      hold.slots.SecondCard.value = argv[4];
     }
-  } else if (argv[2] == 'discardnumber') {
-    lambda.request.intent = discardNumber;
-    if (argv.length > 3) {
-      discardNumber.slots.CardNumber.value = argv[3];
+    if (argv.length > 5) {
+      hold.slots.ThirdCard.value = argv[5];
     }
-  } else if (argv[2] == 'discardordinal') {
-    lambda.request.intent = discardOrdinal;
-    if (argv.length > 3) {
-      discardOrdinal.slots.CardOrdinal.value = argv[3];
+    if (argv.length > 6) {
+      hold.slots.FourthCard.value = argv[6];
     }
-  } else if (argv[2] == 'discardcard') {
-    lambda.request.intent = discardCard;
+    if (argv.length > 7) {
+      hold.slots.FifthCard.value = argv[7];
+    }
+  } else if (argv[2] == 'discard') {
+    lambda.request.intent = discard;
     if (argv.length > 3) {
-      discardCard.slots.CardRank.value = argv[3];
+      discard.slots.FirstCard.value = argv[3];
     }
     if (argv.length > 4) {
-      discardCard.slots.CardSuit.value = argv[4];
+      discard.slots.SecondCard.value = argv[4];
     }
+    if (argv.length > 5) {
+      discard.slots.ThirdCard.value = argv[5];
+    }
+    if (argv.length > 6) {
+      discard.slots.FourthCard.value = argv[6];
+    }
+    if (argv.length > 7) {
+      discard.slots.FifthCard.value = argv[7];
+    }
+  } else if (argv[2] == 'holdall') {
+    lambda.request.intent = holdall;
+  } else if (argv[2] == 'discardall') {
+    lambda.request.intent = discardall;
   } else if (argv[2] == 'betmax') {
     lambda.request.intent = betMax;
   } else if (argv[2] == 'deal') {

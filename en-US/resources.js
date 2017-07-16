@@ -21,11 +21,13 @@ const resources = {
   'HOLD_INVALID_VALUE': 'Sorry, I can\'t hold {0}. ',
   'HOLD_INVALID_NOVALUE': 'Sorry, I didn\'t hear a card to hold. ',
   'HOLD_FIRST_REPROMPT': 'Say hold to hold additional cards <break time=\"200ms\"/> discard to unmark this card as held <break time=\"200ms\"/> or deal to deal new cards.',
+  'HOLD_NOTFOUND_REPROMPT': 'Try saying hold the first card or hold the {0}.',
   // From Discard.js
   'DISCARD_CARDS': 'You discarded {0}. ',
   'DISCARD_INVALID_VALUE': 'Sorry, I can\'t discard {0}. ',
   'DISCARD_INVALID_NOVALUE': 'Sorry, I didn\'t hear a card to discard. ',
   'DISCARD_REPROMPT': 'Say hold to hold additional cards <break time=\"200ms\"/> or deal to deal new cards.',
+  'DISCARD_NOTFOUND_REPROMPT': 'Try saying discard the first card or discard the {0}.',
   // From Bet.js
   'BET_INVALID_AMOUNT': 'I\'m sorry, {0} is not a valid amount to bet.',
   'BET_EXCEEDS_MAX': 'Sorry, this bet exceeds the maximum bet of {0}.',
@@ -71,6 +73,10 @@ const resources = {
   'SAY_DISCARD': 'discard to unmark a held card',
   'SAY_HIGHSCORE': 'read high scores to hear the leader board',
   'YOU_CAN_SAY': 'You can say {0}.',
+  'CARD_NOT_FOUND_HOLD': 'Sorry, I don\'t know how to hold {0}. ',
+  'CARD_NOT_FOUND_DISCARD': 'Sorry, I don\'t know how to discard {0}. ',
+  'NO_CARD_SPECIFIED_HOLD': 'Sorry, I didn\'t hear any cards to hold. ',
+  'NO_CARD_SPECIFIED_DISCARD': 'Sorry, I didn\'t hear any cards to discard. ',
   'SUGGEST_HOLD_ALL': 'You should hold all your cards. ',
   'SUGGEST_HOLD_MATCHING': 'You should hold the {0}. ',
   'SUGGEST_HOLD_CARDS': 'You should hold {0}. ',
@@ -120,25 +126,39 @@ module.exports = {
     return undefined;
   },
   ordinalMapping: function(ordinal) {
-    const ordinals = {'first': [1], 'second': [2], 'third': [3], 'fourth': [4], 'fifth': [5],
-        'all': [1, 2, 3, 4, 5]};
+    const ordinals = {'first': 1, 'second': 2, 'third': 3, 'fourth': 4, 'fifth': 5};
 
     return (ordinals[ordinal.toLowerCase()]);
   },
-  getRank: function(rank) {
+  getCardFromString: function(card) {
     const ranks = {'ace': 'A', 'two': '2', 'three': '3', 'four': '4', 'five': '5', 'six': '6',
         'seven': '7', 'eight': '8', 'nine': '9', 'ten': '10', 'jack': 'J', 'queen': 'Q', 'king': 'K',
         'aces': 'A', 'twos': '2', 'threes': '3', 'fours': '4', 'fives': '5', 'sixes': '6',
         'sevens': '7', 'eights': '8', 'nines': '9', 'tens': '10', 'jacks': 'J', 'queens': 'Q', 'kings': 'K',
-        '1': 'A', '2': '2', '3': '3', '4': '4', '5': '5', '6': '6', '7': '7', '8': '8', '9': '9', '10': '10'};
-
-    return (ranks[rank.toLowerCase()]);
-  },
-  getSuit: function(suit) {
+        '1': 'A', '2': '2', '3': '3', '4': '4', '5': '5',
+        '6': '6', '7': '7', '8': '8', '9': '9', '10': '10',
+        '1s': 'A', '2s': '2', '3s': '3', '4s': '4', '5s': '5',
+        '6s': '6', '7s': '7', '8s': '8', '9s': '9', '10s': '10'};
     const suits = {'club': 'C', 'clubs': 'C', 'diamond': 'D', 'diamonds': 'D',
         'heart': 'H', 'hearts': 'H', 'spade': 'S', 'spades': 'S'};
+    let rank;
+    let suit;
 
-    return (suits[suit.toLowerCase()]);
+    // OK, first let's process each word separately
+    const words = card.split(' ');
+    words.map((word) => {
+      if (ranks[word]) {
+        rank = ranks[word];
+      } else if (suits[word]) {
+        suit = suits[word];
+      }
+    });
+
+    if (rank || suit) {
+      return {rank: rank, suit: suit};
+    } else {
+      return undefined;
+    }
   },
   readPayoutHand: function(hand) {
     const payouts = {
