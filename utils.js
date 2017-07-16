@@ -513,14 +513,13 @@ function suggestJacksOrBetter(locale, attributes) {
 
   // See if they have a made hand
   evaluateOptions.aceCanBeLow = true;
-  evaluateOptions.getDetails = true;
   if (rules.wildCards) {
     evaluateOptions.wildCards = rules.wildCards;
   }
   if (rules.minPair) {
     evaluateOptions.minPair = rules.minPair;
   }
-  const fullHandRank = pokerrank.evaluateHand(evalCards, evaluateOptions);
+  const fullHandRank = pokerrank.evaluateAndFindCards(evalCards, evaluateOptions);
 
   // Royal Flush
   // Straight Flush
@@ -547,7 +546,7 @@ function suggestJacksOrBetter(locale, attributes) {
 
   // 4 Card Straight Flush - open both ends
   evaluateOptions.cardsToEvaluate = 4;
-  const fourHandRank = pokerrank.evaluateHand(evalCards, evaluateOptions);
+  const fourHandRank = pokerrank.evaluateAndFindCards(evalCards, evaluateOptions);
   if (fourHandRank.match === 'straightflush') {
     return sayCardsToHold(locale, fourHandRank.cards);
   }
@@ -565,7 +564,7 @@ function suggestJacksOrBetter(locale, attributes) {
       }
     }
     evaluateOptions.cardsToEvaluate = 5;
-    if (pokerrank.evaluateHand(evalCards, evaluateOptions).match === 'straightflush') {
+    if (pokerrank.evaluateHand(evalCards, evaluateOptions) === 'straightflush') {
       return sayCardsToHold(locale, fourHandRank.cards);
     }
   }
@@ -615,7 +614,7 @@ function suggestJacksOrBetter(locale, attributes) {
   // 3 Card Straight Flush - sequential order
   evaluateOptions.cardsToEvaluate = 3;
   evaluateOptions.wildCards = [];
-  const threeHandRank = pokerrank.evaluateHand(evalCards, evaluateOptions);
+  const threeHandRank = pokerrank.evaluateAndFindCards(evalCards, evaluateOptions);
   if (threeHandRank.match === 'straightflush') {
     return sayCardsToHold(locale, threeHandRank.cards);
   }
@@ -627,7 +626,7 @@ function suggestJacksOrBetter(locale, attributes) {
   evaluateOptions.cardsToEvaluate = 5;
   for (i = 0; i < game.cards.length; i++) {
     evaluateOptions.wildCards = [game.cards[i].rank + game.cards[i].suit];
-    if (pokerrank.evaluateHand(evalCards, evaluateOptions).match === 'straight') {
+    if (pokerrank.evaluateHand(evalCards, evaluateOptions) === 'straight') {
       // This is the card to discard - so hold the others
       for (j = 0; j < game.cards.length; j++) {
         if (j !== i) {
@@ -654,7 +653,7 @@ function suggestJacksOrBetter(locale, attributes) {
       }
     }
     evaluateOptions.cardsToEvaluate = 5;
-    if (pokerrank.evaluateHand(evalCards, evaluateOptions).match === 'straightflush') {
+    if (pokerrank.evaluateHand(evalCards, evaluateOptions) === 'straightflush') {
       return sayCardsToHold(locale, threeHandRank.cards);
     }
   }
@@ -774,11 +773,10 @@ function suggestNoDeuce(locale, attributes) {
 
   // See if they have a made hand
   evaluateOptions.aceCanBeLow = true;
-  evaluateOptions.getDetails = true;
   if (rules.wildCards) {
     evaluateOptions.wildCards = rules.wildCards;
   }
-  const fullHandRank = pokerrank.evaluateHand(evalCards, evaluateOptions);
+  const fullHandRank = pokerrank.evaluateAndFindCards(evalCards, evaluateOptions);
 
   // Royal Flush
   // Straight Flush
@@ -805,7 +803,7 @@ function suggestNoDeuce(locale, attributes) {
 
   // 4 Card Straight Flush - open both ends
   evaluateOptions.cardsToEvaluate = 4;
-  const fourHandRank = pokerrank.evaluateHand(evalCards, evaluateOptions);
+  const fourHandRank = pokerrank.evaluateAndFindCards(evalCards, evaluateOptions);
   if (fourHandRank.match === 'straightflush') {
     return sayCardsToHold(locale, fourHandRank.cards);
   }
@@ -818,7 +816,7 @@ function suggestNoDeuce(locale, attributes) {
       }
     }
     evaluateOptions.cardsToEvaluate = 5;
-    if (pokerrank.evaluateHand(evalCards, evaluateOptions).match === 'straightflush') {
+    if (pokerrank.evaluateHand(evalCards, evaluateOptions) === 'straightflush') {
       return sayCardsToHold(locale, fourHandRank.cards);
     }
   }
@@ -857,7 +855,7 @@ function suggestNoDeuce(locale, attributes) {
   // Four, Five and Six of same suit
   // Three, Four and Five of same suit
   evaluateOptions.cardsToEvaluate = 3;
-  const threeHandRank = pokerrank.evaluateHand(evalCards, evaluateOptions);
+  const threeHandRank = pokerrank.evaluateAndFindCards(evalCards, evaluateOptions);
   if (threeHandRank.match === 'straightflush') {
     return sayCardsToHold(locale, threeHandRank.cards);
   }
@@ -898,7 +896,7 @@ function suggestNoDeuce(locale, attributes) {
   evaluateOptions.cardsToEvaluate = 5;
   for (i = 0; i < game.cards.length; i++) {
     evaluateOptions.wildCards = [game.cards[i].rank + game.cards[i].suit];
-    if (pokerrank.evaluateHand(evalCards, evaluateOptions).match === 'straight') {
+    if (pokerrank.evaluateHand(evalCards, evaluateOptions) === 'straight') {
       // This is the card to discard - so hold the others
       for (j = 0; j < game.cards.length; j++) {
         if (j !== i) {
@@ -925,11 +923,10 @@ function suggestOneDeuce(locale, attributes) {
 
   // See if they have a made hand
   evaluateOptions.aceCanBeLow = true;
-  evaluateOptions.getDetails = true;
   if (rules.wildCards) {
     evaluateOptions.wildCards = rules.wildCards;
   }
-  const fullHandRank = pokerrank.evaluateHand(evalCards, evaluateOptions);
+  const fullHandRank = pokerrank.evaluateAndFindCards(evalCards, evaluateOptions);
 
   // Royal Flush with Deuce
   // Five of a Kind
@@ -957,7 +954,7 @@ function suggestOneDeuce(locale, attributes) {
 
   // 4 Card Straight Flush - open both ends
   evaluateOptions.cardsToEvaluate = 4;
-  const fourHandRank = pokerrank.evaluateHand(evalCards, evaluateOptions);
+  const fourHandRank = pokerrank.evaluateAndFindCards(evalCards, evaluateOptions);
   if (fourHandRank.match === 'straightflush') {
     return sayCardsToHold(locale, fourHandRank.cards);
   }
@@ -1020,11 +1017,10 @@ function suggestTwoDeuce(locale, attributes) {
 
   // See if they have a made hand
   evaluateOptions.aceCanBeLow = true;
-  evaluateOptions.getDetails = true;
   if (rules.wildCards) {
     evaluateOptions.wildCards = rules.wildCards;
   }
-  const fullHandRank = pokerrank.evaluateHand(evalCards, evaluateOptions);
+  const fullHandRank = pokerrank.evaluateAndFindCards(evalCards, evaluateOptions);
 
   // Royal Flush
   // Five of a Kind
@@ -1047,7 +1043,7 @@ function suggestTwoDeuce(locale, attributes) {
 
   // 4 Card Straight Flush - open both ends
   evaluateOptions.cardsToEvaluate = 4;
-  const fourHandRank = pokerrank.evaluateHand(evalCards, evaluateOptions);
+  const fourHandRank = pokerrank.evaluateAndFindCards(evalCards, evaluateOptions);
   if (fourHandRank.match === 'straightflush') {
     return sayCardsToHold(locale, fourHandRank.cards);
   }
@@ -1065,11 +1061,10 @@ function suggestThreeDeuce(locale, attributes) {
 
   // See if they have a made hand
   evaluateOptions.aceCanBeLow = true;
-  evaluateOptions.getDetails = true;
   if (rules.wildCards) {
     evaluateOptions.wildCards = rules.wildCards;
   }
-  const fullHandRank = pokerrank.evaluateHand(evalCards, evaluateOptions);
+  const fullHandRank = pokerrank.evaluateAndFindCards(evalCards, evaluateOptions);
 
   // Royal Flush
   if (fullHandRank.match === 'royalflush') {
