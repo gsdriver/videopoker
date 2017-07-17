@@ -526,13 +526,13 @@ function suggestJacksOrBetter(locale, attributes) {
   // 4 of a Kind
   if ((fullHandRank.match === 'royalflush') || (fullHandRank.match === 'straightflush')
       || (fullHandRank.match === '4ofakind')) {
-    return sayCardsToHold(locale, fullHandRank.cards);
+    return sayCardsToHold(locale, attributes, fullHandRank.cards);
   }
 
   // 4 Card Royal
   let royalCards = nCardRoyal(evalCards, 4);
   if (royalCards) {
-    return sayCardsToHold(locale, royalCards);
+    return sayCardsToHold(locale, attributes, royalCards);
   }
 
   // Full House
@@ -541,19 +541,19 @@ function suggestJacksOrBetter(locale, attributes) {
   // Straight
   if ((fullHandRank.match === 'fullhouse') || (fullHandRank.match === 'flush')
     || (fullHandRank.match === 'straight') || (fullHandRank.match === '3ofakind')) {
-    return sayCardsToHold(locale, fullHandRank.cards);
+    return sayCardsToHold(locale, attributes, fullHandRank.cards);
   }
 
   // 4 Card Straight Flush - open both ends
   evaluateOptions.cardsToEvaluate = 4;
   const fourHandRank = pokerrank.evaluateAndFindCards(evalCards, evaluateOptions);
   if (fourHandRank.match === 'straightflush') {
-    return sayCardsToHold(locale, fourHandRank.cards);
+    return sayCardsToHold(locale, attributes, fourHandRank.cards);
   }
 
   // Two Pairs
   if (fullHandRank.match === '2pair') {
-    return sayCardsToHold(locale, fullHandRank.cards);
+    return sayCardsToHold(locale, attributes, fullHandRank.cards);
   }
 
   // 4 Card Straight Flush - inside draw
@@ -565,24 +565,24 @@ function suggestJacksOrBetter(locale, attributes) {
     }
     evaluateOptions.cardsToEvaluate = 5;
     if (pokerrank.evaluateHand(evalCards, evaluateOptions) === 'straightflush') {
-      return sayCardsToHold(locale, fourHandRank.cards);
+      return sayCardsToHold(locale, attributes, fourHandRank.cards);
     }
   }
 
   // Pair of Jacks, Queens, Kings or Aces
   if (fullHandRank.match === 'minpair') {
-    return sayCardsToHold(locale, fullHandRank.cards);
+    return sayCardsToHold(locale, attributes, fullHandRank.cards);
   }
 
   // 3 Card Royal
   royalCards = nCardRoyal(evalCards, 3);
   if (royalCards) {
-    return sayCardsToHold(locale, royalCards);
+    return sayCardsToHold(locale, attributes, royalCards);
   }
 
   // 4 Card Flush
   if (fourHandRank.match === 'flush') {
-    return sayCardsToHold(locale, fourHandRank.cards);
+    return sayCardsToHold(locale, attributes, fourHandRank.cards);
   }
 
   // Ten, Jack, Queen and King any suit
@@ -597,18 +597,18 @@ function suggestJacksOrBetter(locale, attributes) {
     });
 
     if (toKeep === 4) {
-      return sayCardsToHold(locale, fourHandRank.cards);
+      return sayCardsToHold(locale, attributes, fourHandRank.cards);
     }
   }
 
   // Low Pair - Two through Ten
   if (fullHandRank.match === 'pair') {
-    return sayCardsToHold(locale, fullHandRank.cards);
+    return sayCardsToHold(locale, attributes, fullHandRank.cards);
   }
 
   // 4 Card Straight - sequential order
   if (fourHandRank.match === 'straight') {
-    return sayCardsToHold(locale, fourHandRank.cards);
+    return sayCardsToHold(locale, attributes, fourHandRank.cards);
   }
 
   // 3 Card Straight Flush - sequential order
@@ -616,7 +616,7 @@ function suggestJacksOrBetter(locale, attributes) {
   evaluateOptions.wildCards = [];
   const threeHandRank = pokerrank.evaluateAndFindCards(evalCards, evaluateOptions);
   if (threeHandRank.match === 'straightflush') {
-    return sayCardsToHold(locale, threeHandRank.cards);
+    return sayCardsToHold(locale, attributes, threeHandRank.cards);
   }
 
   // 4 Card Straight - non sequential order
@@ -637,7 +637,7 @@ function suggestJacksOrBetter(locale, attributes) {
     }
   }
   if (holdCards.length) {
-    return sayCardsToHold(locale, holdCards.map((card) => card.rank + card.suit));
+    return sayCardsToHold(locale, attributes, holdCards.map((card) => card.rank + card.suit));
   }
 
   // 3 Card Straight Flush - non sequential order
@@ -654,14 +654,14 @@ function suggestJacksOrBetter(locale, attributes) {
     }
     evaluateOptions.cardsToEvaluate = 5;
     if (pokerrank.evaluateHand(evalCards, evaluateOptions) === 'straightflush') {
-      return sayCardsToHold(locale, threeHandRank.cards);
+      return sayCardsToHold(locale, attributes, threeHandRank.cards);
     }
   }
 
   // 2 Card Royal
   royalCards = nCardRoyal(evalCards, 2);
   if (royalCards) {
-    return sayCardsToHold(locale, royalCards);
+    return sayCardsToHold(locale, attributes, royalCards);
   }
 
   // 4 Card Straight - non sequential - 3 high cards (isn't this caught above?)
@@ -676,23 +676,34 @@ function suggestJacksOrBetter(locale, attributes) {
     }
   });
   if (highCards.length > 0) {
-    return sayCardsToHold(locale, highCards.map((card) => card.rank + card.suit));
+    return sayCardsToHold(locale, attributes, highCards.map((card) => card.rank + card.suit));
   }
 
   // Nothing
   return res.strings.SUGGEST_DISCARD_ALL;
 }
 
-function sayCardsToHold(locale, evalCards) {
+function sayCardsToHold(locale, attributes, evalCards) {
   const res = require('./' + locale + '/resources');
   let result;
   const cards = [];
+  const game = attributes[attributes.currentGame];
 
   evalCards.map((card) => {
-    if (card.substring(0, 2) === '10') {
-      cards.push({rank: '10', suit: card.substring(2, 3)});
-    } else {
-      cards.push({rank: card.substring(0, 1), suit: card.substring(1, 2)});
+    cards.push({rank: card.substring(0, card.length -1), suit: card.substring(card.length - 1)});
+  });
+
+  // Now for each card, translate into an index to add
+  game.suggestedHold = [];
+  cards.map((card) => {
+    let i;
+
+    for (i = 0; i < game.cards.length; i++) {
+      if ((game.cards[i].rank === card.rank)
+        && (game.cards[i].suit === card.suit)) {
+        game.suggestedHold.push(i + 1);
+        break;
+      }
     }
   });
 
@@ -783,13 +794,13 @@ function suggestNoDeuce(locale, attributes) {
   // 4 of a Kind
   if ((fullHandRank.match === 'royalflush') || (fullHandRank.match === 'straightflush')
       || (fullHandRank.match === '4ofakind')) {
-    return sayCardsToHold(locale, fullHandRank.cards);
+    return sayCardsToHold(locale, attributes, fullHandRank.cards);
   }
 
   // 4 Card Royal
   royalCards = nCardRoyal(evalCards, 4);
   if (royalCards) {
-    return sayCardsToHold(locale, royalCards);
+    return sayCardsToHold(locale, attributes, royalCards);
   }
 
   // Full House
@@ -798,14 +809,14 @@ function suggestNoDeuce(locale, attributes) {
   // Straight
   if ((fullHandRank.match === 'fullhouse') || (fullHandRank.match === 'flush')
     || (fullHandRank.match === 'straight') || (fullHandRank.match === '3ofakind')) {
-    return sayCardsToHold(locale, fullHandRank.cards);
+    return sayCardsToHold(locale, attributes, fullHandRank.cards);
   }
 
   // 4 Card Straight Flush - open both ends
   evaluateOptions.cardsToEvaluate = 4;
   const fourHandRank = pokerrank.evaluateAndFindCards(evalCards, evaluateOptions);
   if (fourHandRank.match === 'straightflush') {
-    return sayCardsToHold(locale, fourHandRank.cards);
+    return sayCardsToHold(locale, attributes, fourHandRank.cards);
   }
 
   // 4 Card Straight Flush - inside draw
@@ -817,20 +828,20 @@ function suggestNoDeuce(locale, attributes) {
     }
     evaluateOptions.cardsToEvaluate = 5;
     if (pokerrank.evaluateHand(evalCards, evaluateOptions) === 'straightflush') {
-      return sayCardsToHold(locale, fourHandRank.cards);
+      return sayCardsToHold(locale, attributes, fourHandRank.cards);
     }
   }
 
   // 3 Card Royal
   royalCards = nCardRoyal(evalCards, 3);
   if (royalCards) {
-    return sayCardsToHold(locale, royalCards);
+    return sayCardsToHold(locale, attributes, royalCards);
   }
 
   // One Pair
   // Note with two pairs, only hold one of the pairs
   if (fullHandRank.match === 'pair') {
-    return sayCardsToHold(locale, fullHandRank.cards);
+    return sayCardsToHold(locale, attributes, fullHandRank.cards);
   }
   if (fullHandRank.match === '2pair') {
     const onePair = [];
@@ -841,14 +852,14 @@ function suggestNoDeuce(locale, attributes) {
         onePair.push(fullHandRank.cards[i]);
       }
     }
-    return sayCardsToHold(locale, onePair);
+    return sayCardsToHold(locale, attributes, onePair);
   }
 
   // 4 Card Flush
   // 4 Card Straight - open both ends
   if ((fourHandRank.match === 'flush')
     || (fourHandRank.match === 'straight')) {
-    return sayCardsToHold(locale, fourHandRank.cards);
+    return sayCardsToHold(locale, attributes, fourHandRank.cards);
   }
 
   // 3 Card Straight Flush - open
@@ -857,13 +868,13 @@ function suggestNoDeuce(locale, attributes) {
   evaluateOptions.cardsToEvaluate = 3;
   const threeHandRank = pokerrank.evaluateAndFindCards(evalCards, evaluateOptions);
   if (threeHandRank.match === 'straightflush') {
-    return sayCardsToHold(locale, threeHandRank.cards);
+    return sayCardsToHold(locale, attributes, threeHandRank.cards);
   }
 
   // 2 Card Royal
   royalCards = nCardRoyal(evalCards, 2);
   if (royalCards) {
-    return sayCardsToHold(locale, royalCards);
+    return sayCardsToHold(locale, attributes, royalCards);
   }
 
   // Three, Four and Six of same suit
@@ -873,7 +884,7 @@ function suggestNoDeuce(locale, attributes) {
         === someCards[1].substring(someCards[1].length - 1)) &&
     (someCards[0].substring(someCards[0].length - 1)
         === someCards[1].substring(someCards[1].length - 1))) {
-    return sayCardsToHold(locale, someCards);
+    return sayCardsToHold(locale, attributes, someCards);
   }
 
   // Three, Five and Six of same suit
@@ -883,7 +894,7 @@ function suggestNoDeuce(locale, attributes) {
         === someCards[1].substring(someCards[1].length - 1)) &&
     (someCards[0].substring(someCards[0].length - 1)
         === someCards[1].substring(someCards[1].length - 1))) {
-    return sayCardsToHold(locale, someCards);
+    return sayCardsToHold(locale, attributes, someCards);
   }
 
   // Three, Four, Five and Six of same suit
@@ -907,7 +918,7 @@ function suggestNoDeuce(locale, attributes) {
     }
   }
   if (holdCards.length) {
-    return sayCardsToHold(locale, holdCards.map((card) => card.rank + card.suit));
+    return sayCardsToHold(locale, attributes, holdCards.map((card) => card.rank + card.suit));
   }
 
   // Nothing
@@ -936,7 +947,7 @@ function suggestOneDeuce(locale, attributes) {
       || (fullHandRank.match === '5ofakind')
       || (fullHandRank.match === 'straightflush')
       || (fullHandRank.match === '4ofakind')) {
-    return sayCardsToHold(locale, fullHandRank.cards);
+    return sayCardsToHold(locale, attributes, fullHandRank.cards);
   }
 
   // 4 Card Royal with Deuce
@@ -944,19 +955,19 @@ function suggestOneDeuce(locale, attributes) {
   if (royalCards) {
     // Add the deuce
     royalCards.push(theDeuce);
-    return sayCardsToHold(locale, royalCards);
+    return sayCardsToHold(locale, attributes, royalCards);
   }
 
   // Full House
   if (fullHandRank.match === 'fullhouse') {
-    return sayCardsToHold(locale, fullHandRank.cards);
+    return sayCardsToHold(locale, attributes, fullHandRank.cards);
   }
 
   // 4 Card Straight Flush - open both ends
   evaluateOptions.cardsToEvaluate = 4;
   const fourHandRank = pokerrank.evaluateAndFindCards(evalCards, evaluateOptions);
   if (fourHandRank.match === 'straightflush') {
-    return sayCardsToHold(locale, fourHandRank.cards);
+    return sayCardsToHold(locale, attributes, fourHandRank.cards);
   }
 
   // 3 of a Kind
@@ -965,7 +976,7 @@ function suggestOneDeuce(locale, attributes) {
   if ((fullHandRank.match === '3ofakind')
       || (fullHandRank.match === 'flush')
       || (fullHandRank.match === 'straight')) {
-    return sayCardsToHold(locale, fullHandRank.cards);
+    return sayCardsToHold(locale, attributes, fullHandRank.cards);
   }
 
   // These would be captured by 4 card straight flush
@@ -985,7 +996,7 @@ function suggestOneDeuce(locale, attributes) {
     // Three and five have to match this suit
     if ((evalCards.indexOf('3' + anAce.suit) > -1)
       && (evalCards.indexOf('5' + anAce.suit) > -1)) {
-      return sayCardsToHold(locale, findCardsInHand(evalCards, ['A', '2', '3', '5']));
+      return sayCardsToHold(locale, attributes, findCardsInHand(evalCards, ['A', '2', '3', '5']));
     }
   }
 
@@ -993,7 +1004,7 @@ function suggestOneDeuce(locale, attributes) {
   if (anAce) {
     if ((evalCards.indexOf('4' + anAce.suit) > -1)
       && (evalCards.indexOf('5' + anAce.suit) > -1)) {
-      return sayCardsToHold(locale, findCardsInHand(evalCards, ['A', '2', '4', '5']));
+      return sayCardsToHold(locale, attributes, findCardsInHand(evalCards, ['A', '2', '4', '5']));
     }
   }
 
@@ -1002,11 +1013,11 @@ function suggestOneDeuce(locale, attributes) {
   royalCards = nCardRoyal(evalCards, 2);
   if (royalCards) {
     royalCards.push(theDeuce);
-    return sayCardsToHold(locale, royalCards);
+    return sayCardsToHold(locale, attributes, royalCards);
   }
 
   // Deuce Only - need to find the deuce
-  return sayCardsToHold(locale, [theDeuce]);
+  return sayCardsToHold(locale, attributes, [theDeuce]);
 }
 
 function suggestTwoDeuce(locale, attributes) {
@@ -1030,7 +1041,7 @@ function suggestTwoDeuce(locale, attributes) {
       || (fullHandRank.match === '5ofakind')
       || (fullHandRank.match === 'straightflush')
       || (fullHandRank.match === '4ofakind')) {
-    return sayCardsToHold(locale, fullHandRank.cards);
+    return sayCardsToHold(locale, attributes, fullHandRank.cards);
   }
 
   // 4 Card Royal
@@ -1038,18 +1049,18 @@ function suggestTwoDeuce(locale, attributes) {
   if (royalCards) {
     const wildCards = findCardsInHand(evalCards, ['2']);
     wildCards.map((card) => royalCards.push(card));
-    return sayCardsToHold(locale, royalCards);
+    return sayCardsToHold(locale, attributes, royalCards);
   }
 
   // 4 Card Straight Flush - open both ends
   evaluateOptions.cardsToEvaluate = 4;
   const fourHandRank = pokerrank.evaluateAndFindCards(evalCards, evaluateOptions);
   if (fourHandRank.match === 'straightflush') {
-    return sayCardsToHold(locale, fourHandRank.cards);
+    return sayCardsToHold(locale, attributes, fourHandRank.cards);
   }
 
   // Two Deuces Only
-  return sayCardsToHold(locale, ['2C', '2D']);
+  return sayCardsToHold(locale, attributes, findCardsInHand(evalCards, ['2']));
 }
 
 function suggestThreeDeuce(locale, attributes) {
@@ -1068,7 +1079,7 @@ function suggestThreeDeuce(locale, attributes) {
 
   // Royal Flush
   if (fullHandRank.match === 'royalflush') {
-    return sayCardsToHold(locale, fullHandRank.cards);
+    return sayCardsToHold(locale, attributes, fullHandRank.cards);
   }
 
   // Five of a Kind - Tens through Aces
@@ -1082,17 +1093,17 @@ function suggestThreeDeuce(locale, attributes) {
     });
 
     if (isHigh) {
-      return sayCardsToHold(locale, fullHandRank.cards);
+      return sayCardsToHold(locale, attributes, fullHandRank.cards);
     }
   }
 
   // Three Deuces Only
-  return sayCardsToHold(locale, ['2C', '2D', '2H']);
+  return sayCardsToHold(locale, attributes, findCardsInHand(evalCards, ['2']));
 }
 
 function suggestFourDeuce(locale, attributes) {
   // Four Deuces - keep them
-  return sayCardsToHold(locale, ['2C', '2D', '2H', '2S']);
+  return sayCardsToHold(locale, attributes, ['2C', '2D', '2H', '2S']);
 }
 
 function findCardsInHand(cards, cardRanks) {

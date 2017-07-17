@@ -42,6 +42,9 @@ const resources = {
   // From Repeat.js
   'REPEAT_NEW_GAME': 'You are playing {0} with {1} coins. ',
   'HELD_CARDS': 'You selected to hold {0}. ',
+  // From Suggest.js
+  'SUGGEST_REPROMPT': 'Would you like to follow this suggestion?',
+  'SUGGEST_NOT_TAKING': 'Say the cards you would like to hold.',
   // From Rules.js
   'RULES_REPROMPT': 'Say bet to insert coins or deal to deal cards.',
   'RULES_CARD_TITLE': 'Payout Table',

@@ -70,6 +70,19 @@ const newGameHandlers = Alexa.CreateStateHandler('NEWGAME', {
   },
 });
 
+const suggestionHandlers = Alexa.CreateStateHandler('SUGGESTION', {
+  'NewSession': function() {
+    this.handler.state = '';
+    this.emitWithState('NewSession');
+  },
+  'AMAZON.YesIntent': Suggest.handleYesIntent,
+  'AMAZON.NoIntent': Suggest.handleNoIntent,
+  'Unhandled': function() {
+    this.handler.state = 'FIRSTDEAL';
+    this.emitWithState(this.event.request.intent.name);
+  },
+});
+
 const firstDealHandlers = Alexa.CreateStateHandler('FIRSTDEAL', {
   'NewSession': function() {
     this.handler.state = '';
@@ -140,6 +153,6 @@ exports.handler = function(event, context, callback) {
   alexa.APP_ID = APP_ID;
 //  alexa.dynamoDBTableName = 'VideoPoker';
   alexa.registerHandlers(handlers, newGameHandlers,
-      firstDealHandlers, selectGameHandlers);
+      suggestionHandlers, firstDealHandlers, selectGameHandlers);
   alexa.execute();
 };
