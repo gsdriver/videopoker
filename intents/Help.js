@@ -13,6 +13,8 @@ module.exports = {
     const game = this.attributes[this.attributes.currentGame];
     const reprompt = utils.readAvailableActions(this.event.request.locale,
               this.attributes, this.handler.state);
+    const rules = utils.getGame(this.attributes.currentGame);
+    let cardText;
 
     switch (this.handler.state) {
       case 'SELECTGAME':
@@ -28,6 +30,8 @@ module.exports = {
         break;
     }
 
-    utils.emitResponse(this.emit, this.event.request.locale, null, null, speech, reprompt);
+    cardText = res.strings[rules.help];
+    cardText += utils.readPayoutTable(this.event.request.locale, rules);
+    this.emit(':askWithCard', speech, reprompt, res.strings.HELP_CARD_TITLE, cardText);
   },
 };

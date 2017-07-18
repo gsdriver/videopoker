@@ -15,6 +15,7 @@ const games = {
   'jacks': {
     'maxCoins': 5,
     'special': 'JACKS_SPECIAL',
+    'help': 'HELP_CARD_TEXT_JACKS',
     'minPair': 'J',
     'progressive': {
       'start': 4000,
@@ -37,6 +38,7 @@ const games = {
   'deuces': {
     'maxCoins': 5,
     'special': 'DEUCES_SPECIAL',
+    'help': 'HELP_CARD_TEXT_DEUCES',
     'wildCards': ['2'],
     'progressive': {
       'start': 4000,
