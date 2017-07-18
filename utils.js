@@ -237,15 +237,16 @@ module.exports = {
 
     switch (state) {
       case 'SELECTGAME':
-        actions.push(res.strings.SAY_YES);
-        actions.push(res.strings.SAY_NO);
-        actions.push(res.strings.SAY_HIGHSCORE);
+        actions.push(res.strings.SAY_YES_SELECT);
+        actions.push(res.strings.SAY_NO_SELECT);
         break;
       case 'NEWGAME':
         actions.push(res.strings.SAY_BET);
         actions.push(res.strings.SAY_DEAL);
-        actions.push(res.strings.SAY_HIGHSCORE);
         break;
+      case 'SUGGESTION':
+        actions.push(res.strings.SAY_YES_SUGGEST);
+        // Fall through
       case 'FIRSTDEAL':
         let held = 0;
         game.cards.map((card) => held += (card.hold) ? 1 : 0);
@@ -256,12 +257,13 @@ module.exports = {
           actions.push(res.strings.SAY_DISCARD);
         }
         actions.push(res.strings.SAY_DEAL);
-        actions.push(res.strings.SAY_HIGHSCORE);
         break;
       default:
-        speech = '';
         break;
     }
+
+    // Everyone can say read high scores
+    actions.push(res.strings.SAY_HIGHSCORE);
 
     if (actions.length) {
       speech = res.strings.YOU_CAN_SAY
@@ -720,6 +722,20 @@ function sayCardsToHold(locale, attributes, evalCards) {
 
     if (match) {
       result = res.strings.SUGGEST_HOLD_MATCHING.replace('{0}', res.pluralCardRanks(cards[0]));
+    }
+
+    // Four cards of same suit?
+    if (cards.length === 4) {
+      let sameSuit = true;
+      cards.map((card) => {
+        if (card.suit !== cards[0].suit) {
+          sameSuit = undefined;
+        }
+      });
+
+      if (sameSuit) {
+        result = res.strings.SUGGEST_HOLD_MATCHING.replace('{0}', res.pluralCardSuits(cards[0]));
+      }
     }
   }
 

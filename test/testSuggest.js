@@ -49,7 +49,7 @@ verifySuggestion('jacks', '4 card royal', [
   {rank: 'K', suit: 'C'},
   {rank: 'K', suit: 'S'},
   {rank: 'Q', suit: 'C'},
-  ], 'You should hold ace of clubs, jack of clubs, king of clubs, and queen of clubs. ');
+  ], 'You should hold the clubs. ');
 verifySuggestion('jacks', 'Full House', [
   {rank: 'A', suit: 'C'},
   {rank: 'J', suit: 'C'},
@@ -84,7 +84,7 @@ verifySuggestion('jacks', '4 card open straight flush', [
   {rank: '6', suit: 'C'},
   {rank: '10', suit: 'S'},
   {rank: '5', suit: 'C'},
-  ], 'You should hold three of clubs, four of clubs, six of clubs, and five of clubs. ');
+  ], 'You should hold the clubs. ');
 verifySuggestion('jacks', '2 pairs', [
   {rank: '4', suit: 'C'},
   {rank: '3', suit: 'C'},
@@ -98,7 +98,7 @@ verifySuggestion('jacks', '4 card straight flush - inside draw', [
   {rank: '10', suit: 'C'},
   {rank: '3', suit: 'S'},
   {rank: '8', suit: 'C'},
-  ], 'You should hold queen of clubs, jack of clubs, ten of clubs, and eight of clubs. ');
+  ], 'You should hold the clubs. ');
 verifySuggestion('jacks', 'Jacks or better', [
   {rank: 'J', suit: 'C'},
   {rank: 'J', suit: 'D'},
@@ -119,7 +119,7 @@ verifySuggestion('jacks', '4 card flush', [
   {rank: '6', suit: 'C'},
   {rank: '3', suit: 'S'},
   {rank: 'Q', suit: 'C'},
-  ], 'You should hold four of clubs, nine of clubs, six of clubs, and queen of clubs. ');
+  ], 'You should hold the clubs. ');
 verifySuggestion('jacks', '10, Jack, Queen, and King', [
   {rank: '10', suit: 'D'},
   {rank: 'J', suit: 'H'},
@@ -212,7 +212,7 @@ verifySuggestion('jacks', 'Wizard of Odds case 2', [
   {rank: 'J', suit: 'C'},
   {rank: 'Q', suit: 'C'},
   {rank: 'K', suit: 'C'},
-  ], 'You should hold ten of clubs, jack of clubs, queen of clubs, and king of clubs. ');
+  ], 'You should hold the clubs. ');
 
 verifySuggestion('jacks', 'Wizard of Odds case 3', [
   {rank: 'A', suit: 'D'},
@@ -220,14 +220,14 @@ verifySuggestion('jacks', 'Wizard of Odds case 3', [
   {rank: 'J', suit: 'C'},
   {rank: 'Q', suit: 'C'},
   {rank: 'K', suit: 'C'},
-  ], 'You should hold ten of clubs, jack of clubs, queen of clubs, and king of clubs. ');
+  ], 'You should hold the clubs. ');
 verifySuggestion('jacks', 'Wizard of Odds case 4', [
   {rank: 'Q', suit: 'S'},
   {rank: '10', suit: 'C'},
   {rank: 'J', suit: 'C'},
   {rank: 'Q', suit: 'C'},
   {rank: 'K', suit: 'C'},
-  ], 'You should hold ten of clubs, jack of clubs, queen of clubs, and king of clubs. ');
+  ], 'You should hold the clubs. ');
 verifySuggestion('jacks', 'Wizard of Odds case 5', [
   {rank: 'K', suit: 'C'},
   {rank: 'Q', suit: 'H'},
@@ -300,7 +300,7 @@ verifySuggestion('deuces', 'No deuce 4 card royal', [
   {rank: 'K', suit: 'C'},
   {rank: 'K', suit: 'S'},
   {rank: 'Q', suit: 'C'},
-  ], 'You should hold ace of clubs, jack of clubs, king of clubs, and queen of clubs. ');
+  ], 'You should hold the clubs. ');
 verifySuggestion('deuces', 'No deuce Full House', [
   {rank: 'A', suit: 'C'},
   {rank: 'J', suit: 'C'},
@@ -335,7 +335,7 @@ verifySuggestion('deuces', 'No deuce 4 card open straight flush', [
   {rank: '6', suit: 'C'},
   {rank: '10', suit: 'S'},
   {rank: '5', suit: 'C'},
-  ], 'You should hold three of clubs, four of clubs, six of clubs, and five of clubs. ');
+  ], 'You should hold the clubs. ');
 verifySuggestion('deuces', 'No deuce 2 pairs', [
   {rank: '4', suit: 'C'},
   {rank: '3', suit: 'C'},
@@ -349,7 +349,7 @@ verifySuggestion('deuces', 'No deuce 4 card straight flush - inside draw', [
   {rank: '10', suit: 'C'},
   {rank: '3', suit: 'S'},
   {rank: '8', suit: 'C'},
-  ], 'You should hold six of clubs, seven of clubs, ten of clubs, and eight of clubs. ');
+  ], 'You should hold the clubs. ');
 verifySuggestion('deuces', 'No deuce 3 card royal', [
   {rank: 'A', suit: 'C'},
   {rank: 'J', suit: 'C'},
@@ -363,7 +363,7 @@ verifySuggestion('deuces', 'No deuce 4 card flush', [
   {rank: '6', suit: 'C'},
   {rank: '3', suit: 'S'},
   {rank: 'Q', suit: 'C'},
-  ], 'You should hold four of clubs, nine of clubs, six of clubs, and queen of clubs. ');
+  ], 'You should hold the clubs. ');
 verifySuggestion('deuces', 'No deuce pair', [
   {rank: '8', suit: 'H'},
   {rank: 'J', suit: 'S'},

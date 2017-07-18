@@ -77,6 +77,8 @@ const suggestionHandlers = Alexa.CreateStateHandler('SUGGESTION', {
   },
   'AMAZON.YesIntent': Suggest.handleYesIntent,
   'AMAZON.NoIntent': Suggest.handleNoIntent,
+  'AMAZON.HelpIntent': Help.handleIntent,
+  'AMAZON.RepeatIntent': Repeat.handleIntent,
   'Unhandled': function() {
     this.handler.state = 'FIRSTDEAL';
     this.emitWithState(this.event.request.intent.name);
@@ -151,7 +153,7 @@ exports.handler = function(event, context, callback) {
   const alexa = Alexa.handler(event, context);
 
   alexa.APP_ID = APP_ID;
-//  alexa.dynamoDBTableName = 'VideoPoker';
+  alexa.dynamoDBTableName = 'VideoPoker';
   alexa.registerHandlers(handlers, newGameHandlers,
       suggestionHandlers, firstDealHandlers, selectGameHandlers);
   alexa.execute();

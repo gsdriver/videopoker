@@ -18,17 +18,12 @@ module.exports = {
       case 'SELECTGAME':
         speech = res.strings.HELP_SELECTGAME;
         break;
+      case 'SUGGESTION':
       case 'NEWGAME':
-        speech = res.strings.HELP_STATUS
-            .replace('{0}', res.sayGame(this.attributes.currentGame))
-            .replace('{1}', utils.readCoins(this.event.request.locale, game.bankroll));
-        speech += reprompt;
-        break;
       case 'FIRSTDEAL':
         speech = res.strings.HELP_STATUS
             .replace('{0}', res.sayGame(this.attributes.currentGame))
             .replace('{1}', utils.readCoins(this.event.request.locale, game.bankroll));
-        speech += utils.readHand(this.event.request.locale, game);
         speech += reprompt;
         break;
     }

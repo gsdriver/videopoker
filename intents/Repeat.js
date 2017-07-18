@@ -9,6 +9,7 @@ const utils = require('../utils');
 module.exports = {
   handleIntent: function() {
     const res = require('../' + this.event.request.locale + '/resources');
+    const rules = utils.getGame(this.attributes.currentGame);
     const game = this.attributes[this.attributes.currentGame];
     let speech;
     let reprompt;
@@ -45,6 +46,15 @@ module.exports = {
       case 'FIRSTDEAL':
         // Read the hand and any held cards
         speech = utils.readHand(this.event.request.locale, game);
+        reprompt = utils.readAvailableActions(this.event.request.locale,
+                  this.attributes, this.handler.state);
+        speech += reprompt;
+        utils.emitResponse(this.emit, this.event.request.locale, null, null, speech, reprompt);
+        break;
+      case 'SUGGESTION':
+        // Read the hand and the suggestion
+        speech = utils.readHand(this.event.request.locale, game);
+        speech += rules.suggest(this.event.request.locale, this.attributes);
         reprompt = utils.readAvailableActions(this.event.request.locale,
                   this.attributes, this.handler.state);
         speech += reprompt;

@@ -69,8 +69,9 @@ const resources = {
   'AVAILABLE_GAMES': 'We have {0} different games <break time=\"200ms\"/> ',
   'DEUCES_SPECIAL': 'Natural royal flush wins the progressive jackpot when the maximum number of coins are played. ',
   'JACKS_SPECIAL': 'Royal flush wins the progressive jackpot when the maximum number of coins are played. ',
-  'SAY_YES': 'yes',
-  'SAY_NO': 'no',
+  'SAY_YES_SELECT': 'yes to select this game',
+  'SAY_NO_SELECT': 'no to hear the next game',
+  'SAY_YES_SUGGEST': 'yes to play this suggestion',
   'SAY_BET': 'bet',
   'SAY_DEAL': 'deal cards',
   'SAY_HOLD': 'hold to hold a card',
@@ -107,6 +108,10 @@ module.exports = {
             'J': 'jacks', 'Q': 'queens', 'K': 'kings'};
     return names[card.rank];
   },
+  pluralCardSuits: function(card) {
+    const suits = {'C': 'clubs', 'D': 'diamonds', 'H': 'hearts', 'S': 'spades'};
+    return suits[card.suit];
+  },
   sayCard: function(card, withArticle) {
     const names = {'A': 'ace', '2': 'two', '3': 'three', '4': 'four', '5': 'five',
             '6': 'six', '7': 'seven', '8': 'eight', '9': 'nine', '10': 'ten',
@@ -130,7 +135,7 @@ module.exports = {
     return undefined;
   },
   ordinalMapping: function(ordinal) {
-    const ordinals = {'first': 1, 'second': 2, 'third': 3, 'fourth': 4, 'fifth': 5};
+    const ordinals = {'first': 1, 'second': 2, 'third': 3, 'fourth': 4, 'fifth': 5, 'last': 5};
 
     return (ordinals[ordinal.toLowerCase()]);
   },
