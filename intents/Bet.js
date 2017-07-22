@@ -13,7 +13,7 @@ module.exports = {
     // of either the last bet amount or 1 unit
     let reprompt;
     let speechError;
-    let speech;
+    let speech = '';
     let amount;
     const res = require('../' + this.event.request.locale + '/resources');
     const game = this.attributes[this.attributes.currentGame];
@@ -49,7 +49,12 @@ module.exports = {
       utils.incrementProgressive(this.attributes, amount);
       game.bet = amount;
       game.bankroll -= game.bet;
-      speech = res.strings.BET_PLACED.replace('{0}', utils.readCoins(this.event.request.locale, amount));
+
+      // Mention the bet if it's the first bet or the bet changed
+      if (this.attributes.firstBet || (amount != game.lastbet)) {
+        speech += res.strings.BET_PLACED.replace('{0}', utils.readCoins(this.event.request.locale, amount));
+        this.attributes.firstBet = undefined;
+      }
 
       // Deal out 5 new cards
       initializeCards(game);
@@ -70,6 +75,7 @@ module.exports = {
 
     // Set last bet and forward
     game.lastbet = rules.maxCoins;
+    this.attributes.firstBet = true;
     this.emitWithState('BetIntent');
   },
 };

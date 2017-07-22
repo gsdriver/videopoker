@@ -129,6 +129,7 @@ const handlers = {
     }
 
     this.attributes.firstHold = true;
+    this.attributes.firstBet = true;
     this.emit('LaunchRequest');
   },
   'LaunchRequest': Launch.handleIntent,

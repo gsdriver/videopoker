@@ -111,8 +111,8 @@ function updateGamePostPayout(locale, game, callback) {
   } else {
     if (game.bankroll < game.lastbet) {
       // They still have money left, but if they don't have enough to support
-      // the last set of bets again, then reset it to 1 coin
-      game.lastbet = 1;
+      // the last set of bets again, then reset it to whatever is left
+      game.lastbet = game.bankroll;
     }
 
     speech += res.strings.READ_BANKROLL.replace('{0}', utils.readCoins(locale, game.bankroll));
