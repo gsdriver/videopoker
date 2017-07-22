@@ -83,16 +83,15 @@ module.exports = {
 function initializeCards(game) {
   // Start by initializing the deck
   let i;
-  let rank;
   const deck = [];
   const suits = ['C', 'D', 'H', 'S'];
-  const ranks = ['0', 'A', '2', '3', '4', '5', '6', '7', '8', '9', '10', 'J', 'Q', 'K', 'A'];
+  const ranks = ['2', '3', '4', '5', '6', '7', '8', '9', '10', 'J', 'Q', 'K', 'A'];
 
-  for (rank = 1; rank <= 13; rank++) {
+  ranks.map((rank) => {
     suits.map((item) => {
-      deck.push({'rank': ranks[rank], 'suit': item});
+      deck.push({'rank': rank, 'suit': item});
     });
-  }
+  });
 
   // OK, let's shuffle the deck - we'll do this by going thru
   // 520 of cards times, and swap random pairs each iteration
@@ -108,5 +107,6 @@ function initializeCards(game) {
 
   // Top 5 go into hand, next 5 in reserve
   game.cards = deck.slice(0, 5);
+  game.cards.sort((a, b) => (ranks.indexOf(a.rank) - ranks.indexOf(b.rank)));
   game.reserve = deck.slice(6, 11);
 }
