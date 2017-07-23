@@ -60,10 +60,21 @@ module.exports = {
       initializeCards(game);
       this.handler.state = 'FIRSTDEAL';
       speech += res.strings.DEALT_CARDS.replace('{0}',
+              '<audio src=\"https://s3-us-west-2.amazonaws.com/alexasoundclips/dealcard.mp3\"/>' +
               speechUtils.and(game.cards.map((card) => res.sayCard(card)),
-                {pause: '300ms', locale: this.event.request.locale}));
+                {preseparator: '<audio src=\"https://s3-us-west-2.amazonaws.com/alexasoundclips/dealcard.mp3\"/>',
+                  locale: this.event.request.locale}));
 
-      reprompt = res.strings.BET_PLACED_REPROMPT;
+      const rank = utils.determineWinner(this.attributes);
+      if ((rules.payouts['royalflushnatural'] && (rank === 'royalflushnatural'))
+          || (!rules.payouts['royalflushnatural'] && (rank === 'royalflush'))) {
+        // Natural winner - mark all cards as held
+        game.cards.map((card) => card.hold = true);
+        reprompt = res.strings.BET_ROYAL_FLUSH;
+      } else {
+        reprompt = res.strings.BET_PLACED_REPROMPT;
+      }
+
       speech += reprompt;
     }
 

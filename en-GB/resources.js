@@ -34,6 +34,7 @@ const resources = {
   'BET_EXCEEDS_BANKROLL': 'Sorry, this bet exceeds your bankroll of {0}.',
   'BET_PLACED': 'You bet {0}. ',
   'BET_PLACED_REPROMPT': 'Say the cards you would like to hold.',
+  'BET_ROYAL_FLUSH': 'You have a royal flush! All cards are marked as held. Say deal to end the game.',
   // From Help.js
   'HELP_STATUS': 'You are playing {0} and have a bankroll of {1}. ',
   'HELP_SELECTGAME': 'You can say yes to select the currently offered game or no to hear more choices. ',

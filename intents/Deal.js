@@ -38,14 +38,19 @@ module.exports = {
     // Read the cards that were dealt (if any)
     if (newCards.length > 0) {
       speech += res.strings.DEALT_CARDS.replace('{0}',
+              '<audio src=\"https://s3-us-west-2.amazonaws.com/alexasoundclips/dealcard.mp3\"/>' +
               speechUtils.and(newCards.map((card) => res.sayCard(card)),
-                {pause: '300ms', locale: this.event.request.locale}));
+                {preseparator: '<audio src=\"https://s3-us-west-2.amazonaws.com/alexasoundclips/dealcard.mp3\"/>',
+                  locale: this.event.request.locale}));
     }
 
     // OK, let's see if there's a payout associated with this
     const rank = utils.determineWinner(this.attributes);
     if (rules.payouts[rank] >= 50) {
-      speech += '<audio src=\"https://s3-us-west-2.amazonaws.com/alexasoundclips/jackpot.mp3\"/> ';
+      // Can only have five sounds per response
+      if (newCards.length < 5) {
+        speech += '<audio src=\"https://s3-us-west-2.amazonaws.com/alexasoundclips/jackpot.mp3\"/> ';
+      }
       game.jackpot = (game.jackpot) ? (game.jackpot + 1) : 1;
 
       // Write the jackpot details, UNLESS it's a progressive payout
