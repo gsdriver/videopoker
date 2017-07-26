@@ -173,7 +173,7 @@ module.exports = {
           } else {
             error = ((holding)
               ? res.strings.CARD_NOT_FOUND_HOLD
-              : res.strings.CARD_NOT_FOUND_DICSARD)
+              : res.strings.CARD_NOT_FOUND_DISCARD)
                 .replace('{0}', slots[slot].value);
           }
         } else {
