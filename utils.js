@@ -180,7 +180,7 @@ module.exports = {
           // Error with this card
           error = ((holding)
             ? res.strings.CARD_NOT_FOUND_HOLD
-            : res.strings.CARD_NOT_FOUND_DICSARD)
+            : res.strings.CARD_NOT_FOUND_DISCARD)
               .replace('{0}', slots[slot].value);
         }
       }
@@ -191,6 +191,11 @@ module.exports = {
       error = (holding)
         ? res.strings.NO_CARD_SPECIFIED_HOLD
         : res.strings.NO_CARD_SPECIFIED_DISCARD;
+    }
+
+    // If there's an error, log it
+    if (error) {
+      console.log('getSelectedCard error: ' + error);
     }
 
     // Return what we found
