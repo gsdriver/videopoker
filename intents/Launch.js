@@ -11,7 +11,7 @@ module.exports = {
     // Tell them the rules, their bankroll and offer a few things they can do
     const res = require('../' + this.event.request.locale + '/resources');
     let speech = res.strings.LAUNCH_WELCOME;
-console.log('LAUNCH');
+
     // Read the available games then prompt for each one
     utils.readAvailableGames(this.event.request.locale,
         this.attributes.currentGame, true, (gameText, choices) => {

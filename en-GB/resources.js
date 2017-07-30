@@ -138,7 +138,8 @@ module.exports = {
     return undefined;
   },
   ordinalMapping: function(ordinal) {
-    const ordinals = {'first': 1, 'second': 2, 'third': 3, 'fourth': 4, 'fifth': 5, 'last': 5};
+    const ordinals = {'first': 1, 'second': 2, 'third': 3, 'fourth': 4, 'fifth': 5, 'last': 5,
+                      '1st': 1, '2nd': 2, '3rd': 3, '4th': 4, '5th': 5};
 
     return (ordinals[ordinal.toLowerCase()]);
   },
