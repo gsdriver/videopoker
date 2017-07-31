@@ -69,15 +69,15 @@ module.exports = {
       utils.getProgressivePayout(this.attributes, (coinsWon) => {
         game.bankroll += coinsWon;
         speech += res.strings.DEAL_PROGRESSIVE_WINNER.replace('{0}', utils.readCoins(this.event.request.locale, coinsWon));
-        utils.resetProgressive(this.attributes.currentGame);
-        utils.writeJackpotDetails(this.event.session.user.userId,
+        utils.updateProgressiveJackpot(this.event.session.user.userId,
               this.attributes.currentGame,
-              coinsWon);
-        this.handler.state = 'NEWGAME';
-        updateGamePostPayout(this.event.request.locale, game, (speechText, reprompt) => {
-          speech += speechText;
-          utils.emitResponse(this.emit, this.event.request.locale,
-                              null, null, speech, reprompt);
+              coinsWon, () => {
+          this.handler.state = 'NEWGAME';
+          updateGamePostPayout(this.event.request.locale, game, (speechText, reprompt) => {
+            speech += speechText;
+            utils.emitResponse(this.emit, this.event.request.locale,
+                                null, null, speech, reprompt);
+          });
         });
       });
       return;
