@@ -39,7 +39,8 @@ const selectGameHandlers = Alexa.CreateStateHandler('SELECTGAME', {
   },
   'Unhandled': function() {
     const res = require('./' + this.event.request.locale + '/resources');
-    this.emit(':ask', res.strings.UNKNOWN_SELECT_INTENT, res.strings.UNKNOWN_SELECT_INTENT_REPROMPT);
+    utils.emitResponse(this.emit, this.event.request.locale, null, null,
+          res.strings.UNKNOWN_SELECT_INTENT, res.strings.UNKNOWN_SELECT_INTENT_REPROMPT);
   },
 });
 
@@ -66,7 +67,8 @@ const newGameHandlers = Alexa.CreateStateHandler('NEWGAME', {
   },
   'Unhandled': function() {
     const res = require('./' + this.event.request.locale + '/resources');
-    this.emit(':ask', res.strings.UNKNOWN_INTENT, res.strings.UNKNOWN_INTENT_REPROMPT);
+    utils.emitResponse(this.emit, this.event.request.locale, null, null,
+          res.strings.UNKNOWN_INTENT, res.strings.UNKNOWN_INTENT_REPROMPT);
   },
 });
 
@@ -109,7 +111,8 @@ const firstDealHandlers = Alexa.CreateStateHandler('FIRSTDEAL', {
   },
   'Unhandled': function() {
     const res = require('./' + this.event.request.locale + '/resources');
-    this.emit(':ask', res.strings.UNKNOWN_INTENT, res.strings.UNKNOWN_INTENT_REPROMPT);
+    utils.emitResponse(this.emit, this.event.request.locale, null, null,
+          res.strings.UNKNOWN_INTENT, res.strings.UNKNOWN_INTENT_REPROMPT);
   },
 });
 
@@ -135,21 +138,14 @@ const handlers = {
   'LaunchRequest': Launch.handleIntent,
   'Unhandled': function() {
     const res = require('./' + this.event.request.locale + '/resources');
-    this.emit(':ask', res.strings.UNKNOWN_INTENT, res.strings.UNKNOWN_INTENT_REPROMPT);
+    utils.emitResponse(this.emit, this.event.request.locale, null, null,
+          res.strings.UNKNOWN_INTENT, res.strings.UNKNOWN_INTENT_REPROMPT);
   },
 };
 
 exports.handler = function(event, context, callback) {
-  // Small enough volume for me to just write the incoming request
-  if (event && !process.env.NOLOG) {
-    console.log(JSON.stringify(event));
-  }
-
-  if (process.env.RUN_DB_LOCAL) {
-    AWS.config.update({region: 'us-west-2', endpoint: 'http://localhost:8000'});
-  } else {
-    AWS.config.update({region: 'us-east-1'});
-  }
+  utils.setEvent(event);
+  AWS.config.update({region: 'us-east-1'});
 
   const alexa = Alexa.handler(event, context);
 

@@ -18,6 +18,8 @@ module.exports = {
     speech += res.strings.RULES_READ_CARD;
     speech += reprompt;
 
-    this.emit(':askWithCard', speech, reprompt, res.strings.RULES_CARD_TITLE, utils.readPayoutTable(this.event.request.locale, rules));
+    utils.emitResponse(this.emit, this.event.request.locale, null, null,
+          speech, reprompt, res.strings.RULES_CARD_TITLE,
+          utils.readPayoutTable(this.event.request.locale, rules));
   },
 };
