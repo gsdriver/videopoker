@@ -112,7 +112,7 @@ const firstDealHandlers = Alexa.CreateStateHandler('FIRSTDEAL', {
   'Unhandled': function() {
     const res = require('./' + this.event.request.locale + '/resources');
     utils.emitResponse(this.emit, this.event.request.locale, null, null,
-          res.strings.UNKNOWN_INTENT, res.strings.UNKNOWN_INTENT_REPROMPT);
+          res.strings.UNKNOWN_DEAL_INTENT, res.strings.UNKNOWN_DEAL_INTENT_REPROMPT);
   },
 });
 
