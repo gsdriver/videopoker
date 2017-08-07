@@ -42,7 +42,7 @@ function BuildEvent(argv)
 
   var lambda = {
     "session": {
-      "sessionId": "SessionId.c88ec34d-28b0-46f6-a4c7-120d8fba8fa7",
+      "sessionId": "SessionId.c88ec34d-28b0-46f6-a4c7-120d8fba8fa8",
       "application": {
         "applicationId": "amzn1.ask.skill.8f0ddee1-51b3-496a-9424-524436770828"
       },
@@ -64,7 +64,7 @@ function BuildEvent(argv)
 
   var openEvent = {
     "session": {
-      "sessionId": "SessionId.c88ec34d-28b0-46f6-a4c7-120d8fba8fa7",
+      "sessionId": "SessionId.c88ec34d-28b0-46f6-a4c7-120d8fba8fa8",
       "application": {
         "applicationId": "amzn1.ask.skill.8f0ddee1-51b3-496a-9424-524436770828"
       },
