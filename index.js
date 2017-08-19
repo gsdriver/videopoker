@@ -35,7 +35,7 @@ const selectGameHandlers = Alexa.CreateStateHandler('SELECTGAME', {
   'AMAZON.StopIntent': Exit.handleIntent,
   'AMAZON.CancelIntent': Exit.handleIntent,
   'SessionEndedRequest': function() {
-    this.emit(':saveState', true);
+    saveState(this.event.session.user.userId, this.attributes);
   },
   'Unhandled': function() {
     const res = require('./' + this.event.request.locale + '/resources');
@@ -63,7 +63,7 @@ const newGameHandlers = Alexa.CreateStateHandler('NEWGAME', {
   'AMAZON.StopIntent': Exit.handleIntent,
   'AMAZON.CancelIntent': Exit.handleIntent,
   'SessionEndedRequest': function() {
-    this.emit(':saveState', true);
+    saveState(this.event.session.user.userId, this.attributes);
   },
   'Unhandled': function() {
     const res = require('./' + this.event.request.locale + '/resources');
@@ -107,7 +107,7 @@ const firstDealHandlers = Alexa.CreateStateHandler('FIRSTDEAL', {
   'AMAZON.StopIntent': Exit.handleIntent,
   'AMAZON.CancelIntent': Exit.handleIntent,
   'SessionEndedRequest': function() {
-    this.emit(':saveState', true);
+    saveState(this.event.session.user.userId, this.attributes);
   },
   'Unhandled': function() {
     const res = require('./' + this.event.request.locale + '/resources');
@@ -144,14 +144,42 @@ const handlers = {
 };
 
 exports.handler = function(event, context, callback) {
-  utils.setEvent(event);
   AWS.config.update({region: 'us-east-1'});
 
   const alexa = Alexa.handler(event, context);
 
-  alexa.APP_ID = APP_ID;
-  alexa.dynamoDBTableName = 'VideoPoker';
-  alexa.registerHandlers(handlers, newGameHandlers,
-      suggestionHandlers, firstDealHandlers, selectGameHandlers);
-  alexa.execute();
+  alexa.appId = APP_ID;
+  if (!event.session.sessionId || event.session['new']) {
+    const doc = new AWS.DynamoDB.DocumentClient({apiVersion: '2012-08-10'});
+    doc.get({TableName: 'VideoPoker',
+            ConsistentRead: true,
+            Key: {userId: event.session.user.userId}},
+            (err, data) => {
+      if (err || (data.Item === undefined)) {
+        console.log('Error reading attributes ' + err);
+      } else {
+        Object.assign(event.session.attributes, data.Item.mapAttr);
+      }
+
+      execute();
+    });
+  } else {
+    execute();
+  }
+
+  function execute() {
+    utils.setEvent(event);
+    alexa.registerHandlers(handlers, newGameHandlers,
+        suggestionHandlers, firstDealHandlers, selectGameHandlers);
+    alexa.execute();
+  }
 };
+
+function saveState(userId, attributes) {
+  const doc = new AWS.DynamoDB.DocumentClient({apiVersion: '2012-08-10'});
+  doc.put({TableName: 'VideoPoker',
+      Item: {userId: userId, mapAttr: attributes}},
+      (err, data) => {
+    console.log('Saved');
+  });
+}
