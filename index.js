@@ -121,7 +121,6 @@ const handlers = {
     // Initialize attributes and route the request
     if (!this.attributes.currentGame) {
       this.attributes.currentGame = 'jacks';
-      utils.saveNewUser();
     }
 
     if (!this.attributes[this.attributes.currentGame]) {
@@ -156,7 +155,11 @@ exports.handler = function(event, context, callback) {
             Key: {userId: event.session.user.userId}},
             (err, data) => {
       if (err || (data.Item === undefined)) {
-        console.log('Error reading attributes ' + err);
+        if (err) {
+          console.log('Error reading attributes ' + err);
+        } else {
+          utils.saveNewUser();
+        }
       } else {
         Object.assign(event.session.attributes, data.Item.mapAttr);
       }
