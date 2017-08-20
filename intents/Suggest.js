@@ -9,14 +9,21 @@ const utils = require('../utils');
 module.exports = {
   handleIntent: function() {
     const res = require('../' + this.event.request.locale + '/resources');
-    const rules = utils.getGame(this.attributes.currentGame);
     let speech;
-    const reprompt = res.strings.SUGGEST_REPROMPT;
 
-    speech = rules.suggest(this.event.request.locale, this.attributes);
-    speech += reprompt;
-    this.handler.state = 'SUGGESTION';
-    utils.emitResponse(this.emit, this.event.request.locale, null, null, speech, reprompt);
+    if (this.handler.state === 'SELECTGAME') {
+      speech = res.strings.SUGGEST_SELECT_GAME
+          .replace('{0}', res.sayGame(this.attributes.choices[0]));
+      utils.emitResponse(this.emit, this.event.request.locale, null, null, speech, speech);
+    } else {
+      const rules = utils.getGame(this.attributes.currentGame);
+      const reprompt = res.strings.SUGGEST_REPROMPT;
+
+      speech = rules.suggest(this.event.request.locale, this.attributes);
+      speech += reprompt;
+      this.handler.state = 'SUGGESTION';
+      utils.emitResponse(this.emit, this.event.request.locale, null, null, speech, reprompt);
+    }
   },
   handleYesIntent: function() {
     const game = this.attributes[this.attributes.currentGame];

@@ -45,6 +45,16 @@ module.exports = {
       reprompt = res.strings.GENERIC_REPROMPT;
     }
 
+    // If there is partial speech from a previous intent, append
+    if (this.attributes.partialSpeech) {
+      if (speechError) {
+        speechError = this.attributes.partialSpeech + speechError;
+      } else {
+        speech = this.attributes.partialSpeech;
+      }
+      this.attributes.partialSpeech = undefined;
+    }
+
     if (!speechError) {
       utils.incrementProgressive(this.attributes, amount);
       game.bet = amount;
