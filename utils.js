@@ -10,7 +10,7 @@ const dynamodb = new AWS.DynamoDB({apiVersion: '2012-08-10'});
 const s3 = new AWS.S3({apiVersion: '2006-03-01'});
 const speechUtils = require('alexa-speech-utils')();
 const pokerrank = require('poker-ranking');
-const logger = require('alexa-logger');
+const request = require('request');
 
 // Global session ID
 let globalEvent;
@@ -67,44 +67,37 @@ const games = {
 
 module.exports = {
   emitResponse: function(emit, locale, error, response, speech, reprompt, cardTitle, cardText) {
-    let numCalls = 0;
+    const formData = {};
 
-    // Save to S3 if environment variable is set
+    // Async call to save state and logs if necessary
     if (process.env.SAVELOG) {
-      numCalls++;
       const result = (error) ? error : ((response) ? response : speech);
-        logger.saveLog(globalEvent, result,
-        {bucket: 'garrett-alexa-logs', keyPrefix: 'videopoker/', fullLog: true},
-        (err) => {
-        if (err) {
-          console.log(err, err.stack);
-        }
-
-        if (--numCalls === 0) {
-          emitResult();
-        }
+      formData.savelog = JSON.stringify({
+        event: globalEvent,
+        result: result,
       });
     }
-
     if (response) {
-      // Save state
-      numCalls++;
-      const doc = new AWS.DynamoDB.DocumentClient({apiVersion: '2012-08-10'});
-      doc.put({TableName: 'VideoPoker',
-          Item: {userId: globalEvent.session.user.userId,
-                mapAttr: globalEvent.session.attributes}},
-          (err, data) => {
-        if (--numCalls === 0) {
-          emitResult();
-        }
+      formData.savedb = JSON.stringify({
+        userId: globalEvent.session.user.userId,
+        attributes: globalEvent.session.attributes,
       });
     }
 
-    if (!numCalls) {
-      emitResult();
+    if (formData.savelog || formData.savedb) {
+      const params = {
+        url: process.env.SERVICEURL + 'videopoker/saveState',
+        formData: formData,
+      };
+
+      request.post(params, (err, res, body) => {
+        completed();
+      });
+    } else {
+      completed();
     }
 
-    function emitResult() {
+    function completed() {
       if (!process.env.NOLOG) {
         console.log(JSON.stringify(globalEvent));
       }
