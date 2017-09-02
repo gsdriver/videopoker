@@ -31,7 +31,8 @@ module.exports = {
 
     // Mark each suggested card as held, and issue a deal
     for (i = 0; i < game.cards.length; i++) {
-      game.cards[i].hold = (game.suggestedHold.indexOf(i + 1) > -1) ? true : undefined;
+      game.cards[i].hold = (game.suggestedHold && game.suggestedHold.indexOf(i + 1) > -1)
+              ? true : undefined;
     }
     this.handler.state = 'FIRSTDEAL';
     this.emitWithState('DealIntent');

@@ -19,6 +19,7 @@ const Exit = require('./intents/Exit');
 const Launch = require('./intents/Launch');
 const Select = require('./intents/Select');
 const utils = require('./utils');
+const request = require('request');
 
 const APP_ID = 'amzn1.ask.skill.8f0ddee1-51b3-496a-9424-524436770828';
 
@@ -163,7 +164,8 @@ exports.handler = function(event, context, callback) {
         if (err) {
           console.log('Error reading attributes ' + err);
         } else {
-          utils.saveNewUser();
+          request.post({url: process.env.SERVICEURL + 'craps/newUser'}, (err, res, body) => {
+          });
         }
       } else {
         Object.assign(event.session.attributes, data.Item.mapAttr);
