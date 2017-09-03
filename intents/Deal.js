@@ -6,6 +6,7 @@
 
 const utils = require('../utils');
 const speechUtils = require('alexa-speech-utils')();
+const request = require('request');
 
 module.exports = {
   handleIntent: function() {
@@ -57,8 +58,16 @@ module.exports = {
       // in which case we'll write it out once we know the amount
       if (!(rules.progressive && (rank == rules.progressive.match)
                     && (game.bet == rules.maxCoins))) {
-        utils.writeJackpotDetails(this.event.session.user.userId,
-            this.attributes.currentGame, rules.payouts[rank] * game.bet);
+        const params = {
+          url: process.env.SERVICEURL + 'videopoker/updateJackpot',
+          formData: {
+            jackpot: rules.payouts[rank] * game.bet,
+            game: this.attributes.currentGame,
+            userId: this.event.session.user.userId,
+          },
+        };
+        request.post(params, (err, res, body) => {
+        });
       }
     }
 
@@ -69,15 +78,24 @@ module.exports = {
       utils.getProgressivePayout(this.attributes, (coinsWon) => {
         game.bankroll += coinsWon;
         speech += res.strings.DEAL_PROGRESSIVE_WINNER.replace('{0}', utils.readCoins(this.event.request.locale, coinsWon));
-        utils.updateProgressiveJackpot(this.event.session.user.userId,
-              this.attributes.currentGame,
-              coinsWon, () => {
-          this.handler.state = 'NEWGAME';
-          updateGamePostPayout(this.event.request.locale, game, (speechText, reprompt) => {
-            speech += speechText;
-            utils.emitResponse(this.emit, this.event.request.locale,
-                                null, null, speech, reprompt);
-          });
+
+        const params = {
+          url: process.env.SERVICEURL + 'videopoker/updateJackpot',
+          formData: {
+            jackpot: coinsWon,
+            game: this.attributes.currentGame,
+            userId: this.event.session.user.userId,
+            resetProgressive: true,
+          },
+        };
+        request.post(params, (err, res, body) => {
+        });
+
+        this.handler.state = 'NEWGAME';
+        updateGamePostPayout(this.event.request.locale, game, (speechText, reprompt) => {
+          speech += speechText;
+          utils.emitResponse(this.emit, this.event.request.locale,
+                              null, null, speech, reprompt);
         });
       });
       return;
@@ -107,6 +125,7 @@ function updateGamePostPayout(locale, game, callback) {
   let reprompt = res.strings.DEAL_PLAY_AGAIN;
 
   // If they have no units left, reset the bankroll
+  game.suggestedHold = undefined;
   game.lastbet = game.bet;
   if (game.bankroll < 1) {
     game.bankroll = 1000;

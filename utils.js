@@ -468,56 +468,6 @@ module.exports = {
       });
     }
   },
-  // Updates DynamoDB and S3 to note the jackpot win
-  updateProgressiveJackpot: function(userId, game, jackpot, callback) {
-    let callsToComplete = 3;
-
-    // Write to the DB, and reset the coins played to 0
-    dynamodb.putItem({TableName: 'VideoPoker',
-        Item: {userId: {S: 'game-' + game}, coins: {N: '0'}}},
-        (err, data) => {
-      // We don't take a callback, but if there's an error log it
-      if (err) {
-        console.log(err);
-      }
-      complete();
-    });
-
-    // Update number of progressive wins while you're at it
-    dynamodb.updateItem({TableName: 'VideoPoker',
-        Key: {userId: {S: 'game-' + game}},
-        AttributeUpdates: {jackpots: {
-            Action: 'ADD',
-            Value: {N: '1'}},
-    }}, (err, data) => {
-      // Again, don't care about the error
-      if (err) {
-        console.log(err);
-      }
-      complete();
-    });
-
-    // And write this jackpot out to S3
-    const details = {userId: userId, amount: jackpot};
-    const params = {Body: JSON.stringify(details),
-      Bucket: 'garrett-alexa-usage',
-      Key: 'jackpots/videopoker/' + game + '-' + Date.now() + '.txt'};
-
-    s3.putObject(params, (err, data) => {
-      if (err) {
-        console.log(err, err.stack);
-      }
-      complete();
-    });
-
-    // This function keeps track of when we've completed all calls
-    function complete() {
-      callsToComplete--;
-      if (callsToComplete === 0) {
-        callback();
-      }
-    }
-  },
 };
 
 function getTopScoresFromS3(attributes, callback) {
