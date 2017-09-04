@@ -91,28 +91,26 @@ module.exports = {
       };
 
       request.post(params, (err, res, body) => {
-        completed();
+        if (err) {
+          console.log(err);
+        }
       });
-    } else {
-      completed();
     }
 
-    function completed() {
-      if (!process.env.NOLOG) {
-        console.log(JSON.stringify(globalEvent));
-      }
+    if (!process.env.NOLOG) {
+      console.log(JSON.stringify(globalEvent));
+    }
 
-      if (error) {
-        const res = require('./' + locale + '/resources');
-        console.log('Speech error: ' + error);
-        emit(':ask', error, res.ERROR_REPROMPT);
-      } else if (response) {
-        emit(':tell', response);
-      } else if (cardTitle) {
-        emit(':askWithCard', speech, reprompt, cardTitle, cardText);
-      } else {
-        emit(':ask', speech, reprompt);
-      }
+    if (error) {
+      const res = require('./' + locale + '/resources');
+      console.log('Speech error: ' + error);
+      emit(':ask', error, res.ERROR_REPROMPT);
+    } else if (response) {
+      emit(':tell', response);
+    } else if (cardTitle) {
+      emit(':askWithCard', speech, reprompt, cardTitle, cardText);
+    } else {
+      emit(':ask', speech, reprompt);
     }
   },
   setEvent: function(event) {
