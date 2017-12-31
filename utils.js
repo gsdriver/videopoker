@@ -7,7 +7,6 @@
 const AWS = require('aws-sdk');
 AWS.config.update({region: 'us-east-1'});
 const dynamodb = new AWS.DynamoDB({apiVersion: '2012-08-10'});
-const s3 = new AWS.S3({apiVersion: '2006-03-01'});
 const speechUtils = require('alexa-speech-utils')();
 const pokerrank = require('poker-ranking');
 const request = require('request');
@@ -387,34 +386,45 @@ module.exports = {
 
     return text;
   },
-  readLeaderBoard: function(locale, attributes, callback) {
+  readLeaderBoard: function(locale, userId, attributes, callback) {
     const res = require('./' + locale + '/resources');
     const game = attributes[attributes.currentGame];
+    let leaderURL = process.env.SERVICEURL + 'videopoker/leaders?game=' + attributes.currentGame;
+    let speech = '';
 
-    getTopScoresFromS3(attributes, (err, scores) => {
-      let speech = '';
+    if (game.spins > 0) {
+      leaderURL += '&userId=' + userId + '&score=' + game.bankroll;
+    }
 
-      // OK, read up to five high scores
-      if (!scores || (scores.length === 0)) {
+    request(
+      {
+        uri: leaderURL,
+        method: 'GET',
+        timeout: 1000,
+      }, (err, response, body) => {
+      if (err) {
         // No scores to read
         speech = res.strings.LEADER_NO_SCORES;
       } else {
-        // What is your ranking - assuming you've done a spin
-        if (game.spins > 0) {
-          const ranking = scores.indexOf(game.bankroll) + 1;
+        const leaders = JSON.parse(body);
 
-          speech += res.strings.LEADER_RANKING
-            .replace('{0}', game.bankroll)
-            .replace('{1}', res.sayGame(attributes.currentGame))
-            .replace('{2}', ranking)
-            .replace('{3}', scores.length);
+        if (!leaders.count || !leaders.top) {
+          // Something went wrong
+          speech = res.strings.LEADER_NO_SCORES;
+        } else {
+          if (leaders.rank) {
+            speech += res.strings.LEADER_RANKING
+              .replace('{0}', game.bankroll)
+              .replace('{1}', res.sayGame(attributes.currentGame))
+              .replace('{2}', leaders.rank)
+              .replace('{3}', leaders.count);
+          }
+
+          // And what is the leader board?
+          const topScores = leaders.top.map((x) => res.strings.LEADER_FORMAT.replace('{0}', x));
+          speech += res.strings.LEADER_TOP_SCORES.replace('{0}', topScores.length);
+          speech += speechUtils.and(topScores, {locale: locale, pause: '300ms'});
         }
-
-        // And what is the leader board?
-        const toRead = (scores.length > 5) ? 5 : scores.length;
-        const topScores = scores.slice(0, toRead).map((x) => res.strings.LEADER_FORMAT.replace('{0}', x));
-        speech += res.strings.LEADER_TOP_SCORES.replace('{0}', toRead);
-        speech += speechUtils.and(topScores, {locale: locale, pause: '300ms'});
       }
 
       callback(speech);
@@ -467,34 +477,6 @@ module.exports = {
     }
   },
 };
-
-function getTopScoresFromS3(attributes, callback) {
-  const game = attributes[attributes.currentGame];
-
-  // Read the S3 buckets that has everyone's scores
-  s3.getObject({Bucket: 'garrett-alexa-usage', Key: 'VideoPokerScores.txt'}, (err, data) => {
-    if (err) {
-      console.log(err, err.stack);
-      callback(err, null);
-    } else {
-      // Yeah, I can do a binary search (this is sorted), but straight search for now
-      const ranking = JSON.parse(data.Body.toString('ascii'));
-      const scores = ranking.scores;
-
-      if (scores && scores[attributes.currentGame]) {
-        // If their current high score isn't in the list, add it
-        if (scores[attributes.currentGame].indexOf(game.bankroll) < 0) {
-          scores[attributes.currentGame].push(game.bankroll);
-        }
-
-        callback(null, scores[attributes.currentGame].sort((a, b) => (b - a)));
-      } else {
-        console.log('No scores for ' + attributes.currentGame);
-        callback('No scoreset', null);
-      }
-    }
-  });
-}
 
 // From http://www.thegamblersedge.com/vpoker/vpokerstrat96JoB.htm
 function suggestJacksOrBetter(locale, attributes) {
