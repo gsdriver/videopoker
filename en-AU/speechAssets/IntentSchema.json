@@ -1,0 +1,105 @@
+{
+  "intents": [
+    {
+      "intent": "BetIntent",
+      "slots": [
+        {
+          "name": "Amount",
+          "type": "AMAZON.Number"
+        }
+      ]
+    },
+    {
+      "intent": "BetMaxIntent"
+    },
+    {
+      "intent": "HoldIntent",
+      "slots": [
+        {
+          "name": "FirstCard",
+          "type": "LIST_OF_CARD_SELECTION"
+        },
+        {
+          "name": "SecondCard",
+          "type": "LIST_OF_CARD_SELECTION"
+        },
+        {
+          "name": "ThirdCard",
+          "type": "LIST_OF_CARD_SELECTION"
+        },
+        {
+          "name": "FourthCard",
+          "type": "LIST_OF_CARD_SELECTION"
+        },
+        {
+          "name": "FifthCard",
+          "type": "LIST_OF_CARD_SELECTION"
+        }
+      ]
+    },
+    {
+      "intent": "HoldAllIntent"
+    },
+    {
+      "intent": "DiscardIntent",
+      "slots": [
+        {
+          "name": "FirstCard",
+          "type": "LIST_OF_CARD_SELECTION"
+        },
+        {
+          "name": "SecondCard",
+          "type": "LIST_OF_CARD_SELECTION"
+        },
+        {
+          "name": "ThirdCard",
+          "type": "LIST_OF_CARD_SELECTION"
+        },
+        {
+          "name": "FourthCard",
+          "type": "LIST_OF_CARD_SELECTION"
+        },
+        {
+          "name": "FifthCard",
+          "type": "LIST_OF_CARD_SELECTION"
+        }
+      ]
+    },
+    {
+      "intent": "DiscardAllIntent"
+    },
+    {
+      "intent": "RulesIntent"
+    },
+    {
+      "intent": "DealIntent"
+    },
+    {
+      "intent": "SelectIntent"
+    },
+    {
+      "intent": "SuggestIntent"
+    },
+    {
+      "intent": "HighScoreIntent"
+    },
+    {
+      "intent": "AMAZON.RepeatIntent"
+    },
+    {
+      "intent": "AMAZON.YesIntent"
+    },
+    {
+      "intent": "AMAZON.NoIntent"
+    },
+    {
+      "intent": "AMAZON.HelpIntent"
+    },
+    {
+      "intent": "AMAZON.StopIntent"
+    },
+    {
+      "intent": "AMAZON.CancelIntent"
+    }
+  ]
+}
