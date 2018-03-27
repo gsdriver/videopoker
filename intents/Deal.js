@@ -21,7 +21,7 @@ module.exports = {
     // They shouldn't be able to get this far without a bet
     if (!game.bet) {
       this.handler.state = 'NEWGAME';
-      utils.emitResponse(this.emit, this.event.request.locale,
+      utils.emitResponse(this,
           res.strings.DEAL_NOBETS, null, null,
           res.strings.DEAL_INVALID_REPROMPT);
       return;
@@ -94,8 +94,7 @@ module.exports = {
         this.handler.state = 'NEWGAME';
         updateGamePostPayout(this.event.request.locale, game, (speechText, reprompt) => {
           speech += speechText;
-          utils.emitResponse(this.emit, this.event.request.locale,
-                              null, null, speech, reprompt);
+          utils.emitResponse(this, null, null, speech, reprompt);
         });
       });
       return;
@@ -113,8 +112,7 @@ module.exports = {
     this.handler.state = 'NEWGAME';
     updateGamePostPayout(this.event.request.locale, game, (speechText, reprompt) => {
       speech += speechText;
-      utils.emitResponse(this.emit, this.event.request.locale,
-                          null, null, speech, reprompt);
+      utils.emitResponse(this, null, null, speech, reprompt);
     });
   },
 };

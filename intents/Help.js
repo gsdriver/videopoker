@@ -32,7 +32,7 @@ module.exports = {
 
     cardText = res.strings[rules.help];
     cardText += utils.readPayoutTable(this.event.request.locale, rules);
-    utils.emitResponse(this.emit, this.event.request.locale, null, null,
+    utils.emitResponse(this, null, null,
           speech, reprompt, res.strings.HELP_CARD_TITLE, cardText);
   },
 };

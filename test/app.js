@@ -39,6 +39,7 @@ function BuildEvent(argv)
     'FourthCard': {'name': 'FourthCard', 'value': ''},
     'FifthCard': {'name': 'FifthCard', 'value': ''}}};
   var discardall = {'name': 'DiscardAllIntent', 'slots': {}};
+  var toggle = {'name': 'ToggleIntent', 'slots': {'Number': {'name': 'Number', 'value': ''}}};
 
   var lambda = {
     "session": {
@@ -141,6 +142,11 @@ function BuildEvent(argv)
     }
     if (argv.length > 7) {
       discard.slots.FifthCard.value = argv[7];
+    }
+  } else if (argv[2] == 'toggle') {
+    lambda.request.intent = toggle;
+    if (argv.length > 3) {
+      toggle.slots.Number.value = argv[3];
     }
   } else if (argv[2] == 'holdall') {
     lambda.request.intent = holdall;
