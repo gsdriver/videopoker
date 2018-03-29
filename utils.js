@@ -106,6 +106,7 @@ module.exports = {
 
     if (context.event.context &&
         context.event.context.System.device.supportedInterfaces.Display) {
+      context.attributes.display = true;
       const listTemplate = buildDisplayTemplate(context);
       if (listTemplate) {
         context.response.renderTemplate(listTemplate);
@@ -1179,7 +1180,7 @@ function buildDisplayTemplate(context) {
   let cardText;
 
   if ((context.handler.state !== 'SELETGAME')
-    && game.cards && (game.cards.length > 0)) {
+    && game && game.cards && (game.cards.length > 0)) {
     let i;
 
     for (i = 0; i < game.cards.length; i++) {
@@ -1199,11 +1200,11 @@ function buildDisplayTemplate(context) {
             ? res.strings.IMAGE_TITLE_INGAME : res.strings.IMAGE_TITLE_GAMEOVER)
       .setListItems(listItems)
       .setBackButtonBehavior('HIDDEN')
+      .setBackgroundImage(makeImage('http://garrettvargas.com/img/background.jpg'))
       .build();
 
     return listTemplate;
   }
 
-console.log('Returning undefined');
   return undefined;
 }
