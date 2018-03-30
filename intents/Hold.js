@@ -53,7 +53,7 @@ module.exports = {
       speech+= reprompt;
     }
 
-    utils.emitResponse(this.emit, this.event.request.locale, error, null, speech, reprompt);
+    utils.emitResponse(this, error, null, speech, reprompt);
   },
   handleAllIntent: function() {
     this.attributes.allSelected = true;

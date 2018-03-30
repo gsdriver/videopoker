@@ -4,6 +4,10 @@
 
 'use strict';
 
+const Alexa = require('alexa-sdk');
+// utility methods for creating Image and TextField objects
+const makePlainText = Alexa.utils.TextUtils.makePlainText;
+const makeImage = Alexa.utils.ImageUtils.makeImage;
 const AWS = require('aws-sdk');
 AWS.config.update({region: 'us-east-1'});
 const dynamodb = new AWS.DynamoDB({apiVersion: '2012-08-10'});
@@ -65,7 +69,7 @@ const games = {
 };
 
 module.exports = {
-  emitResponse: function(emit, locale, error, response, speech, reprompt, cardTitle, cardText) {
+  emitResponse: function(context, error, response, speech, reprompt, cardTitle, cardText) {
     const formData = {};
 
     // Async call to save state and logs if necessary
@@ -100,17 +104,32 @@ module.exports = {
       console.log(JSON.stringify(globalEvent));
     }
 
-    if (error) {
-      const res = require('./' + locale + '/resources');
-      console.log('Speech error: ' + error);
-      emit(':ask', error, res.ERROR_REPROMPT);
-    } else if (response) {
-      emit(':tell', response);
-    } else if (cardTitle) {
-      emit(':askWithCard', speech, reprompt, cardTitle, cardText);
-    } else {
-      emit(':ask', speech, reprompt);
+    if (context.event.context &&
+        context.event.context.System.device.supportedInterfaces.Display) {
+      context.attributes.display = true;
+      const listTemplate = buildDisplayTemplate(context);
+      if (listTemplate) {
+        context.response.renderTemplate(listTemplate);
+      }
     }
+
+    if (error) {
+      const res = require('./' + context.event.request.locale + '/resources');
+      console.log('Speech error: ' + error);
+      context.response.speak(error)
+        .listen(res.ERROR_REPROMPT);
+    } else if (response) {
+      context.response.speak(response);
+    } else if (cardTitle) {
+      context.response.speak(speech)
+        .listen(reprompt)
+        .cardRenderer(cardTitle, cardText);
+    } else {
+      context.response.speak(speech)
+        .listen(reprompt);
+    }
+
+    context.emit(':responseReady');
   },
   setEvent: function(event) {
     globalEvent = event;
@@ -1133,6 +1152,58 @@ function nCardRoyal(cards, numCards) {
       // We have our flush!
       return matchedCards;
     }
+  }
+
+  return undefined;
+}
+
+function buildDisplayTemplate(context) {
+  const res = require('./' + context.event.request.locale + '/resources');
+  const attributes = context.attributes;
+  const game = attributes[attributes.currentGame];
+  const listItemBuilder = new Alexa.templateBuilders.ListItemBuilder();
+  const listTemplateBuilder = new Alexa.templateBuilders.ListTemplate2Builder();
+  let url;
+  const format = 'https://s3.amazonaws.com/blackjacktutor-card-images/{0}_of_{1}.png';
+  const suits = {
+    'C': 'clubs',
+    'D': 'diamonds',
+    'H': 'hearts',
+    'S': 'spades',
+  };
+  const ranks = {
+    'J': '11',
+    'Q': '12',
+    'K': '13',
+    'A': '1',
+  };
+  let cardText;
+
+  if ((context.handler.state !== 'SELETGAME')
+    && game && game.cards && (game.cards.length > 0)) {
+    let i;
+
+    for (i = 0; i < game.cards.length; i++) {
+      const card = game.cards[i];
+      url = format
+        .replace('{0}', ranks[card.rank] ? ranks[card.rank] : card.rank)
+        .replace('{1}', suits[card.suit]);
+
+      cardText = (card.hold) ? makePlainText(res.strings.IMAGE_HELD) : undefined;
+      listItemBuilder.addItem(makeImage(url), 'card.' + i, cardText);
+    }
+
+    const listItems = listItemBuilder.build();
+    const listTemplate = listTemplateBuilder
+      .setToken('listToken')
+      .setTitle((context.handler.state == 'FIRSTDEAL')
+            ? res.strings.IMAGE_TITLE_INGAME : res.strings.IMAGE_TITLE_GAMEOVER)
+      .setListItems(listItems)
+      .setBackButtonBehavior('HIDDEN')
+      .setBackgroundImage(makeImage('http://garrettvargas.com/img/background.jpg'))
+      .build();
+
+    return listTemplate;
   }
 
   return undefined;

@@ -92,6 +92,9 @@ const resources = {
   'SUGGEST_HOLD_CARDS': 'You should hold {0}. ',
   'SUGGEST_DISCARD_ALL': 'You shouldn\'t hold any of your cards. ',
   'SUGGEST_SELECT_GAME': 'You should say yes to play {0}.',
+  'IMAGE_HELD': 'HELD',
+  'IMAGE_TITLE_INGAME': 'Select cards to hold or say Deal to deal new cards',
+  'IMAGE_TITLE_GAMEOVER': 'Your last hand',
   // General
   'SINGLE_COIN': 'coin',
   'PLURAL_COIN': 'coins',

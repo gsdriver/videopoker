@@ -24,7 +24,7 @@ module.exports = {
             speech = gameText;
             reprompt = res.strings.LAUNCH_REPROMPT.replace('{0}', res.sayGame(this.attributes.choices[0]));
             speech += reprompt;
-            utils.emitResponse(this.emit, this.event.request.locale, null, null, speech, reprompt);
+            utils.emitResponse(this, null, null, speech, reprompt);
           });
         } else {
           // Hmm - invalid state - reset for them
@@ -41,7 +41,7 @@ module.exports = {
         reprompt = utils.readAvailableActions(this.event.request.locale,
                   this.attributes, this.handler.state);
         speech += reprompt;
-        utils.emitResponse(this.emit, this.event.request.locale, null, null, speech, reprompt);
+        utils.emitResponse(this, null, null, speech, reprompt);
         break;
       case 'FIRSTDEAL':
         // Read the hand and any held cards
@@ -49,7 +49,7 @@ module.exports = {
         reprompt = utils.readAvailableActions(this.event.request.locale,
                   this.attributes, this.handler.state);
         speech += reprompt;
-        utils.emitResponse(this.emit, this.event.request.locale, null, null, speech, reprompt);
+        utils.emitResponse(this, null, null, speech, reprompt);
         break;
       case 'SUGGESTION':
         // Read the hand and the suggestion
@@ -58,14 +58,14 @@ module.exports = {
         reprompt = utils.readAvailableActions(this.event.request.locale,
                   this.attributes, this.handler.state);
         speech += reprompt;
-        utils.emitResponse(this.emit, this.event.request.locale, null, null, speech, reprompt);
+        utils.emitResponse(this, null, null, speech, reprompt);
         break;
       default:
         // Not sure what to do
         speech = res.strings.UNKNOWN_INTENT;
         reprompt = res.strings.UNKNOWN_INTENT_REPROMPT;
         speech += reprompt;
-        utils.emitResponse(this.emit, this.event.request.locale, null, null, speech, reprompt);
+        utils.emitResponse(this, null, null, speech, reprompt);
         break;
     }
   },

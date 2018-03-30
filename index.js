@@ -9,6 +9,7 @@ const Alexa = require('alexa-sdk');
 const Bet = require('./intents/Bet');
 const Deal = require('./intents/Deal');
 const Hold = require('./intents/Hold');
+const Toggle = require('./intents/Toggle');
 const Discard = require('./intents/Discard');
 const Rules = require('./intents/Rules');
 const HighScore = require('./intents/HighScore');
@@ -20,7 +21,6 @@ const Launch = require('./intents/Launch');
 const Select = require('./intents/Select');
 const utils = require('./utils');
 const request = require('request');
-const dashbot = require('dashbot')(process.env.DASHBOTKEY).alexa;
 
 const APP_ID = 'amzn1.ask.skill.8f0ddee1-51b3-496a-9424-524436770828';
 
@@ -46,7 +46,7 @@ const selectGameHandlers = Alexa.CreateStateHandler('SELECTGAME', {
   },
   'Unhandled': function() {
     const res = require('./' + this.event.request.locale + '/resources');
-    utils.emitResponse(this.emit, this.event.request.locale, null, null,
+    utils.emitResponse(this, null, null,
           res.strings.UNKNOWN_SELECT_INTENT, res.strings.UNKNOWN_SELECT_INTENT_REPROMPT);
   },
 });
@@ -74,7 +74,7 @@ const newGameHandlers = Alexa.CreateStateHandler('NEWGAME', {
   },
   'Unhandled': function() {
     const res = require('./' + this.event.request.locale + '/resources');
-    utils.emitResponse(this.emit, this.event.request.locale, null, null,
+    utils.emitResponse(this, null, null,
           res.strings.UNKNOWN_INTENT, res.strings.UNKNOWN_INTENT_REPROMPT);
   },
 });
@@ -99,6 +99,8 @@ const firstDealHandlers = Alexa.CreateStateHandler('FIRSTDEAL', {
     this.handler.state = '';
     this.emitWithState('NewSession');
   },
+  'ElementSelected': Toggle.handleIntent,
+  'ToggleIntent': Toggle.handleIntent,
   'HoldIntent': Hold.handleIntent,
   'HoldAllIntent': Hold.handleAllIntent,
   'DiscardIntent': Discard.handleIntent,
@@ -118,7 +120,7 @@ const firstDealHandlers = Alexa.CreateStateHandler('FIRSTDEAL', {
   },
   'Unhandled': function() {
     const res = require('./' + this.event.request.locale + '/resources');
-    utils.emitResponse(this.emit, this.event.request.locale, null, null,
+    utils.emitResponse(this, null, null,
           res.strings.UNKNOWN_DEAL_INTENT, res.strings.UNKNOWN_DEAL_INTENT_REPROMPT);
   },
 });
@@ -144,12 +146,19 @@ const handlers = {
   'LaunchRequest': Launch.handleIntent,
   'Unhandled': function() {
     const res = require('./' + this.event.request.locale + '/resources');
-    utils.emitResponse(this.emit, this.event.request.locale, null, null,
+    utils.emitResponse(this, null, null,
           res.strings.UNKNOWN_INTENT, res.strings.UNKNOWN_INTENT_REPROMPT);
   },
 };
 
-exports.handler = dashbot.handler((event, context, callback) => {
+if (process.env.DASHBOTKEY) {
+  const dashbot = require('dashbot')(process.env.DASHBOTKEY).alexa;
+  exports.handler = dashbot.handler(runSkill);
+} else {
+  exports.handler = runSkill;
+}
+
+function runSkill(event, context, callback) {
   AWS.config.update({region: 'us-east-1'});
 
   const alexa = Alexa.handler(event, context);
@@ -165,7 +174,7 @@ exports.handler = dashbot.handler((event, context, callback) => {
         if (err) {
           console.log('Error reading attributes ' + err);
         } else {
-          request.post({url: process.env.SERVICEURL + 'craps/newUser'}, (err, res, body) => {
+          request.post({url: process.env.SERVICEURL + 'videopoker/newUser'}, (err, res, body) => {
           });
         }
       } else {
@@ -184,7 +193,7 @@ exports.handler = dashbot.handler((event, context, callback) => {
         suggestionHandlers, firstDealHandlers, selectGameHandlers);
     alexa.execute();
   }
-});
+}
 
 function saveState(userId, attributes) {
   const formData = {};

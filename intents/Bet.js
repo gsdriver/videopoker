@@ -88,7 +88,7 @@ module.exports = {
       speech += reprompt;
     }
 
-    utils.emitResponse(this.emit, this.event.request.locale, speechError, null, speech, reprompt);
+    utils.emitResponse(this, speechError, null, speech, reprompt);
   },
   handleMaxIntent: function() {
     const game = this.attributes[this.attributes.currentGame];

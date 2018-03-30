@@ -1,0 +1,1489 @@
+{
+  "languageModel": {
+    "types": [
+      {
+        "name": "LIST_OF_CARD_SELECTION",
+        "values": [
+          {
+            "id": null,
+            "name": {
+              "value": "ace",
+              "synonyms": []
+            }
+          },
+          {
+            "id": null,
+            "name": {
+              "value": "two",
+              "synonyms": []
+            }
+          },
+          {
+            "id": null,
+            "name": {
+              "value": "three",
+              "synonyms": []
+            }
+          },
+          {
+            "id": null,
+            "name": {
+              "value": "four",
+              "synonyms": []
+            }
+          },
+          {
+            "id": null,
+            "name": {
+              "value": "five",
+              "synonyms": []
+            }
+          },
+          {
+            "id": null,
+            "name": {
+              "value": "six",
+              "synonyms": []
+            }
+          },
+          {
+            "id": null,
+            "name": {
+              "value": "seven",
+              "synonyms": []
+            }
+          },
+          {
+            "id": null,
+            "name": {
+              "value": "eight",
+              "synonyms": []
+            }
+          },
+          {
+            "id": null,
+            "name": {
+              "value": "nine",
+              "synonyms": []
+            }
+          },
+          {
+            "id": null,
+            "name": {
+              "value": "ten",
+              "synonyms": []
+            }
+          },
+          {
+            "id": null,
+            "name": {
+              "value": "jack",
+              "synonyms": []
+            }
+          },
+          {
+            "id": null,
+            "name": {
+              "value": "queen",
+              "synonyms": []
+            }
+          },
+          {
+            "id": null,
+            "name": {
+              "value": "king",
+              "synonyms": []
+            }
+          },
+          {
+            "id": null,
+            "name": {
+              "value": "aces",
+              "synonyms": []
+            }
+          },
+          {
+            "id": null,
+            "name": {
+              "value": "twos",
+              "synonyms": []
+            }
+          },
+          {
+            "id": null,
+            "name": {
+              "value": "threes",
+              "synonyms": []
+            }
+          },
+          {
+            "id": null,
+            "name": {
+              "value": "fours",
+              "synonyms": []
+            }
+          },
+          {
+            "id": null,
+            "name": {
+              "value": "fives",
+              "synonyms": []
+            }
+          },
+          {
+            "id": null,
+            "name": {
+              "value": "sixes",
+              "synonyms": []
+            }
+          },
+          {
+            "id": null,
+            "name": {
+              "value": "sevens",
+              "synonyms": []
+            }
+          },
+          {
+            "id": null,
+            "name": {
+              "value": "eights",
+              "synonyms": []
+            }
+          },
+          {
+            "id": null,
+            "name": {
+              "value": "nines",
+              "synonyms": []
+            }
+          },
+          {
+            "id": null,
+            "name": {
+              "value": "tens",
+              "synonyms": []
+            }
+          },
+          {
+            "id": null,
+            "name": {
+              "value": "jacks",
+              "synonyms": []
+            }
+          },
+          {
+            "id": null,
+            "name": {
+              "value": "queens",
+              "synonyms": []
+            }
+          },
+          {
+            "id": null,
+            "name": {
+              "value": "kings",
+              "synonyms": []
+            }
+          },
+          {
+            "id": null,
+            "name": {
+              "value": "club",
+              "synonyms": []
+            }
+          },
+          {
+            "id": null,
+            "name": {
+              "value": "diamond",
+              "synonyms": []
+            }
+          },
+          {
+            "id": null,
+            "name": {
+              "value": "heart",
+              "synonyms": []
+            }
+          },
+          {
+            "id": null,
+            "name": {
+              "value": "spade",
+              "synonyms": []
+            }
+          },
+          {
+            "id": null,
+            "name": {
+              "value": "clubs",
+              "synonyms": []
+            }
+          },
+          {
+            "id": null,
+            "name": {
+              "value": "diamonds",
+              "synonyms": []
+            }
+          },
+          {
+            "id": null,
+            "name": {
+              "value": "hearts",
+              "synonyms": []
+            }
+          },
+          {
+            "id": null,
+            "name": {
+              "value": "spades",
+              "synonyms": []
+            }
+          },
+          {
+            "id": null,
+            "name": {
+              "value": "ace of clubs",
+              "synonyms": []
+            }
+          },
+          {
+            "id": null,
+            "name": {
+              "value": "two of clubs",
+              "synonyms": []
+            }
+          },
+          {
+            "id": null,
+            "name": {
+              "value": "three of clubs",
+              "synonyms": []
+            }
+          },
+          {
+            "id": null,
+            "name": {
+              "value": "four of clubs",
+              "synonyms": []
+            }
+          },
+          {
+            "id": null,
+            "name": {
+              "value": "five of clubs",
+              "synonyms": []
+            }
+          },
+          {
+            "id": null,
+            "name": {
+              "value": "six of clubs",
+              "synonyms": []
+            }
+          },
+          {
+            "id": null,
+            "name": {
+              "value": "seven of clubs",
+              "synonyms": []
+            }
+          },
+          {
+            "id": null,
+            "name": {
+              "value": "eight of clubs",
+              "synonyms": []
+            }
+          },
+          {
+            "id": null,
+            "name": {
+              "value": "nine of clubs",
+              "synonyms": []
+            }
+          },
+          {
+            "id": null,
+            "name": {
+              "value": "ten of clubs",
+              "synonyms": []
+            }
+          },
+          {
+            "id": null,
+            "name": {
+              "value": "jack of clubs",
+              "synonyms": []
+            }
+          },
+          {
+            "id": null,
+            "name": {
+              "value": "queen of clubs",
+              "synonyms": []
+            }
+          },
+          {
+            "id": null,
+            "name": {
+              "value": "king of clubs",
+              "synonyms": []
+            }
+          },
+          {
+            "id": null,
+            "name": {
+              "value": "ace of diamonds",
+              "synonyms": []
+            }
+          },
+          {
+            "id": null,
+            "name": {
+              "value": "two of diamonds",
+              "synonyms": []
+            }
+          },
+          {
+            "id": null,
+            "name": {
+              "value": "three of diamonds",
+              "synonyms": []
+            }
+          },
+          {
+            "id": null,
+            "name": {
+              "value": "four of diamonds",
+              "synonyms": []
+            }
+          },
+          {
+            "id": null,
+            "name": {
+              "value": "five of diamonds",
+              "synonyms": []
+            }
+          },
+          {
+            "id": null,
+            "name": {
+              "value": "six of diamonds",
+              "synonyms": []
+            }
+          },
+          {
+            "id": null,
+            "name": {
+              "value": "seven of diamonds",
+              "synonyms": []
+            }
+          },
+          {
+            "id": null,
+            "name": {
+              "value": "eight of diamonds",
+              "synonyms": []
+            }
+          },
+          {
+            "id": null,
+            "name": {
+              "value": "nine of diamonds",
+              "synonyms": []
+            }
+          },
+          {
+            "id": null,
+            "name": {
+              "value": "ten of diamonds",
+              "synonyms": []
+            }
+          },
+          {
+            "id": null,
+            "name": {
+              "value": "jack of diamonds",
+              "synonyms": []
+            }
+          },
+          {
+            "id": null,
+            "name": {
+              "value": "queen of diamonds",
+              "synonyms": []
+            }
+          },
+          {
+            "id": null,
+            "name": {
+              "value": "king of diamonds",
+              "synonyms": []
+            }
+          },
+          {
+            "id": null,
+            "name": {
+              "value": "ace of hearts",
+              "synonyms": []
+            }
+          },
+          {
+            "id": null,
+            "name": {
+              "value": "two of hearts",
+              "synonyms": []
+            }
+          },
+          {
+            "id": null,
+            "name": {
+              "value": "three of hearts",
+              "synonyms": []
+            }
+          },
+          {
+            "id": null,
+            "name": {
+              "value": "four of hearts",
+              "synonyms": []
+            }
+          },
+          {
+            "id": null,
+            "name": {
+              "value": "five of hearts",
+              "synonyms": []
+            }
+          },
+          {
+            "id": null,
+            "name": {
+              "value": "six of hearts",
+              "synonyms": []
+            }
+          },
+          {
+            "id": null,
+            "name": {
+              "value": "seven of hearts",
+              "synonyms": []
+            }
+          },
+          {
+            "id": null,
+            "name": {
+              "value": "eight of hearts",
+              "synonyms": []
+            }
+          },
+          {
+            "id": null,
+            "name": {
+              "value": "nine of hearts",
+              "synonyms": []
+            }
+          },
+          {
+            "id": null,
+            "name": {
+              "value": "ten of hearts",
+              "synonyms": []
+            }
+          },
+          {
+            "id": null,
+            "name": {
+              "value": "jack of hearts",
+              "synonyms": []
+            }
+          },
+          {
+            "id": null,
+            "name": {
+              "value": "queen of hearts",
+              "synonyms": []
+            }
+          },
+          {
+            "id": null,
+            "name": {
+              "value": "king of hearts",
+              "synonyms": []
+            }
+          },
+          {
+            "id": null,
+            "name": {
+              "value": "ace of spades",
+              "synonyms": []
+            }
+          },
+          {
+            "id": null,
+            "name": {
+              "value": "two of spades",
+              "synonyms": []
+            }
+          },
+          {
+            "id": null,
+            "name": {
+              "value": "three of spades",
+              "synonyms": []
+            }
+          },
+          {
+            "id": null,
+            "name": {
+              "value": "four of spades",
+              "synonyms": []
+            }
+          },
+          {
+            "id": null,
+            "name": {
+              "value": "five of spades",
+              "synonyms": []
+            }
+          },
+          {
+            "id": null,
+            "name": {
+              "value": "six of spades",
+              "synonyms": []
+            }
+          },
+          {
+            "id": null,
+            "name": {
+              "value": "seven of spades",
+              "synonyms": []
+            }
+          },
+          {
+            "id": null,
+            "name": {
+              "value": "eight of spades",
+              "synonyms": []
+            }
+          },
+          {
+            "id": null,
+            "name": {
+              "value": "nine of spades",
+              "synonyms": []
+            }
+          },
+          {
+            "id": null,
+            "name": {
+              "value": "ten of spades",
+              "synonyms": []
+            }
+          },
+          {
+            "id": null,
+            "name": {
+              "value": "jack of spades",
+              "synonyms": []
+            }
+          },
+          {
+            "id": null,
+            "name": {
+              "value": "queen of spades",
+              "synonyms": []
+            }
+          },
+          {
+            "id": null,
+            "name": {
+              "value": "king of spades",
+              "synonyms": []
+            }
+          },
+          {
+            "id": null,
+            "name": {
+              "value": "club ace",
+              "synonyms": []
+            }
+          },
+          {
+            "id": null,
+            "name": {
+              "value": "club two",
+              "synonyms": []
+            }
+          },
+          {
+            "id": null,
+            "name": {
+              "value": "club three",
+              "synonyms": []
+            }
+          },
+          {
+            "id": null,
+            "name": {
+              "value": "club four",
+              "synonyms": []
+            }
+          },
+          {
+            "id": null,
+            "name": {
+              "value": "club five",
+              "synonyms": []
+            }
+          },
+          {
+            "id": null,
+            "name": {
+              "value": "club six",
+              "synonyms": []
+            }
+          },
+          {
+            "id": null,
+            "name": {
+              "value": "club seven",
+              "synonyms": []
+            }
+          },
+          {
+            "id": null,
+            "name": {
+              "value": "club eight",
+              "synonyms": []
+            }
+          },
+          {
+            "id": null,
+            "name": {
+              "value": "club nine",
+              "synonyms": []
+            }
+          },
+          {
+            "id": null,
+            "name": {
+              "value": "club ten",
+              "synonyms": []
+            }
+          },
+          {
+            "id": null,
+            "name": {
+              "value": "club jack",
+              "synonyms": []
+            }
+          },
+          {
+            "id": null,
+            "name": {
+              "value": "club queen",
+              "synonyms": []
+            }
+          },
+          {
+            "id": null,
+            "name": {
+              "value": "club king",
+              "synonyms": []
+            }
+          },
+          {
+            "id": null,
+            "name": {
+              "value": "diamond ace",
+              "synonyms": []
+            }
+          },
+          {
+            "id": null,
+            "name": {
+              "value": "diamond two",
+              "synonyms": []
+            }
+          },
+          {
+            "id": null,
+            "name": {
+              "value": "diamond three",
+              "synonyms": []
+            }
+          },
+          {
+            "id": null,
+            "name": {
+              "value": "diamond four",
+              "synonyms": []
+            }
+          },
+          {
+            "id": null,
+            "name": {
+              "value": "diamond five",
+              "synonyms": []
+            }
+          },
+          {
+            "id": null,
+            "name": {
+              "value": "diamond six",
+              "synonyms": []
+            }
+          },
+          {
+            "id": null,
+            "name": {
+              "value": "diamond seven",
+              "synonyms": []
+            }
+          },
+          {
+            "id": null,
+            "name": {
+              "value": "diamond eight",
+              "synonyms": []
+            }
+          },
+          {
+            "id": null,
+            "name": {
+              "value": "diamond nine",
+              "synonyms": []
+            }
+          },
+          {
+            "id": null,
+            "name": {
+              "value": "diamond ten",
+              "synonyms": []
+            }
+          },
+          {
+            "id": null,
+            "name": {
+              "value": "diamond jack",
+              "synonyms": []
+            }
+          },
+          {
+            "id": null,
+            "name": {
+              "value": "diamond queen",
+              "synonyms": []
+            }
+          },
+          {
+            "id": null,
+            "name": {
+              "value": "diamond king",
+              "synonyms": []
+            }
+          },
+          {
+            "id": null,
+            "name": {
+              "value": "heart ace",
+              "synonyms": []
+            }
+          },
+          {
+            "id": null,
+            "name": {
+              "value": "heart two",
+              "synonyms": []
+            }
+          },
+          {
+            "id": null,
+            "name": {
+              "value": "heart three",
+              "synonyms": []
+            }
+          },
+          {
+            "id": null,
+            "name": {
+              "value": "heart four",
+              "synonyms": []
+            }
+          },
+          {
+            "id": null,
+            "name": {
+              "value": "heart five",
+              "synonyms": []
+            }
+          },
+          {
+            "id": null,
+            "name": {
+              "value": "heart six",
+              "synonyms": []
+            }
+          },
+          {
+            "id": null,
+            "name": {
+              "value": "heart seven",
+              "synonyms": []
+            }
+          },
+          {
+            "id": null,
+            "name": {
+              "value": "heart eight",
+              "synonyms": []
+            }
+          },
+          {
+            "id": null,
+            "name": {
+              "value": "heart nine",
+              "synonyms": []
+            }
+          },
+          {
+            "id": null,
+            "name": {
+              "value": "heart ten",
+              "synonyms": []
+            }
+          },
+          {
+            "id": null,
+            "name": {
+              "value": "heart jack",
+              "synonyms": []
+            }
+          },
+          {
+            "id": null,
+            "name": {
+              "value": "heart queen",
+              "synonyms": []
+            }
+          },
+          {
+            "id": null,
+            "name": {
+              "value": "heart king",
+              "synonyms": []
+            }
+          },
+          {
+            "id": null,
+            "name": {
+              "value": "spade ace",
+              "synonyms": []
+            }
+          },
+          {
+            "id": null,
+            "name": {
+              "value": "spade two",
+              "synonyms": []
+            }
+          },
+          {
+            "id": null,
+            "name": {
+              "value": "spade three",
+              "synonyms": []
+            }
+          },
+          {
+            "id": null,
+            "name": {
+              "value": "spade four",
+              "synonyms": []
+            }
+          },
+          {
+            "id": null,
+            "name": {
+              "value": "spade five",
+              "synonyms": []
+            }
+          },
+          {
+            "id": null,
+            "name": {
+              "value": "spade six",
+              "synonyms": []
+            }
+          },
+          {
+            "id": null,
+            "name": {
+              "value": "spade seven",
+              "synonyms": []
+            }
+          },
+          {
+            "id": null,
+            "name": {
+              "value": "spade eight",
+              "synonyms": []
+            }
+          },
+          {
+            "id": null,
+            "name": {
+              "value": "spade nine",
+              "synonyms": []
+            }
+          },
+          {
+            "id": null,
+            "name": {
+              "value": "spade ten",
+              "synonyms": []
+            }
+          },
+          {
+            "id": null,
+            "name": {
+              "value": "spade jack",
+              "synonyms": []
+            }
+          },
+          {
+            "id": null,
+            "name": {
+              "value": "spade queen",
+              "synonyms": []
+            }
+          },
+          {
+            "id": null,
+            "name": {
+              "value": "spade king",
+              "synonyms": []
+            }
+          },
+          {
+            "id": null,
+            "name": {
+              "value": "first",
+              "synonyms": []
+            }
+          },
+          {
+            "id": null,
+            "name": {
+              "value": "second",
+              "synonyms": []
+            }
+          },
+          {
+            "id": null,
+            "name": {
+              "value": "third",
+              "synonyms": []
+            }
+          },
+          {
+            "id": null,
+            "name": {
+              "value": "fourth",
+              "synonyms": []
+            }
+          },
+          {
+            "id": null,
+            "name": {
+              "value": "fifth",
+              "synonyms": []
+            }
+          },
+          {
+            "id": null,
+            "name": {
+              "value": "last",
+              "synonyms": []
+            }
+          }
+        ]
+      }
+    ],
+    "intents": [
+      {
+        "name": "AMAZON.CancelIntent",
+        "samples": []
+      },
+      {
+        "name": "AMAZON.HelpIntent",
+        "samples": []
+      },
+      {
+        "name": "AMAZON.MoreIntent",
+        "samples": []
+      },
+      {
+        "name": "AMAZON.NavigateSettingsIntent",
+        "samples": []
+      },
+      {
+        "name": "AMAZON.NextIntent",
+        "samples": []
+      },
+      {
+        "name": "AMAZON.NoIntent",
+        "samples": []
+      },
+      {
+        "name": "AMAZON.PageDownIntent",
+        "samples": []
+      },
+      {
+        "name": "AMAZON.PageUpIntent",
+        "samples": []
+      },
+      {
+        "name": "AMAZON.PreviousIntent",
+        "samples": []
+      },
+      {
+        "name": "AMAZON.RepeatIntent",
+        "samples": []
+      },
+      {
+        "name": "AMAZON.NavigateHomeIntent",
+        "samples": []
+      },
+      {
+        "name": "AMAZON.ScrollDownIntent",
+        "samples": []
+      },
+      {
+        "name": "AMAZON.ScrollLeftIntent",
+        "samples": []
+      },
+      {
+        "name": "AMAZON.ScrollRightIntent",
+        "samples": []
+      },
+      {
+        "name": "AMAZON.ScrollUpIntent",
+        "samples": []
+      },
+      {
+        "name": "AMAZON.StopIntent",
+        "samples": []
+      },
+      {
+        "name": "AMAZON.YesIntent",
+        "samples": []
+      },
+      {
+        "name": "BetIntent",
+        "samples": [
+          "bet",
+          "place a bet",
+          "put in {Amount} coins",
+          "insert {Amount} coins",
+          "put in {Amount} pounds",
+          "insert {Amount} pounds",
+          "put in {Amount} units",
+          "insert {Amount} units"
+        ],
+        "slots": [
+          {
+            "name": "Amount",
+            "type": "AMAZON.NUMBER"
+          }
+        ]
+      },
+      {
+        "name": "ToggleIntent",
+        "samples": [
+          "toggle card {Number}",
+          "toggle {Number}",
+          "{Number}"
+        ],
+        "slots": [
+          {
+            "name": "Number",
+            "type": "AMAZON.NUMBER"
+          }
+        ]
+      },
+      {
+        "name": "BetMaxIntent",
+        "samples": [
+          "bet max coins",
+          "place a bet for max coins",
+          "put in max coins",
+          "put in the max coins",
+          "insert max coins",
+          "insert the max coins",
+          "put in max pounds",
+          "put in the max pounds",
+          "insert max pounds",
+          "insert the max pounds",
+          "put in the max units",
+          "put in max units",
+          "insert max units",
+          "insert the max units",
+          "bet maximum coins",
+          "place a bet for maximum coins",
+          "put in maximum coins",
+          "put in the maximum coins",
+          "insert maximum coins",
+          "insert the maximum coins",
+          "put in maximum pounds",
+          "put in the maximum pounds",
+          "insert maximum pounds",
+          "insert the maximum pounds",
+          "put in the maximum units",
+          "put in maximum units",
+          "insert maximum units",
+          "insert the maximum units"
+        ],
+        "slots": []
+      },
+      {
+        "name": "DealIntent",
+        "samples": [
+          "deal the cards",
+          "deal cards",
+          "deal",
+          "draw cards",
+          "draw new cards",
+          "draw the cards",
+          "pull the handle",
+          "push the button",
+          "play"
+        ],
+        "slots": []
+      },
+      {
+        "name": "DiscardAllIntent",
+        "samples": [
+          "discard all cards",
+          "discard all of the cards",
+          "discard them all",
+          "discard all",
+          "remove all cards",
+          "remove all of the cards",
+          "remove them all",
+          "remove all",
+          "throw out all cards",
+          "throw out all of the cards",
+          "throw out them all",
+          "throw out all"
+        ],
+        "slots": []
+      },
+      {
+        "name": "DiscardIntent",
+        "samples": [
+          "discard the {FirstCard}",
+          "discard the {FirstCard} card",
+          "discard the {FirstCard} and {SecondCard}",
+          "discard the {FirstCard} and {SecondCard} cards",
+          "discard the {FirstCard} card and {SecondCard} card",
+          "discard the {FirstCard} and {SecondCard} and {ThirdCard}",
+          "discard the {FirstCard} {SecondCard} and {ThirdCard}",
+          "discard the {FirstCard} and {SecondCard} and {ThirdCard} cards",
+          "discard the {FirstCard} {SecondCard} and {ThirdCard} cards",
+          "discard the {FirstCard} card and {SecondCard} card and {ThirdCard} card",
+          "discard the {FirstCard} card {SecondCard} card and {ThirdCard} card",
+          "discard the {FirstCard} and {SecondCard} and {ThirdCard} and {FourthCard}",
+          "discard the {FirstCard} {SecondCard} {ThirdCard} and {FourthCard}",
+          "discard the {FirstCard} and {SecondCard} and {ThirdCard} and {FourthCard} cards",
+          "discard the {FirstCard} {SecondCard} {ThirdCard} and {FourthCard} cards",
+          "discard the {FirstCard} card and {SecondCard} card and {ThirdCard} card and {FourthCard} card",
+          "discard the {FirstCard} card {SecondCard} card {ThirdCard} and {FourthCard} card",
+          "discard the {FirstCard} and {SecondCard} and {ThirdCard} and {FourthCard} and {FifthCard}",
+          "discard the {FirstCard} {SecondCard} {ThirdCard} {FourthCard} and {FifthCard}",
+          "discard the {FirstCard} and {SecondCard} and {ThirdCard} and {FourthCard} and {FifthCard} cards",
+          "discard the {FirstCard} {SecondCard} {ThirdCard} {FourthCard} and {FifthCard} cards",
+          "discard the {FirstCard} card and {SecondCard} card and {ThirdCard} card and {FourthCard} and {FifthCard} card",
+          "discard the {FirstCard} card {SecondCard} card {ThirdCard} and {FourthCard} and {FifthCard} card",
+          "remove the {FirstCard}",
+          "remove the {FirstCard} card",
+          "remove the {FirstCard} and {SecondCard}",
+          "remove the {FirstCard} and {SecondCard} cards",
+          "remove the {FirstCard} card and {SecondCard} card",
+          "remove the {FirstCard} and {SecondCard} and {ThirdCard}",
+          "remove the {FirstCard} {SecondCard} and {ThirdCard}",
+          "remove the {FirstCard} and {SecondCard} and {ThirdCard} cards",
+          "remove the {FirstCard} {SecondCard} and {ThirdCard} cards",
+          "remove the {FirstCard} card and {SecondCard} card and {ThirdCard} card",
+          "remove the {FirstCard} card {SecondCard} card and {ThirdCard} card",
+          "remove the {FirstCard} and {SecondCard} and {ThirdCard} and {FourthCard}",
+          "remove the {FirstCard} {SecondCard} {ThirdCard} and {FourthCard}",
+          "remove the {FirstCard} and {SecondCard} and {ThirdCard} and {FourthCard} cards",
+          "remove the {FirstCard} {SecondCard} {ThirdCard} and {FourthCard} cards",
+          "remove the {FirstCard} card and {SecondCard} card and {ThirdCard} card and {FourthCard} card",
+          "remove the {FirstCard} card {SecondCard} card {ThirdCard} and {FourthCard} card",
+          "remove the {FirstCard} and {SecondCard} and {ThirdCard} and {FourthCard} and {FifthCard}",
+          "remove the {FirstCard} {SecondCard} {ThirdCard} {FourthCard} and {FifthCard}",
+          "remove the {FirstCard} and {SecondCard} and {ThirdCard} and {FourthCard} and {FifthCard} cards",
+          "remove the {FirstCard} {SecondCard} {ThirdCard} {FourthCard} and {FifthCard} cards",
+          "remove the {FirstCard} card and {SecondCard} card and {ThirdCard} card and {FourthCard} and {FifthCard} card",
+          "remove the {FirstCard} card {SecondCard} card {ThirdCard} and {FourthCard} and {FifthCard} card",
+          "throw out the {FirstCard}",
+          "throw out the {FirstCard} card",
+          "throw out the {FirstCard} and {SecondCard}",
+          "throw out the {FirstCard} and {SecondCard} cards",
+          "throw out the {FirstCard} card and {SecondCard} card",
+          "throw out the {FirstCard} and {SecondCard} and {ThirdCard}",
+          "throw out the {FirstCard} {SecondCard} and {ThirdCard}",
+          "throw out the {FirstCard} and {SecondCard} and {ThirdCard} cards",
+          "throw out the {FirstCard} {SecondCard} and {ThirdCard} cards",
+          "throw out the {FirstCard} card and {SecondCard} card and {ThirdCard} card",
+          "throw out the {FirstCard} card {SecondCard} card and {ThirdCard} card",
+          "throw out the {FirstCard} and {SecondCard} and {ThirdCard} and {FourthCard}",
+          "throw out the {FirstCard} {SecondCard} {ThirdCard} and {FourthCard}",
+          "throw out the {FirstCard} and {SecondCard} and {ThirdCard} and {FourthCard} cards",
+          "throw out the {FirstCard} {SecondCard} {ThirdCard} and {FourthCard} cards",
+          "throw out the {FirstCard} card and {SecondCard} card and {ThirdCard} card and {FourthCard} card",
+          "throw out the {FirstCard} card {SecondCard} card {ThirdCard} and {FourthCard} card",
+          "throw out the {FirstCard} and {SecondCard} and {ThirdCard} and {FourthCard} and {FifthCard}",
+          "throw out the {FirstCard} {SecondCard} {ThirdCard} {FourthCard} and {FifthCard}",
+          "throw out the {FirstCard} and {SecondCard} and {ThirdCard} and {FourthCard} and {FifthCard} cards",
+          "throw out the {FirstCard} {SecondCard} {ThirdCard} {FourthCard} and {FifthCard} cards",
+          "throw out the {FirstCard} card and {SecondCard} card and {ThirdCard} card and {FourthCard} and {FifthCard} card",
+          "throw out the {FirstCard} card {SecondCard} card {ThirdCard} and {FourthCard} and {FifthCard} card"
+        ],
+        "slots": [
+          {
+            "name": "FirstCard",
+            "type": "LIST_OF_CARD_SELECTION"
+          },
+          {
+            "name": "SecondCard",
+            "type": "LIST_OF_CARD_SELECTION"
+          },
+          {
+            "name": "ThirdCard",
+            "type": "LIST_OF_CARD_SELECTION"
+          },
+          {
+            "name": "FourthCard",
+            "type": "LIST_OF_CARD_SELECTION"
+          },
+          {
+            "name": "FifthCard",
+            "type": "LIST_OF_CARD_SELECTION"
+          }
+        ]
+      },
+      {
+        "name": "HighScoreIntent",
+        "samples": [
+          "read high scores",
+          "tell me high scores",
+          "what are the high scores",
+          "what is the leader board",
+          "read leader board",
+          "say high scores",
+          "say leader board"
+        ],
+        "slots": []
+      },
+      {
+        "name": "HoldAllIntent",
+        "samples": [
+          "hold all cards",
+          "hold all of the cards",
+          "hold them all",
+          "hold all",
+          "keep all cards",
+          "keep all of the cards",
+          "keep them all",
+          "keep all",
+          "select all cards",
+          "select all of the cards",
+          "select them all",
+          "select all"
+        ],
+        "slots": []
+      },
+      {
+        "name": "HoldIntent",
+        "samples": [
+          "hold the {FirstCard}",
+          "hold the {FirstCard} card",
+          "hold the {FirstCard} and {SecondCard}",
+          "hold the {FirstCard} and {SecondCard} cards",
+          "hold the {FirstCard} card and {SecondCard} card",
+          "hold the {FirstCard} and {SecondCard} and {ThirdCard}",
+          "hold the {FirstCard} {SecondCard} and {ThirdCard}",
+          "hold the {FirstCard} and {SecondCard} and {ThirdCard} cards",
+          "hold the {FirstCard} {SecondCard} and {ThirdCard} cards",
+          "hold the {FirstCard} card and {SecondCard} card and {ThirdCard} card",
+          "hold the {FirstCard} card {SecondCard} card and {ThirdCard} card",
+          "hold the {FirstCard} and {SecondCard} and {ThirdCard} and {FourthCard}",
+          "hold the {FirstCard} {SecondCard} {ThirdCard} and {FourthCard}",
+          "hold the {FirstCard} and {SecondCard} and {ThirdCard} and {FourthCard} cards",
+          "hold the {FirstCard} {SecondCard} {ThirdCard} and {FourthCard} cards",
+          "hold the {FirstCard} card and {SecondCard} card and {ThirdCard} card and {FourthCard} card",
+          "hold the {FirstCard} card {SecondCard} card {ThirdCard} and {FourthCard} card",
+          "hold the {FirstCard} and {SecondCard} and {ThirdCard} and {FourthCard} and {FifthCard}",
+          "hold the {FirstCard} {SecondCard} {ThirdCard} {FourthCard} and {FifthCard}",
+          "hold the {FirstCard} and {SecondCard} and {ThirdCard} and {FourthCard} and {FifthCard} cards",
+          "hold the {FirstCard} {SecondCard} {ThirdCard} {FourthCard} and {FifthCard} cards",
+          "hold the {FirstCard} card and {SecondCard} card and {ThirdCard} card and {FourthCard} and {FifthCard} card",
+          "hold the {FirstCard} card {SecondCard} card {ThirdCard} and {FourthCard} and {FifthCard} card",
+          "keep the {FirstCard}",
+          "keep the {FirstCard} card",
+          "keep the {FirstCard} and {SecondCard}",
+          "keep the {FirstCard} and {SecondCard} cards",
+          "keep the {FirstCard} card and {SecondCard} card",
+          "keep the {FirstCard} and {SecondCard} and {ThirdCard}",
+          "keep the {FirstCard} {SecondCard} and {ThirdCard}",
+          "keep the {FirstCard} and {SecondCard} and {ThirdCard} cards",
+          "keep the {FirstCard} {SecondCard} and {ThirdCard} cards",
+          "keep the {FirstCard} card and {SecondCard} card and {ThirdCard} card",
+          "keep the {FirstCard} card {SecondCard} card and {ThirdCard} card",
+          "keep the {FirstCard} and {SecondCard} and {ThirdCard} and {FourthCard}",
+          "keep the {FirstCard} {SecondCard} {ThirdCard} and {FourthCard}",
+          "keep the {FirstCard} and {SecondCard} and {ThirdCard} and {FourthCard} cards",
+          "keep the {FirstCard} {SecondCard} {ThirdCard} and {FourthCard} cards",
+          "keep the {FirstCard} card and {SecondCard} card and {ThirdCard} card and {FourthCard} card",
+          "keep the {FirstCard} card {SecondCard} card {ThirdCard} and {FourthCard} card",
+          "keep the {FirstCard} and {SecondCard} and {ThirdCard} and {FourthCard} and {FifthCard}",
+          "keep the {FirstCard} {SecondCard} {ThirdCard} {FourthCard} and {FifthCard}",
+          "keep the {FirstCard} and {SecondCard} and {ThirdCard} and {FourthCard} and {FifthCard} cards",
+          "keep the {FirstCard} {SecondCard} {ThirdCard} {FourthCard} and {FifthCard} cards",
+          "keep the {FirstCard} card and {SecondCard} card and {ThirdCard} card and {FourthCard} and {FifthCard} card",
+          "keep the {FirstCard} card {SecondCard} card {ThirdCard} and {FourthCard} and {FifthCard} card",
+          "select the {FirstCard}",
+          "select the {FirstCard} card",
+          "select the {FirstCard} and {SecondCard}",
+          "select the {FirstCard} and {SecondCard} cards",
+          "select the {FirstCard} card and {SecondCard} card",
+          "select the {FirstCard} and {SecondCard} and {ThirdCard}",
+          "select the {FirstCard} {SecondCard} and {ThirdCard}",
+          "select the {FirstCard} and {SecondCard} and {ThirdCard} cards",
+          "select the {FirstCard} {SecondCard} and {ThirdCard} cards",
+          "select the {FirstCard} card and {SecondCard} card and {ThirdCard} card",
+          "select the {FirstCard} card {SecondCard} card and {ThirdCard} card",
+          "select the {FirstCard} and {SecondCard} and {ThirdCard} and {FourthCard}",
+          "select the {FirstCard} {SecondCard} {ThirdCard} and {FourthCard}",
+          "select the {FirstCard} and {SecondCard} and {ThirdCard} and {FourthCard} cards",
+          "select the {FirstCard} {SecondCard} {ThirdCard} and {FourthCard} cards",
+          "select the {FirstCard} card and {SecondCard} card and {ThirdCard} card and {FourthCard} card",
+          "select the {FirstCard} card {SecondCard} card {ThirdCard} and {FourthCard} card",
+          "select the {FirstCard} and {SecondCard} and {ThirdCard} and {FourthCard} and {FifthCard}",
+          "select the {FirstCard} {SecondCard} {ThirdCard} {FourthCard} and {FifthCard}",
+          "select the {FirstCard} and {SecondCard} and {ThirdCard} and {FourthCard} and {FifthCard} cards",
+          "select the {FirstCard} {SecondCard} {ThirdCard} {FourthCard} and {FifthCard} cards",
+          "select the {FirstCard} card and {SecondCard} card and {ThirdCard} card and {FourthCard} and {FifthCard} card",
+          "select the {FirstCard} card {SecondCard} card {ThirdCard} and {FourthCard} and {FifthCard} card"
+        ],
+        "slots": [
+          {
+            "name": "FirstCard",
+            "type": "LIST_OF_CARD_SELECTION"
+          },
+          {
+            "name": "SecondCard",
+            "type": "LIST_OF_CARD_SELECTION"
+          },
+          {
+            "name": "ThirdCard",
+            "type": "LIST_OF_CARD_SELECTION"
+          },
+          {
+            "name": "FourthCard",
+            "type": "LIST_OF_CARD_SELECTION"
+          },
+          {
+            "name": "FifthCard",
+            "type": "LIST_OF_CARD_SELECTION"
+          }
+        ]
+      },
+      {
+        "name": "RulesIntent",
+        "samples": [
+          "read rules",
+          "read the rules",
+          "what are the rules",
+          "tell me the rules",
+          "read payout",
+          "read payout table",
+          "read the payout table",
+          "what are the payouts",
+          "tell me the payouts",
+          "read rules of the game",
+          "read the rules of the game",
+          "what are the rules of the game",
+          "tell me the rules of the game",
+          "the rules of the game",
+          "rules of the game"
+        ],
+        "slots": []
+      },
+      {
+        "name": "SelectIntent",
+        "samples": [
+          "pick a different game",
+          "pick a different machine",
+          "pick a new game",
+          "pick a new machine",
+          "pick another machine",
+          "pick another game",
+          "change to a different game",
+          "change to a different machine",
+          "change to a new game",
+          "change to a new machine",
+          "change to another machine",
+          "change to another game",
+          "change machine",
+          "select a different game",
+          "select a different machine",
+          "select a new game",
+          "select a new machine",
+          "select another machine",
+          "select another game",
+          "choose a different game",
+          "choose a different machine",
+          "choose a new game",
+          "choose a new machine",
+          "choose another machine",
+          "choose another game",
+          "switch to a different game",
+          "switch to a different machine",
+          "switch to a new game",
+          "switch to a new machine",
+          "switch to another machine",
+          "switch to another game"
+        ],
+        "slots": []
+      },
+      {
+        "name": "SuggestIntent",
+        "samples": [
+          "what should I do",
+          "give suggestion",
+          "give me suggestion",
+          "give me a suggestion",
+          "for suggestion",
+          "for a suggestion",
+          "suggest action",
+          "suggest play",
+          "suggest move",
+          "suggest a move",
+          "suggest an action",
+          "suggest a play"
+        ],
+        "slots": []
+      }
+    ],
+    "invocationName": "video poker"
+  }
+}
