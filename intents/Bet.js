@@ -6,6 +6,7 @@
 
 const utils = require('../utils');
 const speechUtils = require('alexa-speech-utils')();
+const seedrandom = require('seedrandom');
 
 module.exports = {
   handleIntent: function() {
@@ -67,7 +68,7 @@ module.exports = {
       }
 
       // Deal out 5 new cards
-      initializeCards(game);
+      initializeCards(this.event.session.user.userId, game);
       this.handler.state = 'FIRSTDEAL';
       speech += res.strings.DEALT_CARDS.replace('{0}',
               '<audio src=\"https://s3-us-west-2.amazonaws.com/alexasoundclips/dealcard.mp3\"/>' +
@@ -101,7 +102,7 @@ module.exports = {
   },
 };
 
-function initializeCards(game) {
+function initializeCards(userId, game) {
   // Start by initializing the deck
   let i;
   const deck = [];
@@ -118,8 +119,16 @@ function initializeCards(game) {
   // 520 of cards times, and swap random pairs each iteration
   // Yeah, there are probably more elegant solutions but this should do the job
   for (i = 0; i < 520; i++) {
-    const card1 = Math.floor(Math.random() * 52);
-    const card2 = Math.floor(Math.random() * 52);
+    const randomValue1 = seedrandom(i + userId + (game.timestamp ? game.timestamp : ''))();
+    const randomValue2 = seedrandom('A' + i + userId + (game.timestamp ? game.timestamp : ''))();
+    const card1 = Math.floor(randomValue1 * 52);
+    const card2 = Math.floor(randomValue2 * 52);
+    if (card1 == 52) {
+      card1--;
+    }
+    if (card2 == 52) {
+      card2--;
+    }
 
     const tempCard = deck[card1];
     deck[card1] = deck[card2];
