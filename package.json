@@ -10,7 +10,7 @@
     "bluebird": "^3.5.0",
     "dashbot": "^9.4.3",
     "poker-ranking": "^1.1.1",
-    "request": "^2.81.0",
+    "request": "^2.85.0",
     "seedrandom": "^2.4.3"
   },
   "devDependencies": {

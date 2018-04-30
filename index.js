@@ -39,6 +39,7 @@ const selectGameHandlers = Alexa.CreateStateHandler('SELECTGAME', {
   'AMAZON.RepeatIntent': Repeat.handleIntent,
   'AMAZON.YesIntent': Select.handleYesIntent,
   'AMAZON.NoIntent': Select.handleNoIntent,
+  'AMAZON.NextIntent': Select.handleNoIntent,
   'AMAZON.StopIntent': Exit.handleIntent,
   'AMAZON.CancelIntent': Exit.handleIntent,
   'SessionEndedRequest': function() {
@@ -65,6 +66,7 @@ const newGameHandlers = Alexa.CreateStateHandler('NEWGAME', {
   'HighScoreIntent': HighScore.handleIntent,
   'AMAZON.YesIntent': Bet.handleIntent,
   'AMAZON.NoIntent': Exit.handleIntent,
+  'AMAZON.NextIntent': Bet.handleIntent,
   'AMAZON.HelpIntent': Help.handleIntent,
   'AMAZON.RepeatIntent': Repeat.handleIntent,
   'AMAZON.StopIntent': Exit.handleIntent,
@@ -111,6 +113,7 @@ const firstDealHandlers = Alexa.CreateStateHandler('FIRSTDEAL', {
   'SuggestIntent': Suggest.handleIntent,
   'AMAZON.YesIntent': Deal.handleIntent,
   'AMAZON.NoIntent': Exit.handleIntent,
+  'AMAZON.NextIntent': Deal.handleIntent,
   'AMAZON.HelpIntent': Help.handleIntent,
   'AMAZON.RepeatIntent': Repeat.handleIntent,
   'AMAZON.StopIntent': Exit.handleIntent,
