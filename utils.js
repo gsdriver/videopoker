@@ -260,7 +260,10 @@ module.exports = {
     }
 
     // Return what we found
-    return {error: error, cards: cardIndex};
+    return {error: error,
+      cards: cardIndex.filter((x, i, arr) => {
+        return (arr.indexOf(x) == i);
+      })};
   },
   readAvailableGames: function(locale, currentGame, currentFirst, callback) {
     const res = require('./' + locale + '/resources');
