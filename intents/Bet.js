@@ -115,25 +115,20 @@ function initializeCards(userId, game) {
     });
   });
 
-  // OK, let's shuffle the deck - we'll do this by going thru
-  // 520 of cards times, and swap random pairs each iteration
-  // Yeah, there are probably more elegant solutions but this should do the job
-  for (i = 0; i < 520; i++) {
-    const randomValue1 = seedrandom(i + userId + (game.timestamp ? game.timestamp : ''))();
-    const randomValue2 = seedrandom('A' + i + userId + (game.timestamp ? game.timestamp : ''))();
-    const card1 = Math.floor(randomValue1 * 52);
-    const card2 = Math.floor(randomValue2 * 52);
-    if (card1 == 52) {
-      card1--;
+  // Shuffle using the Fisher-Yates algorithm
+  const start = Date.now();
+  for (i = 0; i < deck.length - 1; i++) {
+    const randomValue = seedrandom(i + userId + (game.timestamp ? game.timestamp : ''))();
+    let j = Math.floor(randomValue * (deck.length - i));
+    if (j == (deck.length - i)) {
+      j--;
     }
-    if (card2 == 52) {
-      card2--;
-    }
-
-    const tempCard = deck[card1];
-    deck[card1] = deck[card2];
-    deck[card2] = tempCard;
+    j += i;
+    const tempCard = deck[i];
+    deck[i] = deck[j];
+    deck[j] = tempCard;
   }
+  console.log('Shuffle took ' + (Date.now() - start) + ' ms');
 
   // Top 5 go into hand, next 5 in reserve
   game.cards = deck.slice(0, 5);
