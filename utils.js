@@ -100,10 +100,6 @@ module.exports = {
       });
     }
 
-    if (!process.env.NOLOG) {
-      console.log(JSON.stringify(globalEvent));
-    }
-
     if (context.event.context &&
         context.event.context.System.device.supportedInterfaces.Display) {
       context.attributes.display = true;

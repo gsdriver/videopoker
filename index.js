@@ -164,6 +164,10 @@ if (process.env.DASHBOTKEY) {
 function runSkill(event, context, callback) {
   AWS.config.update({region: 'us-east-1'});
 
+  if (!process.env.NOLOG) {
+    console.log(JSON.stringify(event));
+  }
+
   const alexa = Alexa.handler(event, context);
 
   alexa.appId = APP_ID;
