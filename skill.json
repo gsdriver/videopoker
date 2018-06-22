@@ -106,6 +106,9 @@
         "interfaces": [
           {
             "type": "RENDER_TEMPLATE"
+          },
+          {
+            "type": "CAN_FULFILL_INTENT_REQUEST"
           }
         ]
       }

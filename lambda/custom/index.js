@@ -6,6 +6,7 @@
 
 const AWS = require('aws-sdk');
 const Alexa = require('alexa-sdk');
+const CanFulfill = require('./intents/CanFulfill');
 const Bet = require('./intents/Bet');
 const Deal = require('./intents/Deal');
 const Hold = require('./intents/Hold');
@@ -36,6 +37,7 @@ const selectGameHandlers = Alexa.CreateStateHandler('SELECTGAME', {
   'SuggestIntent': Suggest.handleIntent,
   'HighScoreIntent': HighScore.handleIntent,
   'AMAZON.HelpIntent': Help.handleIntent,
+  'AMAZON.FallbackIntent': Repeat.handleIntent,
   'AMAZON.RepeatIntent': Repeat.handleIntent,
   'AMAZON.YesIntent': Select.handleYesIntent,
   'AMAZON.NoIntent': Select.handleNoIntent,
@@ -68,6 +70,7 @@ const newGameHandlers = Alexa.CreateStateHandler('NEWGAME', {
   'AMAZON.NoIntent': Exit.handleIntent,
   'AMAZON.NextIntent': Bet.handleIntent,
   'AMAZON.HelpIntent': Help.handleIntent,
+  'AMAZON.FallbackIntent': Repeat.handleIntent,
   'AMAZON.RepeatIntent': Repeat.handleIntent,
   'AMAZON.StopIntent': Exit.handleIntent,
   'AMAZON.CancelIntent': Exit.handleIntent,
@@ -89,6 +92,7 @@ const suggestionHandlers = Alexa.CreateStateHandler('SUGGESTION', {
   'AMAZON.YesIntent': Suggest.handleYesIntent,
   'AMAZON.NoIntent': Suggest.handleNoIntent,
   'AMAZON.HelpIntent': Help.handleIntent,
+  'AMAZON.FallbackIntent': Repeat.handleIntent,
   'AMAZON.RepeatIntent': Repeat.handleIntent,
   'Unhandled': function() {
     this.handler.state = 'FIRSTDEAL';
@@ -115,6 +119,7 @@ const firstDealHandlers = Alexa.CreateStateHandler('FIRSTDEAL', {
   'AMAZON.NoIntent': Exit.handleIntent,
   'AMAZON.NextIntent': Deal.handleIntent,
   'AMAZON.HelpIntent': Help.handleIntent,
+  'AMAZON.FallbackIntent': Repeat.handleIntent,
   'AMAZON.RepeatIntent': Repeat.handleIntent,
   'AMAZON.StopIntent': Exit.handleIntent,
   'AMAZON.CancelIntent': Exit.handleIntent,
@@ -166,6 +171,12 @@ function runSkill(event, context, callback) {
 
   if (!process.env.NOLOG) {
     console.log(JSON.stringify(event));
+  }
+
+  // If this is a CanFulfill, handle this separately
+  if (event.request && (event.request.type == 'CanFulfillIntentRequest')) {
+    context.succeed(CanFulfill.check(event));
+    return;
   }
 
   const alexa = Alexa.handler(event, context);
