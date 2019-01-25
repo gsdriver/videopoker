@@ -4,10 +4,6 @@
 
 'use strict';
 
-const Alexa = require('alexa-sdk');
-// utility methods for creating Image and TextField objects
-const makePlainText = Alexa.utils.TextUtils.makePlainText;
-const makeImage = Alexa.utils.ImageUtils.makeImage;
 const AWS = require('aws-sdk');
 AWS.config.update({region: 'us-east-1'});
 const dynamodb = new AWS.DynamoDB({apiVersion: '2012-08-10'});
@@ -1087,6 +1083,7 @@ function nCardRoyal(cards, numCards) {
   return undefined;
 }
 
+/*
 function buildDisplayTemplate(context) {
   const res = require('./' + context.event.request.locale + '/resources');
   const attributes = context.attributes;
@@ -1138,3 +1135,4 @@ function buildDisplayTemplate(context) {
 
   return undefined;
 }
+*/

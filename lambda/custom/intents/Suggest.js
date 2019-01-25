@@ -22,15 +22,17 @@ module.exports = {
     const res = require('../' + event.request.locale + '/resources');
     const game = attributes[attributes.currentGame];
     let speech;
+    let reprompt;
 
     if (attributes.choices) {
       speech = res.strings.SUGGEST_SELECT_GAME
           .replace('{0}', res.sayGame(attributes.choices[0]));
+      reprompt = speech;
     } else {
       const rules = utils.getGame(attributes.currentGame);
-      const reprompt = res.strings.SUGGEST_REPROMPT;
 
       speech = rules.suggest(event.request.locale, attributes);
+      reprompt = res.strings.SUGGEST_REPROMPT;
       speech += reprompt;
     }
 

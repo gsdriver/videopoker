@@ -16,6 +16,7 @@ module.exports = {
 
     // Can always handle with Stop and Cancel
     return ((request.type === 'IntentRequest') && game && (game.state === 'FIRSTDEAL')
+      && !game.suggestedHold
       && ((request.intent.name === 'DealIntent')
         || (request.intent.name === 'AMAZON.YesIntent')
         || (request.intent.name === 'AMAZON.NextIntent')));
