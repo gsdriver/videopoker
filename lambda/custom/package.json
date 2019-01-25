@@ -4,13 +4,14 @@
   "description": "Alexa video poker",
   "main": "index.js",
   "dependencies": {
-    "alexa-sdk": "^1.0.25",
     "alexa-speech-utils": "0.1.0",
+    "ask-sdk": "^2.1.0",
     "aws-sdk": "^2.262.1",
     "bluebird": "^3.5.0",
     "dashbot": "^9.9.1",
-    "poker-ranking": "^1.1.1",
+    "poker-ranking": "^1.1.2",
     "request": "^2.85.0",
+    "request-promise": "^4.2.2",
     "seedrandom": "^2.4.3"
   },
   "devDependencies": {

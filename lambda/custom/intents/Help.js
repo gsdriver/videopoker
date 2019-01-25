@@ -7,32 +7,37 @@
 const utils = require('../utils');
 
 module.exports = {
-  handleIntent: function() {
-    const res = require('../' + this.event.request.locale + '/resources');
+  canHandle(handlerInput) {
+    const request = handlerInput.requestEnvelope.request;
+
+    return ((request.type === 'IntentRequest') &&
+      (request.intent.name === 'AMAZON.HelpIntent'));
+  },
+  handle: function(handlerInput) {
+    const event = handlerInput.requestEnvelope;
+    const attributes = handlerInput.attributesManager.getSessionAttributes();
+    const res = require('../' + event.request.locale + '/resources');
     let speech = '';
-    const game = this.attributes[this.attributes.currentGame];
-    const reprompt = utils.readAvailableActions(this.event.request.locale,
-              this.attributes, this.handler.state);
-    const rules = utils.getGame(this.attributes.currentGame);
+    const game = attributes[attributes.currentGame];
+    const reprompt = utils.readAvailableActions(event.request.locale, attributes);
+    const rules = utils.getGame(attributes.currentGame);
     let cardText;
 
-    switch (this.handler.state) {
-      case 'SELECTGAME':
-        speech = res.strings.HELP_SELECTGAME;
-        break;
-      case 'SUGGESTION':
-      case 'NEWGAME':
-      case 'FIRSTDEAL':
-        speech = res.strings.HELP_STATUS
-            .replace('{0}', res.sayGame(this.attributes.currentGame))
-            .replace('{1}', utils.readCoins(this.event.request.locale, game.bankroll));
-        speech += reprompt;
-        break;
+    if (attributes.choices) {
+      speech = res.strings.HELP_SELECTGAME;
+    } else {
+      speech = res.strings.HELP_STATUS
+          .replace('{0}', res.sayGame(attributes.currentGame))
+          .replace('{1}', utils.readCoins(event.request.locale, game.bankroll));
+      speech += reprompt;
     }
 
     cardText = res.strings[rules.help];
-    cardText += utils.readPayoutTable(this.event.request.locale, rules);
-    utils.emitResponse(this, null, null,
-          speech, reprompt, res.strings.HELP_CARD_TITLE, cardText);
+    cardText += utils.readPayoutTable(event.request.locale, rules);
+    return handlerInput.responseBuilder
+      .speak(speech)
+      .reprompt(reprompt)
+      .withSimpleCard(res.strings.HELP_CARD_TITLE, cardText)
+      .getResponse();
   },
 };

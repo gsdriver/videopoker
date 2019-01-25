@@ -7,13 +7,24 @@
 const utils = require('../utils');
 
 module.exports = {
-  handleIntent: function() {
-    const res = require('../' + this.event.request.locale + '/resources');
+  canHandle(handlerInput) {
+    const request = handlerInput.requestEnvelope.request;
 
-    utils.readLeaderBoard(this.event.request.locale, this.event.session.user.userId,
-      this.attributes, (highScores) => {
+    return ((request.type === 'IntentRequest') &&
+      (request.intent.name === 'HighScoreIntent'));
+  },
+  handle: function(handlerInput) {
+    const event = handlerInput.requestEnvelope;
+    const attributes = handlerInput.attributesManager.getSessionAttributes();
+    const res = require('../' + event.request.locale + '/resources');
+
+    return utils.readLeaderBoard(event.request.locale, event.session.user.userId, attributes)
+    .then((highScores) => {
       const speech = highScores + '. ' + res.strings.GENERIC_REPROMPT;
-      utils.emitResponse(this, null, null, speech, res.strings.GENERIC_REPROMPT);
+      return handlerInput.responseBuilder
+        .speak(speech)
+        .reprompt(res.strings.GENERIC_REPROMPT)
+        .getResponse();
     });
   },
 };

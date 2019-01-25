@@ -4,15 +4,32 @@
 
 'use strict';
 
-const utils = require('../utils');
 const ads = require('../ads');
 
 module.exports = {
-  handleIntent: function() {
-    const res = require('../' + this.event.request.locale + '/resources');
+  canHandle(handlerInput) {
+    const request = handlerInput.requestEnvelope.request;
+    const attributes = handlerInput.attributesManager.getSessionAttributes();
+    const game = attributes[attributes.currentGame];
 
-    ads.getAd(this.attributes, 'videopoker', this.event.request.locale, (adText) => {
-      utils.emitResponse(this, null, res.strings.EXIT_GAME.replace('{0}', adText), null, null);
+    // Can always handle with Stop and Cancel
+    return ((request.type === 'IntentRequest') &&
+      ((request.intent.name === 'AMAZON.CancelIntent')
+        || (request.intent.name === 'AMAZON.StopIntent')
+        || ((request.intent.name === 'AMAZON.NoIntent') && game &&
+          ((game.state === 'FIRSTDEAL') || (game.state === 'NEWGAME')))));
+  },
+  handle: function(handlerInput) {
+    const event = handlerInput.requestEnvelope;
+    const attributes = handlerInput.attributesManager.getSessionAttributes();
+    const res = require('../' + event.request.locale + '/resources');
+
+    return ads.getAd(attributes, 'videopoker', event.request.locale)
+    .then((adText) => {
+      return handlerInput.responseBuilder
+        .speak(res.strings.EXIT_GAME.replace('{0}', adText))
+        .withShouldEndSession(true)
+        .getResponse();
     });
   },
 };

@@ -7,46 +7,36 @@
 const utils = require('../utils');
 
 module.exports = {
-  handleIntent: function() {
-    const res = require('../' + this.event.request.locale + '/resources');
+  canHandle(handlerInput) {
+    const request = handlerInput.requestEnvelope.request;
+    const attributes = handlerInput.attributesManager.getSessionAttributes();
+    const game = attributes[attributes.currentGame];
+
+    // Can always handle with Stop and Cancel
+    return ((request.type === 'IntentRequest') && (request.intent.name === 'SuggestIntent')
+      && (attributes.choices || (game && game.state === 'FIRSTDEAL')));
+  },
+  handle: function(handlerInput) {
+    const event = handlerInput.requestEnvelope;
+    const attributes = handlerInput.attributesManager.getSessionAttributes();
+    const res = require('../' + event.request.locale + '/resources');
+    const game = attributes[attributes.currentGame];
     let speech;
 
-    if (this.handler.state === 'SELECTGAME') {
+    if (attributes.choices) {
       speech = res.strings.SUGGEST_SELECT_GAME
-          .replace('{0}', res.sayGame(this.attributes.choices[0]));
-      utils.emitResponse(this, null, null, speech, speech);
+          .replace('{0}', res.sayGame(attributes.choices[0]));
     } else {
-      const rules = utils.getGame(this.attributes.currentGame);
+      const rules = utils.getGame(attributes.currentGame);
       const reprompt = res.strings.SUGGEST_REPROMPT;
 
-      speech = rules.suggest(this.event.request.locale, this.attributes);
+      speech = rules.suggest(event.request.locale, attributes);
       speech += reprompt;
-      this.handler.state = 'SUGGESTION';
-      utils.emitResponse(this, null, null, speech, reprompt);
     }
-  },
-  handleYesIntent: function() {
-    const game = this.attributes[this.attributes.currentGame];
-    let i;
 
-    // Mark each suggested card as held, and issue a deal
-    for (i = 0; i < game.cards.length; i++) {
-      game.cards[i].hold = (game.suggestedHold && game.suggestedHold.indexOf(i + 1) > -1)
-              ? true : undefined;
-    }
-    this.handler.state = 'FIRSTDEAL';
-    this.emitWithState('DealIntent');
-  },
-  handleNoIntent: function() {
-    const res = require('../' + this.event.request.locale + '/resources');
-    const game = this.attributes[this.attributes.currentGame];
-    let speech;
-    const reprompt = res.strings.SUGGEST_NOT_TAKING;
-
-    this.handler.state = 'FIRSTDEAL';
-    game.suggestedHold = undefined;
-    speech = utils.readHand(this.event.request.locale, game);
-    speech += reprompt;
-    utils.emitResponse(this, null, null, speech, reprompt);
+    return handlerInput.responseBuilder
+      .speak(speech)
+      .reprompt(reprompt)
+      .getResponse();
   },
 };

@@ -14,9 +14,7 @@ const dynamodb = new AWS.DynamoDB({apiVersion: '2012-08-10'});
 const speechUtils = require('alexa-speech-utils')();
 const pokerrank = require('poker-ranking');
 const request = require('request');
-
-// Global session ID
-let globalEvent;
+const rp = require('request-promise');
 
 const games = {
   'jacks': {
@@ -69,67 +67,6 @@ const games = {
 };
 
 module.exports = {
-  emitResponse: function(context, error, response, speech, reprompt, cardTitle, cardText) {
-    const formData = {};
-
-    // Async call to save state and logs if necessary
-    if (process.env.SAVELOG) {
-      const result = (error) ? error : ((response) ? response : speech);
-      formData.savelog = JSON.stringify({
-        event: globalEvent,
-        result: result,
-      });
-    }
-    if (response) {
-      formData.savedb = JSON.stringify({
-        userId: globalEvent.session.user.userId,
-        attributes: globalEvent.session.attributes,
-      });
-    }
-
-    if (formData.savelog || formData.savedb) {
-      const params = {
-        url: process.env.SERVICEURL + 'videopoker/saveState',
-        formData: formData,
-      };
-
-      request.post(params, (err, res, body) => {
-        if (err) {
-          console.log(err);
-        }
-      });
-    }
-
-    if (context.event.context &&
-        context.event.context.System.device.supportedInterfaces.Display) {
-      context.attributes.display = true;
-      const listTemplate = buildDisplayTemplate(context);
-      if (listTemplate) {
-        context.response.renderTemplate(listTemplate);
-      }
-    }
-
-    if (error) {
-      const res = require('./' + context.event.request.locale + '/resources');
-      console.log('Speech error: ' + error);
-      context.response.speak(error)
-        .listen(res.ERROR_REPROMPT);
-    } else if (response) {
-      context.response.speak(response);
-    } else if (cardTitle) {
-      context.response.speak(speech)
-        .listen(reprompt)
-        .cardRenderer(cardTitle, cardText);
-    } else {
-      context.response.speak(speech)
-        .listen(reprompt);
-    }
-
-    context.emit(':responseReady');
-  },
-  setEvent: function(event) {
-    globalEvent = event;
-  },
   getGame: function(name) {
     return games[name];
   },
@@ -261,7 +198,7 @@ module.exports = {
         return (arr.indexOf(x) == i);
       })};
   },
-  readAvailableGames: function(locale, currentGame, currentFirst, callback) {
+  readAvailableGames: function(locale, currentGame, currentFirst) {
     const res = require('./' + locale + '/resources');
     let speech;
     const choices = [];
@@ -294,27 +231,24 @@ module.exports = {
     speech = res.strings.AVAILABLE_GAMES.replace('{0}', count);
     speech += speechUtils.and(choiceText, {locale: locale});
     speech += '. ';
-    callback(speech, choices);
+    return {speech: speech, choices: choices};
   },
-  readAvailableActions: function(locale, attributes, state) {
+  readAvailableActions: function(locale, attributes) {
     const res = require('./' + locale + '/resources');
     const game = attributes[attributes.currentGame];
     let speech;
     const actions = [];
 
-    switch (state) {
-      case 'SELECTGAME':
-        actions.push(res.strings.SAY_YES_SELECT);
-        actions.push(res.strings.SAY_NO_SELECT);
-        break;
-      case 'NEWGAME':
-        actions.push(res.strings.SAY_BET);
-        actions.push(res.strings.SAY_DEAL);
-        break;
-      case 'SUGGESTION':
-        actions.push(res.strings.SAY_YES_SUGGEST);
-        // Fall through
-      case 'FIRSTDEAL':
+    if (attributes.choices) {
+      actions.push(res.strings.SAY_YES_SELECT);
+      actions.push(res.strings.SAY_NO_SELECT);
+    } else {
+      const game = attributes[attributes.currentGame];
+      if (game.state === 'FIRSTDEAL') {
+        if (game.suggestedHold) {
+          actions.push(res.strings.SAY_YES_SUGGEST);
+        }
+
         let held = 0;
         game.cards.map((card) => held += (card.hold) ? 1 : 0);
         if (held < 5) {
@@ -324,18 +258,16 @@ module.exports = {
           actions.push(res.strings.SAY_DISCARD);
         }
         actions.push(res.strings.SAY_DEAL);
-        break;
-      default:
-        break;
+      } else if (game.state === 'NEWGAME') {
+        actions.push(res.strings.SAY_BET);
+        actions.push(res.strings.SAY_DEAL);
+      }
     }
 
     // Everyone can say read high scores
     actions.push(res.strings.SAY_HIGHSCORE);
-
-    if (actions.length) {
-      speech = res.strings.YOU_CAN_SAY
-        .replace('{0}', speechUtils.or(actions, {locale: locale, pause: '200ms'}));
-    }
+    speech = res.strings.YOU_CAN_SAY
+      .replace('{0}', speechUtils.or(actions, {locale: locale, pause: '200ms'}));
     return speech;
   },
   readHand: function(locale, game) {
@@ -404,7 +336,7 @@ module.exports = {
 
     return text;
   },
-  readLeaderBoard: function(locale, userId, attributes, callback) {
+  readLeaderBoard: function(locale, userId, attributes) {
     const res = require('./' + locale + '/resources');
     const game = attributes[attributes.currentGame];
     let leaderURL = process.env.SERVICEURL + 'videopoker/leaders?game=' + attributes.currentGame;
@@ -414,54 +346,49 @@ module.exports = {
       leaderURL += '&userId=' + userId + '&score=' + game.bankroll;
     }
 
-    request(
-      {
-        uri: leaderURL,
-        method: 'GET',
-        timeout: 1000,
-      }, (err, response, body) => {
-      if (err) {
-        // No scores to read
+    return rp({
+      uri: leaderURL,
+      method: 'GET',
+      timeout: 1000,
+    }).then((body) => {
+      const leaders = JSON.parse(body);
+
+      if (!leaders.count || !leaders.top) {
+        // Something went wrong
         speech = res.strings.LEADER_NO_SCORES;
       } else {
-        const leaders = JSON.parse(body);
-
-        if (!leaders.count || !leaders.top) {
-          // Something went wrong
-          speech = res.strings.LEADER_NO_SCORES;
-        } else {
-          if (leaders.rank) {
-            speech += res.strings.LEADER_RANKING
-              .replace('{0}', game.bankroll)
-              .replace('{1}', res.sayGame(attributes.currentGame))
-              .replace('{2}', leaders.rank)
-              .replace('{3}', leaders.count);
-          }
-
-          // And what is the leader board?
-          const topScores = leaders.top.map((x) => res.strings.LEADER_FORMAT.replace('{0}', x));
-          speech += res.strings.LEADER_TOP_SCORES.replace('{0}', topScores.length);
-          speech += speechUtils.and(topScores, {locale: locale, pause: '300ms'});
+        if (leaders.rank) {
+          speech += res.strings.LEADER_RANKING
+            .replace('{0}', game.bankroll)
+            .replace('{1}', res.sayGame(attributes.currentGame))
+            .replace('{2}', leaders.rank)
+            .replace('{3}', leaders.count);
         }
-      }
 
-      callback(speech);
+        // And what is the leader board?
+        const topScores = leaders.top.map((x) => res.strings.LEADER_FORMAT.replace('{0}', x));
+        speech += res.strings.LEADER_TOP_SCORES.replace('{0}', topScores.length);
+        speech += speechUtils.and(topScores, {locale: locale, pause: '300ms'});
+      }
+      return speech;
+    }).catch((err) => {
+      // No scores to read
+      return res.strings.LEADER_NO_SCORES;
     });
   },
-  getProgressivePayout: function(attributes, callback) {
+  getProgressivePayout: function(attributes) {
     const rules = games[attributes.currentGame];
 
     // If there is no progressive for this game, just return undefined
     if (rules && rules.progressive) {
       // Read from Dynamodb
-      dynamodb.getItem({TableName: 'VideoPoker', Key: {userId: {S: 'game-' + attributes.currentGame}}},
-              (err, data) => {
-        if (err || (data.Item === undefined)) {
-          console.log(err);
-          callback((attributes[attributes.currentGame].progressiveJackpot)
-                ? attributes[attributes.currentGame].progressiveJackpot
-                : rules.progressive.start);
-        } else {
+      const defaultPayout = ((attributes[attributes.currentGame].progressiveJackpot)
+        ? attributes[attributes.currentGame].progressiveJackpot
+        : rules.progressive.start);
+
+      return dynamodb.getItem({TableName: 'VideoPoker', Key: {userId: {S: 'game-' + attributes.currentGame}}}).promise()
+      .then((data) => {
+        if (data.Item) {
           let coins;
 
           if (data.Item.coins && data.Item.coins.N) {
@@ -469,12 +396,16 @@ module.exports = {
           } else {
             coins = rules.progressive.start;
           }
-
-          callback(Math.floor(rules.progressive.start + (coins * rules.progressive.rate)));
+          return (Math.floor(rules.progressive.start + (coins * rules.progressive.rate)));
+        } else {
+          return defaultPayout;
         }
+      }).catch((err) => {
+        console.log(err);
+        return defaultPayout;
       });
     } else {
-      callback(undefined);
+      return Promise.resolve();
     }
   },
   incrementProgressive: function(attributes, coinsToAdd) {

@@ -9,6 +9,11 @@ if (process.env.RUN_DB_LOCAL) {
   AWS.config.update({region: 'us-east-1'});
 }
 const dynamodb = new AWS.DynamoDB({apiVersion: '2012-08-10'});
+const fs = require('fs');
+
+const APPID = "amzn1.ask.skill.8f0ddee1-51b3-496a-9424-524436770828";
+const LOCALE = "en-us";
+const APITOKEN = "";
 
 function BuildEvent(argv)
 {
@@ -43,9 +48,9 @@ function BuildEvent(argv)
 
   var lambda = {
     "session": {
-      "sessionId": "SessionId.c88ec34d-28b0-46f6-a4c7-120d8fba8fa8",
+      "sessionId": "SessionId.c88ec34d-28b0-46f6-a4c7-120d8fba8fa7",
       "application": {
-        "applicationId": "amzn1.ask.skill.8f0ddee1-51b3-496a-9424-524436770828"
+        "applicationId": APPID
       },
       "attributes": {},
       "user": {
@@ -56,20 +61,45 @@ function BuildEvent(argv)
     "request": {
       "type": "IntentRequest",
       "requestId": "EdwRequestId.26405959-e350-4dc0-8980-14cdc9a4e921",
-      "locale": "en-US",
+      "locale": LOCALE,
       "timestamp": "2016-11-03T21:31:08Z",
       "intent": {}
     },
-    "version": "1.0"
+    "version": "1.0",
+     "context": {
+       "AudioPlayer": {
+         "playerActivity": "IDLE"
+       },
+       "Display": {},
+       "System": {
+         "application": {
+           "applicationId": APPID
+         },
+         "user": {
+           "userId": "not-amazon",
+         },
+         "device": {
+           "deviceId": "not-amazon",
+           "supportedInterfaces": {
+             "AudioPlayer": {},
+             "Display": {
+               "templateVersion": "1.0",
+               "markupVersion": "1.0"
+             }
+           }
+         },
+         "apiEndpoint": "https://api.amazonalexa.com",
+         "apiAccessToken": APITOKEN,
+       }
+     },
   };
 
   var openEvent = {
     "session": {
-      "sessionId": "SessionId.c88ec34d-28b0-46f6-a4c7-120d8fba8fa8",
+      "sessionId": "SessionId.c88ec34d-28b0-46f6-a4c7-120d8fba8fa7",
       "application": {
-        "applicationId": "amzn1.ask.skill.8f0ddee1-51b3-496a-9424-524436770828"
+        "applicationId": "amzn1.ask.skill.dcc3c959-8c93-4e9a-9cdf-ccdccd5733fd"
       },
-      "attributes": {},
       "user": {
         "userId": "not-amazon",
       },
@@ -78,20 +108,45 @@ function BuildEvent(argv)
     "request": {
       "type": "LaunchRequest",
       "requestId": "EdwRequestId.26405959-e350-4dc0-8980-14cdc9a4e921",
-      "locale": "en-US",
+      "locale": LOCALE,
       "timestamp": "2016-11-03T21:31:08Z",
       "intent": {}
     },
-    "version": "1.0"
+    "version": "1.0",
+     "context": {
+       "AudioPlayer": {
+         "playerActivity": "IDLE"
+       },
+       "Display": {},
+       "System": {
+         "application": {
+           "applicationId": APPID
+         },
+         "user": {
+           "userId": "not-amazon",
+         },
+         "device": {
+           "deviceId": "not-amazon",
+           "supportedInterfaces": {
+             "AudioPlayer": {},
+             "Display": {
+               "templateVersion": "1.0",
+               "markupVersion": "1.0"
+             }
+           }
+         },
+         "apiEndpoint": "https://api.amazonalexa.com",
+         "apiAccessToken": APITOKEN,
+       }
+     },
   };
 
   // If there is an attributes.txt file, read the attributes from there
-  const fs = require('fs');
   if (fs.existsSync(attributeFile)) {
     data = fs.readFileSync(attributeFile, 'utf8');
     if (data) {
       lambda.session.attributes = JSON.parse(data);
-      openEvent.session.attributes = JSON.parse(data);
+      //openEvent.session.attributes = JSON.parse(data);
     }
   }
 
@@ -184,7 +239,25 @@ function BuildEvent(argv)
     return null;
   }
 
+  // Write the last action
+  fs.writeFile('lastaction.txt', JSON.stringify(lambda), (err) => {
+    if (err) {
+      console.log(err);
+    }
+  });
+
   return lambda;
+}
+function ssmlToText(ssml) {
+  let text = ssml;
+
+  // Replace break with ...
+  text = text.replace(/<break[^>]+>/g, ' ... ');
+
+  // Remove all other angle brackets
+  text = text.replace(/<\/?[^>]+(>|$)/g, '');
+  text = text.replace(/\s+/g, ' ').trim();
+  return text;
 }
 
 // Simple response - just print out what I'm given
@@ -192,58 +265,43 @@ function myResponse(appId) {
   this._appId = appId;
 }
 
-myResponse.succeed = function(result) {
-  if (result.response.outputSpeech.ssml) {
-    console.log('AS SSML: ' + result.response.outputSpeech.ssml);
-  } else {
-    console.log(result.response.outputSpeech.text);
-  }
-  if (result.response.card && result.response.card.content) {
-    console.log('Card Content: ' + result.response.card.content);
-  }
-  console.log('The session ' + ((!result.response.shouldEndSession) ? 'stays open.' : 'closes.'));
-  if (result.sessionAttributes) {
-    // Output the attributes too
-    const fs = require('fs');
-    fs.writeFile(attributeFile, JSON.stringify(result.sessionAttributes), (err) => {
-      if (!process.env.NOLOG) {
-        console.log('attributes:' + JSON.stringify(result.sessionAttributes) + ',');
+function myResponse(err, result) {
+  // Write the last action
+  fs.writeFile('lastResponse.txt', JSON.stringify(result), (err) => {
+    if (err) {
+      console.log('ERROR; ' + err.stack);
+    } else {
+      if (result.sessionAttributes) {
+        // Output the attributes
+        fs.writeFile(attributeFile, JSON.stringify(result.sessionAttributes), (err) => {
+          if (err) {
+            console.log(err);
+          }
+        });
+        if (!process.env.NOLOG) {
+          console.log('"attributes": ' + JSON.stringify(result.sessionAttributes));
+        }
       }
-    });
-  }
+      if (!result.response || !result.response.outputSpeech) {
+        console.log('RETURNED ' + JSON.stringify(result));
+      } else {
+        if (result.response.outputSpeech.ssml) {
+          console.log('AS SSML: ' + result.response.outputSpeech.ssml);
+          console.log('AS TEXT: ' + ssmlToText(result.response.outputSpeech.ssml));
+        } else {
+          console.log(result.response.outputSpeech.text);
+        }
+        if (result.response.card && result.response.card.content) {
+          console.log('Card Content: ' + result.response.card.content);
+        }
+        console.log('The session ' + ((!result.response.shouldEndSession) ? 'stays open.' : 'closes.'));
+      }
+    }
+  });
 }
-
-myResponse.fail = function(e) {
-  console.log(e);
-}
-
-/* function createTable(callback)
-{
-    var dynamodb = new AWS.DynamoDB();
-    var params = {
-            TableName : "VideoPoker",
-            KeySchema: [
-            { AttributeName: "userId", KeyType: "HASH"},
-        ],
-        AttributeDefinitions: [
-            { AttributeName: "userId", AttributeType: "S" },
-        ],
-        ProvisionedThroughput: {
-            ReadCapacityUnits: 5,
-            WriteCapacityUnits: 5
-       }
-    };
-
-    dynamodb.createTable(params, callback);
-}
-
-createTable();
-return; */
 
 // Build the event object and call the app
 if ((process.argv.length == 3) && (process.argv[2] == 'clear')) {
-  const fs = require('fs');
-
   // Clear is a special case - delete this entry from the DB and delete the attributes.txt file
   dynamodb.deleteItem({TableName: 'VideoPoker', Key: { userId: {S: 'not-amazon'}}}, function (error, data) {
     console.log("Deleted " + error);
@@ -254,6 +312,6 @@ if ((process.argv.length == 3) && (process.argv[2] == 'clear')) {
 } else {
   var event = BuildEvent(process.argv);
   if (event) {
-      mainApp.handler(event, myResponse);
+      mainApp.handler(event, null, myResponse);
   }
 }

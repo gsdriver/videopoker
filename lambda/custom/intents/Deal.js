@@ -9,22 +9,36 @@ const speechUtils = require('alexa-speech-utils')();
 const request = require('request');
 
 module.exports = {
-  handleIntent: function() {
+  canHandle(handlerInput) {
+    const request = handlerInput.requestEnvelope.request;
+    const attributes = handlerInput.attributesManager.getSessionAttributes();
+    const game = attributes[attributes.currentGame];
+
+    // Can always handle with Stop and Cancel
+    return ((request.type === 'IntentRequest') && game && (game.state === 'FIRSTDEAL')
+      && ((request.intent.name === 'DealIntent')
+        || (request.intent.name === 'AMAZON.YesIntent')
+        || (request.intent.name === 'AMAZON.NextIntent')));
+  },
+  handle: function(handlerInput) {
+    const event = handlerInput.requestEnvelope;
+    const attributes = handlerInput.attributesManager.getSessionAttributes();
+    const res = require('../' + event.request.locale + '/resources');
+    const game = attributes[attributes.currentGame];
     let speech = '';
-    const res = require('../' + this.event.request.locale + '/resources');
-    const game = this.attributes[this.attributes.currentGame];
-    const rules = utils.getGame(this.attributes.currentGame);
+    const rules = utils.getGame(attributes.currentGame);
     let i;
     const newCards = [];
     let newCard;
+    let result;
 
     // They shouldn't be able to get this far without a bet
     if (!game.bet) {
-      this.handler.state = 'NEWGAME';
-      utils.emitResponse(this,
-          res.strings.DEAL_NOBETS, null, null,
-          res.strings.DEAL_INVALID_REPROMPT);
-      return;
+      game.state = 'NEWGAME';
+      return handlerInput.responseBuilder
+        .speak(res.strings.DEAL_NOBETS)
+        .reprompt(res.strings.DEAL_INVALID_REPROMPT)
+        .getResponse();
     }
 
     // Discard the non-held cards and replace from the deck
@@ -39,18 +53,18 @@ module.exports = {
     // Read the cards that were dealt (if any)
     if (newCards.length > 0) {
       speech += res.strings.DEALT_CARDS.replace('{0}',
-              '<audio src=\"https://s3-us-west-2.amazonaws.com/alexasoundclips/dealcard.mp3\"/>' +
+              ' <audio src=\"https://s3-us-west-2.amazonaws.com/alexasoundclips/dealcard.mp3\"/> ' +
               speechUtils.and(newCards.map((card) => res.sayCard(card)),
-                {preseparator: '<audio src=\"https://s3-us-west-2.amazonaws.com/alexasoundclips/dealcard.mp3\"/>',
-                  locale: this.event.request.locale}));
+                {preseparator: ' <audio src=\"https://s3-us-west-2.amazonaws.com/alexasoundclips/dealcard.mp3\"/> ',
+                  locale: event.request.locale}));
     }
 
     // OK, let's see if there's a payout associated with this
-    const rank = utils.determineWinner(this.attributes);
+    const rank = utils.determineWinner(attributes);
     if (rules.payouts[rank] >= 50) {
       // Can only have five sounds per response
       if (newCards.length < 5) {
-        speech += '<audio src=\"https://s3-us-west-2.amazonaws.com/alexasoundclips/jackpot.mp3\"/> ';
+        speech += ' <audio src=\"https://s3-us-west-2.amazonaws.com/alexasoundclips/jackpot.mp3\"/> ';
       }
       game.jackpot = (game.jackpot) ? (game.jackpot + 1) : 1;
 
@@ -62,8 +76,8 @@ module.exports = {
           url: process.env.SERVICEURL + 'videopoker/updateJackpot',
           formData: {
             jackpot: rules.payouts[rank] * game.bet,
-            game: this.attributes.currentGame,
-            userId: this.event.session.user.userId,
+            game: attributes.currentGame,
+            userId: event.session.user.userId,
           },
         };
         request.post(params, (err, res, body) => {
@@ -75,49 +89,53 @@ module.exports = {
     if (rules.progressive && (rank == rules.progressive.match)
           && (game.bet == rules.maxCoins)) {
       // OK, read the jackpot from the database
-      utils.getProgressivePayout(this.attributes, (coinsWon) => {
+      return utils.getProgressivePayout(attributes)
+      .then((coinsWon) => {
         game.bankroll += coinsWon;
-        speech += res.strings.DEAL_PROGRESSIVE_WINNER.replace('{0}', utils.readCoins(this.event.request.locale, coinsWon));
+        speech += res.strings.DEAL_PROGRESSIVE_WINNER.replace('{0}', utils.readCoins(event.request.locale, coinsWon));
 
         const params = {
           url: process.env.SERVICEURL + 'videopoker/updateJackpot',
           formData: {
             jackpot: coinsWon,
-            game: this.attributes.currentGame,
-            userId: this.event.session.user.userId,
+            game: attributes.currentGame,
+            userId: event.session.user.userId,
             resetProgressive: 'true',
           },
         };
         request.post(params, (err, res, body) => {
         });
 
-        this.handler.state = 'NEWGAME';
-        updateGamePostPayout(this.event.request.locale, game, (speechText, reprompt) => {
-          speech += speechText;
-          utils.emitResponse(this, null, null, speech, reprompt);
-        });
+        game.state = 'NEWGAME';
+        result = updateGamePostPayout(event.request.locale, game);
+        speech += result.speech;
+        return handlerInput.responseBuilder
+          .speak(speech)
+          .reprompt(result.reprompt)
+          .getResponse();
       });
-      return;
     }
 
     if (rules.payouts[rank]) {
       game.bankroll += rules.payouts[rank] * game.bet;
       speech += res.strings.DEAL_WINNER
-          .replace('{0}', utils.readPayout(this.event.request.locale, rules, rank))
-          .replace('{1}', utils.readCoins(this.event.request.locale, rules.payouts[rank] * game.bet));
+          .replace('{0}', utils.readPayout(event.request.locale, rules, rank))
+          .replace('{1}', utils.readCoins(event.request.locale, rules.payouts[rank] * game.bet));
     } else {
       speech += res.strings.DEAL_LOSER;
     }
 
-    this.handler.state = 'NEWGAME';
-    updateGamePostPayout(this.event.request.locale, game, (speechText, reprompt) => {
-      speech += speechText;
-      utils.emitResponse(this, null, null, speech, reprompt);
-    });
+    game.state = 'NEWGAME';
+    result = updateGamePostPayout(event.request.locale, game);
+    speech += result.speech;
+    return handlerInput.responseBuilder
+      .speak(speech)
+      .reprompt(result.reprompt)
+      .getResponse();
   },
 };
 
-function updateGamePostPayout(locale, game, callback) {
+function updateGamePostPayout(locale, game) {
   const res = require('../' + locale + '/resources');
   let speech = '';
   let reprompt = res.strings.DEAL_PLAY_AGAIN;
@@ -153,5 +171,5 @@ function updateGamePostPayout(locale, game, callback) {
   // And reprompt
   game.bet = undefined;
   speech += reprompt;
-  callback(speech, reprompt);
+  return {speech: speech, reprompt: reprompt}
 }

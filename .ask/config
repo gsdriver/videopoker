@@ -8,13 +8,46 @@
           "apis": {
             "custom": {
               "endpoint": {
-                "uri": "arn:aws:lambda:us-east-1:129065607926:function:VideoPoker2"
+                "uri": "arn:aws:lambda:us-east-1:129065607926:function:VideoPoker3"
               }
             }
           }
         }
       },
-      "in_skill_products": []
+      "in_skill_products": [],
+      "resources": {
+        "manifest": {
+          "eTag": "d48894e92a8d9d3c2c3a6c7b4ce61b2f"
+        },
+        "interactionModel": {
+          "en-CA": {
+            "eTag": "1a4bf112f6711ca51a66dddebd27272f"
+          },
+          "en-AU": {
+            "eTag": "1a4bf112f6711ca51a66dddebd27272f"
+          },
+          "en-IN": {
+            "eTag": "1a4bf112f6711ca51a66dddebd27272f"
+          },
+          "en-GB": {
+            "eTag": "e97aa93287f9e382ae34ac5c2b0dbd7f"
+          },
+          "en-US": {
+            "eTag": "bf5d72d46a71a7038a46a5d4622f8129"
+          }
+        },
+        "lambda": [
+          {
+            "arn": "arn:aws:lambda:us-east-1:129065607926:function:VideoPoker3",
+            "functionName": "arn:aws:lambda:us-east-1:129065607926:function:VideoPoker3",
+            "awsRegion": "us-east-1",
+            "alexaUsage": [
+              "custom/default"
+            ],
+            "revisionId": "4eb43d1b-59dd-4d44-85da-1a54076e9ffe"
+          }
+        ]
+      }
     }
   }
 }

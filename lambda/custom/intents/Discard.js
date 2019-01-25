@@ -8,23 +8,30 @@ const utils = require('../utils');
 const speechUtils = require('alexa-speech-utils')();
 
 module.exports = {
-  handleIntent: function() {
-    // The bet amount is optional - if not present we will use a default value
-    // of either the last bet amount or 1 unit
+  canHandle(handlerInput) {
+    const request = handlerInput.requestEnvelope.request;
+    const attributes = handlerInput.attributesManager.getSessionAttributes();
+    const game = attributes[attributes.currentGame];
+
+    return ((request.type === 'IntentRequest') && game && (game.state === 'FIRSTDEAL')
+      && ((request.intent.name === 'DiscardIntent') || (request.intent.name === 'DiscardAllIntent')));
+  },
+  handle: function(handlerInput) {
+    const event = handlerInput.requestEnvelope;
+    const attributes = handlerInput.attributesManager.getSessionAttributes();
+    const res = require('../' + event.request.locale + '/resources');
+    const game = attributes[attributes.currentGame];
     let reprompt;
     let error;
     let speech;
-    const res = require('../' + this.event.request.locale + '/resources');
-    const game = this.attributes[this.attributes.currentGame];
     let discardCards;
 
-    if (this.attributes.allSelected) {
+    if (event.request.intent.name === 'DiscardAllIntent') {
       discardCards = [1, 2, 3, 4, 5];
-      this.attributes.allSelected = undefined;
     } else {
       // See which card(s) were selected
-      const selected = utils.getSelectedCards(this.event.request.locale,
-              this.attributes, false, this.event.request.intent.slots);
+      const selected = utils.getSelectedCards(event.request.locale,
+              attributes, false, event.request.intent.slots);
       if (selected.error) {
         error = selected.error;
         reprompt = res.strings.HOLD_NOTFOUND_REPROMPT.replace('{0}', res.sayCard(game.cards[0]));
@@ -45,14 +52,13 @@ module.exports = {
       reprompt = res.strings.DISCARD_REPROMPT;
       speech = res.strings.DISCARD_CARDS.replace('{0}',
               speechUtils.and(discardCards.map((index) => res.sayCard(game.cards[index - 1])),
-                {locale: this.event.request.locale}));
+                {locale: event.request.locale}));
       speech += reprompt;
     }
 
-    utils.emitResponse(this, error, null, speech, reprompt);
-  },
-  handleAllIntent: function() {
-    this.attributes.allSelected = true;
-    this.emitWithState('DiscardIntent');
+    return handlerInput.responseBuilder
+      .speak((error) ? error : speech)
+      .reprompt(reprompt)
+      .getResponse();
   },
 };

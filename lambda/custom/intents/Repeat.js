@@ -7,66 +7,51 @@
 const utils = require('../utils');
 
 module.exports = {
-  handleIntent: function() {
-    const res = require('../' + this.event.request.locale + '/resources');
-    const rules = utils.getGame(this.attributes.currentGame);
-    const game = this.attributes[this.attributes.currentGame];
+  canHandle(handlerInput) {
+    const request = handlerInput.requestEnvelope.request;
+    const attributes = handlerInput.attributesManager.getSessionAttributes();
+    const game = attributes[attributes.currentGame];
+
+    return ((request.type === 'IntentRequest') &&
+      (((request.intent.name === 'AMAZON.RepeatIntent') || (request.intent.name === 'AMAZON.FallbackIntent'))
+      || ((request.intent.name === 'SuggestIntent') && !attributes.choices && (game.state === 'NEWGAME'))));
+  },
+  handle: function(handlerInput) {
+    const event = handlerInput.requestEnvelope;
+    const attributes = handlerInput.attributesManager.getSessionAttributes();
+    const res = require('../' + event.request.locale + '/resources');
+    const rules = utils.getGame(attributes.currentGame);
+    const game = attributes[attributes.currentGame];
     let speech;
     let reprompt;
 
     // Repeat is different based on state
-    switch (this.handler.state) {
-      case 'SELECTGAME':
-        // Tell them the available choices
-        if (this.attributes.choices) {
-          utils.readAvailableGames(this.event.request.locale,
-              this.attributes.currentGame, true, (gameText, choices) => {
-            speech = gameText;
-            reprompt = res.strings.LAUNCH_REPROMPT.replace('{0}', res.sayGame(this.attributes.choices[0]));
-            speech += reprompt;
-            utils.emitResponse(this, null, null, speech, reprompt);
-          });
-        } else {
-          // Hmm - invalid state - reset for them
-          console.log('Error in Repeat - no choices during SELECTGAME');
-          this.handler.state = '';
-          this.emitWithState('LaunchRequest');
-        }
-        break;
-      case 'NEWGAME':
+    if (attributes.choices) {
+      const result = utils.readAvailableGames(event.request.locale, attributes.currentGame, true);
+      speech = result.speech;
+      reprompt = res.strings.LAUNCH_REPROMPT.replace('{0}', res.sayGame(attributes.choices[0]));
+      speech += reprompt;
+    } else {
+      if (attributes.suggestedHold) {
+        speech = utils.readHand(event.request.locale, game);
+        speech += rules.suggest(event.request.locale, attributes);
+      } else if (game.state === 'FIRSTDEAL') {
+        // Read the hand and any held cards
+        speech = utils.readHand(event.request.locale, game);
+      } else {
         // Tell them the game they are playing and their bankroll
         speech = res.strings.REPEAT_NEW_GAME
-                  .replace('{0}', res.sayGame(this.attributes.currentGame))
+                  .replace('{0}', res.sayGame(attributes.currentGame))
                   .replace('{1}', game.bankroll);
-        reprompt = utils.readAvailableActions(this.event.request.locale,
-                  this.attributes, this.handler.state);
-        speech += reprompt;
-        utils.emitResponse(this, null, null, speech, reprompt);
-        break;
-      case 'FIRSTDEAL':
-        // Read the hand and any held cards
-        speech = utils.readHand(this.event.request.locale, game);
-        reprompt = utils.readAvailableActions(this.event.request.locale,
-                  this.attributes, this.handler.state);
-        speech += reprompt;
-        utils.emitResponse(this, null, null, speech, reprompt);
-        break;
-      case 'SUGGESTION':
-        // Read the hand and the suggestion
-        speech = utils.readHand(this.event.request.locale, game);
-        speech += rules.suggest(this.event.request.locale, this.attributes);
-        reprompt = utils.readAvailableActions(this.event.request.locale,
-                  this.attributes, this.handler.state);
-        speech += reprompt;
-        utils.emitResponse(this, null, null, speech, reprompt);
-        break;
-      default:
-        // Not sure what to do
-        speech = res.strings.UNKNOWN_INTENT;
-        reprompt = res.strings.UNKNOWN_INTENT_REPROMPT;
-        speech += reprompt;
-        utils.emitResponse(this, null, null, speech, reprompt);
-        break;
+      }
+
+      reprompt = utils.readAvailableActions(event.request.locale, attributes);
+      speech += reprompt;
     }
+
+    return handlerInput.responseBuilder
+      .speak(speech)
+      .reprompt(reprompt)
+      .getResponse();
   },
 };
