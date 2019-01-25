@@ -1,0 +1,189 @@
+{
+    "dataSources": {
+        "listTemplate2Metadata": {
+            "type": "object",
+            "objectId": "lt1Metadata",
+            "backgroundImage": {
+                "contentDescription": null,
+                "smallSourceUrl": null,
+                "largeSourceUrl": null,
+                "sources": [
+                    {
+                        "url": "http://garrettvargas.com/img/background.jpg",
+                        "size": "small",
+                        "widthPixels": 0,
+                        "heightPixels": 0
+                    },
+                    {
+                        "url": "http://garrettvargas.com/img/background.jpg",
+                        "size": "large",
+                        "widthPixels": 0,
+                        "heightPixels": 0
+                    }
+                ]
+            },
+            "title": "Select cards to hold or say Deal to deal new cards",
+            "logoUrl": "http://garrettvargas.com.s3-website-us-west-2.amazonaws.com/img/portfolio/09-small.jpg"
+        },
+        "listTemplate2ListData": {
+            "type": "list",
+            "listId": "lt2Sample",
+            "totalNumberOfItems": 5,
+            "hintText": "Try, \"Alexa, hold the first card\"",
+            "listPage": {
+                "listItems": [
+                    {
+                        "listItemIdentifier": "card.1",
+                        "ordinalNumber": 1,
+                        "textContent": {
+                            "primaryText": {
+                                "type": "PlainText",
+                                "text": "HOLD"
+                            }
+                        },
+                        "image": {
+                            "contentDescription": null,
+                            "smallSourceUrl": null,
+                            "largeSourceUrl": null,
+                            "sources": [
+                                {
+                                    "url": "https://s3.amazonaws.com/blackjacktutor-card-images/3_of_clubs.png",
+                                    "size": "small",
+                                    "widthPixels": 0,
+                                    "heightPixels": 0
+                                },
+                                {
+                                    "url": "https://s3.amazonaws.com/blackjacktutor-card-images/3_of_clubs.png",
+                                    "size": "large",
+                                    "widthPixels": 0,
+                                    "heightPixels": 0
+                                }
+                            ]
+                        },
+                        "token": "card.1"
+                    },
+                    {
+                        "listItemIdentifier": "card.2",
+                        "ordinalNumber": 2,
+                        "textContent": {
+                            "primaryText": {
+                                "type": "PlainText",
+                                "text": "HOLD"
+                            }
+                        },
+                        "image": {
+                            "contentDescription": null,
+                            "smallSourceUrl": null,
+                            "largeSourceUrl": null,
+                            "sources": [
+                                {
+                                    "url": "https://s3.amazonaws.com/blackjacktutor-card-images/4_of_hearts.png",
+                                    "size": "small",
+                                    "widthPixels": 0,
+                                    "heightPixels": 0
+                                },
+                                {
+                                    "url": "https://s3.amazonaws.com/blackjacktutor-card-images/4_of_hearts.png",
+                                    "size": "large",
+                                    "widthPixels": 0,
+                                    "heightPixels": 0
+                                }
+                            ]
+                        },
+                        "token": "card.2"
+                    },
+                    {
+                        "listItemIdentifier": "card.3",
+                        "ordinalNumber": 3,
+                        "textContent": {
+                            "primaryText": {
+                                "type": "PlainText",
+                                "text": ""
+                            }
+                        },
+                        "image": {
+                            "contentDescription": null,
+                            "smallSourceUrl": null,
+                            "largeSourceUrl": null,
+                            "sources": [
+                                {
+                                    "url": "https://s3.amazonaws.com/blackjacktutor-card-images/6_of_spades.png",
+                                    "size": "small",
+                                    "widthPixels": 0,
+                                    "heightPixels": 0
+                                },
+                                {
+                                    "url": "https://s3.amazonaws.com/blackjacktutor-card-images/6_of_spades.png",
+                                    "size": "large",
+                                    "widthPixels": 0,
+                                    "heightPixels": 0
+                                }
+                            ]
+                        },
+                        "token": "card.3"
+                    },
+                    {
+                        "listItemIdentifier": "card.4",
+                        "ordinalNumber": 4,
+                        "textContent": {
+                            "primaryText": {
+                                "type": "PlainText",
+                                "text": "HOLD"
+                            }
+                        },
+                        "image": {
+                            "contentDescription": null,
+                            "smallSourceUrl": null,
+                            "largeSourceUrl": null,
+                            "sources": [
+                                {
+                                    "url": "https://s3.amazonaws.com/blackjacktutor-card-images/9_of_clubs.png",
+                                    "size": "small",
+                                    "widthPixels": 0,
+                                    "heightPixels": 0
+                                },
+                                {
+                                    "url": "https://s3.amazonaws.com/blackjacktutor-card-images/9_of_clubs.png",
+                                    "size": "large",
+                                    "widthPixels": 0,
+                                    "heightPixels": 0
+                                }
+                            ]
+                        },
+                        "token": "card.4"
+                    },
+                    {
+                        "listItemIdentifier": "card.5",
+                        "ordinalNumber": 5,
+                        "textContent": {
+                            "primaryText": {
+                                "type": "PlainText",
+                                "text": ""
+                            }
+                        },
+                        "image": {
+                            "contentDescription": null,
+                            "smallSourceUrl": null,
+                            "largeSourceUrl": null,
+                            "sources": [
+                                {
+                                    "url": "https://s3.amazonaws.com/blackjacktutor-card-images/9_of_diamonds.png",
+                                    "size": "small",
+                                    "widthPixels": 0,
+                                    "heightPixels": 0
+                                },
+                                {
+                                    "url": "https://s3.amazonaws.com/blackjacktutor-card-images/9_of_diamonds.png",
+                                    "size": "large",
+                                    "widthPixels": 0,
+                                    "heightPixels": 0
+                                }
+                            ]
+                        },
+                        "token": "card.5"
+                    }
+                ]
+            }
+        }
+    }
+}

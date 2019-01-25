@@ -5,6 +5,8 @@
 'use strict';
 
 const utils = require('../utils');
+const main = require('../main.json');
+const datasources = require('../datasource.json');
 
 module.exports = {
   canHandle: function(handlerInput) {
@@ -30,6 +32,12 @@ module.exports = {
     return handlerInput.responseBuilder
       .speak(speech)
       .reprompt(reprompt)
+      .addDirective({
+          type: 'Alexa.Presentation.APL.RenderDocument',
+          version: '1.0',
+          document: main,
+          datasources: datasources,
+      })
       .getResponse();
   },
 };
