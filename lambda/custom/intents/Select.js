@@ -51,7 +51,7 @@ module.exports = {
         .reprompt(reprompt)
         .getResponse();
     } else if ((request.intent.name === 'AMAZON.NoIntent') || (request.intent.name === 'AMAZON.NextIntent')) {
-      // OK, pop this choice and go to the next one - if no other choices, we'll go with the last one
+      // OK, pop this choice and go to the next one
       attributes.choices.shift();
       if (attributes.choices.length === 1) {
         // OK, we're going with this one

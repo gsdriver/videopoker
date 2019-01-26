@@ -7,7 +7,6 @@
 module.exports = {
   canHandle(handlerInput) {
     const request = handlerInput.requestEnvelope.request;
-    const attributes = handlerInput.attributesManager.getSessionAttributes();
 
     return (request.type === 'SessionEndedRequest');
   },

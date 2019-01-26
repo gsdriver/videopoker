@@ -31,7 +31,8 @@ module.exports = {
     return handlerInput.responseBuilder
       .speak(speech)
       .reprompt(reprompt)
-      .withSimpleCard(res.strings.RULES_CARD_TITLE, utils.readPayoutTable(event.request.locale, rules))
+      .withSimpleCard(res.strings.RULES_CARD_TITLE,
+          utils.readPayoutTable(event.request.locale, rules))
       .getResponse();
   },
 };

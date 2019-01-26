@@ -4,7 +4,6 @@
 
 'use strict';
 
-const AWS = require('aws-sdk');
 const Alexa = require('ask-sdk');
 const CanFulfill = require('./intents/CanFulfill');
 const Bet = require('./intents/Bet');
@@ -185,24 +184,3 @@ function runSkill(event, context, callback) {
     callback(err, response);
   });
 }
-
-function saveState(userId, attributes) {
-  const formData = {};
-
-  formData.savedb = JSON.stringify({
-    userId: userId,
-    attributes: attributes,
-  });
-
-  const params = {
-    url: process.env.SERVICEURL + 'videopoker/saveState',
-    formData: formData,
-  };
-
-  request.post(params, (err, res, body) => {
-    if (err) {
-      console.log(err);
-    }
-  });
-}
-

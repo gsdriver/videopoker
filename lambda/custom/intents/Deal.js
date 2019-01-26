@@ -172,5 +172,5 @@ function updateGamePostPayout(locale, game) {
   // And reprompt
   game.bet = undefined;
   speech += reprompt;
-  return {speech: speech, reprompt: reprompt}
+  return {speech: speech, reprompt: reprompt};
 }

@@ -95,6 +95,10 @@ const resources = {
   'IMAGE_HELD': 'HELD',
   'IMAGE_TITLE_INGAME': 'Select cards to hold or say Deal to deal new cards',
   'IMAGE_TITLE_GAMEOVER': 'Your last hand',
+  'IMAGE_HINT_DISCARD': 'Try, "Alexa, discard the first card"',
+  'IMAGE_HINT_HOLD': 'Try, "Alexa, hold the first card"',
+  'IMAGE_HINT_DEAL': 'Try, "Alexa, deal"',
+  'IMAGE_HINT_SELECT': 'Try, "Alexa, Yes"',
   // General
   'SINGLE_COIN': 'coin',
   'PLURAL_COIN': 'coins',

@@ -4,15 +4,18 @@
 
 'use strict';
 
-const utils = require('../utils');
-
 module.exports = {
   canHandle(handlerInput) {
     const request = handlerInput.requestEnvelope.request;
     const attributes = handlerInput.attributesManager.getSessionAttributes();
     const game = attributes[attributes.currentGame];
 
-    // Need to do ElementSelected (or APL equivalent)
+    // Was this a touch item selected?
+    if (request.type === 'Alexa.Presentation.APL.UserEvent') {
+      return ((request.source.type === 'TouchWrapper')
+        && (request.source.handler === 'Press'));
+    }
+
     return ((request.type === 'IntentRequest') && game && (game.state === 'FIRSTDEAL')
       && (request.intent.name === 'ToggleIntent'));
   },
@@ -53,8 +56,9 @@ function getCardIndex(handlerInput) {
   let index;
   const event = handlerInput.requestEnvelope;
 
-  if (event.request.token) {
-    const cards = event.request.token.split('.');
+  // Was this a touch item selected?
+  if (event.request.type === 'Alexa.Presentation.APL.UserEvent') {
+    const cards = event.request.arguments[0].split('.');
     if (cards.length === 2) {
       index = cards[1];
     }

@@ -20,7 +20,6 @@ module.exports = {
     const event = handlerInput.requestEnvelope;
     const attributes = handlerInput.attributesManager.getSessionAttributes();
     const res = require('../' + event.request.locale + '/resources');
-    const game = attributes[attributes.currentGame];
     let speech;
     let reprompt;
 
