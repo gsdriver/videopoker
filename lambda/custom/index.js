@@ -91,6 +91,7 @@ const saveResponseInterceptor = {
         return SessionEnd.handle(handlerInput);
       } else {
         // Save the response and reprompt for repeat
+        utils.drawTable(handlerInput);
         if (response.outputSpeech && response.outputSpeech.ssml) {
           // Strip <speak> tags
           let lastResponse = response.outputSpeech.ssml;

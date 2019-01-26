@@ -11,6 +11,8 @@ const speechUtils = require('alexa-speech-utils')();
 const pokerrank = require('poker-ranking');
 const request = require('request');
 const rp = require('request-promise');
+const main = require('./main.json');
+const datasource = require('./datasource.json');
 
 const games = {
   'jacks': {
@@ -65,6 +67,51 @@ const games = {
 module.exports = {
   getGame: function(name) {
     return games[name];
+  },
+  drawTable: function(handlerInput) {
+    const event = handlerInput.requestEnvelope;
+    const attributes = handlerInput.attributesManager.getSessionAttributes();
+    const game = attributes[attributes.currentGame];
+    const res = require('./' + event.request.locale + '/resources');
+
+    if (!attributes.choices && game && game.cards && game.cards.length > 0) {
+      const format = 'https://s3.amazonaws.com/blackjacktutor-card-images/{0}_of_{1}.png';
+      const suits = {
+        'C': 'clubs',
+        'D': 'diamonds',
+        'H': 'hearts',
+        'S': 'spades',
+      };
+      const ranks = {
+        'J': '11',
+        'Q': '12',
+        'K': '13',
+        'A': '1',
+      };
+      let i;
+      let cardText;
+      let url;
+
+      for (i = 0; i < game.cards.length; i++) {
+        const card = game.cards[i];
+        url = format
+          .replace('{0}', ranks[card.rank] ? ranks[card.rank] : card.rank)
+          .replace('{1}', suits[card.suit]);
+
+        cardText = (card.hold) ? res.strings.IMAGE_HELD : '';
+        datasource.dataSources.listTemplate2ListData.listPage.listItems[i].textContent.primaryText.text = cardText;
+        datasource.dataSources.listTemplate2ListData.listPage.listItems[i].image.sources[0].url = url;
+        datasource.dataSources.listTemplate2ListData.listPage.listItems[i].image.sources[1].url = url;
+      }
+    }
+
+    return handlerInput.responseBuilder
+      .addDirective({
+          type: 'Alexa.Presentation.APL.RenderDocument',
+          version: '1.0',
+          document: main,
+          datasources: datasource,
+      });
   },
   determineWinner: function(attributes) {
     const game = attributes[attributes.currentGame];
