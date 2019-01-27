@@ -144,17 +144,16 @@
         "item": [
           {
             "type": "Container",
-            "height": "85vh",
+            "height": "100vh",
             "width": "100vw",
             "alignItems": "center",
-            "justifyContent": "end",
+            "justifyContent": "center",
             "items": [
               {
                 "type": "Image",
                 "position": "absolute",
-                "height": "70vh",
-                "width": "50vw",
-                "overlayColor": "rgba(0, 0, 0, 0.6)",
+                "height": "50vh",
+                "width": "35vw",
                 "source": "${data.image.sources[0].url}",
                 "scale": "best-fill"
               },
@@ -168,19 +167,9 @@
                 "type": "Text",
                 "text": "${data.textContent.primaryText.text}",
                 "style": "textStyleBody",
+                "paddingBottom": "30dp",
+                "color": "red",
                 "maxLines": 1
-              },
-              {
-                "type": "Text",
-                "text": "${data.textContent.secondaryText.text}",
-                "style": "textStyleDetails"
-              },
-              {
-                "type": "Text",
-                "text": "${ordinal} | ${listLength}",
-                "paddingBottom": "20dp",
-                "color": "white",
-                "spacing": "5dp"
               }
             ]
           }
@@ -209,6 +198,7 @@
                 "textAlign": "center",
                 "style": "textStylePrimary",
                 "maxLines": 1,
+                "color": "red",
                 "spacing": 12
               }
             ]
@@ -231,6 +221,14 @@
             "width": "100%",
             "items": [
               {
+                "type": "Image",
+                "source": "${backgroundImage}",
+                "scale": "best-fill",
+                "width": "100vw",
+                "height": "100vh",
+                "position": "absolute"
+              },
+              {
                 "type": "Sequence",
                 "scrollDirection": "horizontal",
                 "data": "${listData}",
@@ -239,8 +237,17 @@
                 "numbered": true,
                 "item": [
                   {
-                    "type": "FullHorizontalListItem",
-                    "listLength": "${payload.listTemplate2ListData.listPage.listItems.length}"
+                    "type": "TouchWrapper",
+                    "onPress": {
+                      "type": "SendEvent",
+                      "arguments": [
+                        "${data.token}"
+                      ]
+                    },
+                    "item": {
+                      "type": "FullHorizontalListItem",
+                      "listLength": "${payload.listTemplate2ListData.listPage.listItems.length}"
+                    }
                   }
                 ]
               }
