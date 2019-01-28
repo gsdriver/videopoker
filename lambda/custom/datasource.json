@@ -2,6 +2,15 @@
     "listTemplate2Metadata": {
         "type": "object",
         "objectId": "lt1Metadata",
+        "properties": {
+            "hintText": "say hold to hold the first card"
+        },
+        "transformers": [
+            {
+                "inputPath": "hintText",
+                "transformer": "textToHint"
+            }
+        ],
         "backgroundImage": {
             "contentDescription": null,
             "smallSourceUrl": null,

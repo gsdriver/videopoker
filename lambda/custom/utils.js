@@ -73,71 +73,78 @@ module.exports = {
     const game = attributes[attributes.currentGame];
     const res = require('./' + event.request.locale + '/resources');
 
-    // Save off default list items, if not already done
-    if (!attributes.temp.initList) {
-      attributes.temp.initList = datasource.listTemplate2ListData.listPage.listItems;
-    }
-
-    if (!attributes.choices && game && game.cards && game.cards.length > 0) {
-      const format = 'https://s3.amazonaws.com/blackjacktutor-card-images/{0}_of_{1}.png';
-      const suits = {
-        'C': 'clubs',
-        'D': 'diamonds',
-        'H': 'hearts',
-        'S': 'spades',
-      };
-      const ranks = {
-        'J': '11',
-        'Q': '12',
-        'K': '13',
-        'A': '1',
-      };
-      let i;
-      let cardText;
-      let url;
-
-      datasource.listTemplate2ListData.listPage.listItems = attributes.temp.initList;
-      for (i = 0; i < game.cards.length; i++) {
-        const card = game.cards[i];
-        url = format
-          .replace('{0}', ranks[card.rank] ? ranks[card.rank] : card.rank)
-          .replace('{1}', suits[card.suit]);
-
-        cardText = (card.hold) ? res.strings.IMAGE_HELD : '';
-        datasource.listTemplate2ListData.listPage.listItems[i]
-          .textContent.primaryText.text = cardText;
-        datasource.listTemplate2ListData.listPage.listItems[i]
-          .image.sources[0].url = url;
-        datasource.listTemplate2ListData.listPage.listItems[i]
-          .image.sources[1].url = url;
+    if (event.context && event.context.System
+      && event.context.System.device
+      && event.context.System.device.supportedInterfaces
+      && (Object.keys(event.context.System.device.supportedInterfaces).indexOf('Alexa.Presentation.APL') > -1)) {
+      // Save off default list items, if not already done
+      if (!attributes.temp.initList) {
+        attributes.temp.initList = datasource.listTemplate2ListData.listPage.listItems;
       }
 
-      // Give an appropriate hint
-      if (game.state === 'FIRSTDEAL') {
-        if (game.cards[0].hold) {
-          datasource.listTemplate2ListData.hintText = res.strings.IMAGE_HINT_DISCARD;
-        } else {
-          datasource.listTemplate2ListData.hintText = res.strings.IMAGE_HINT_HOLD;
+      if (!attributes.choices && game && game.cards && game.cards.length > 0) {
+        const format = 'https://s3.amazonaws.com/blackjacktutor-card-images/{0}_of_{1}.png';
+        const suits = {
+          'C': 'clubs',
+          'D': 'diamonds',
+          'H': 'hearts',
+          'S': 'spades',
+        };
+        const ranks = {
+          'J': '11',
+          'Q': '12',
+          'K': '13',
+          'A': '1',
+        };
+        let i;
+        let cardText;
+        let url;
+
+        datasource.listTemplate2ListData.listPage.listItems = attributes.temp.initList;
+        for (i = 0; i < game.cards.length; i++) {
+          const card = game.cards[i];
+          url = format
+            .replace('{0}', ranks[card.rank] ? ranks[card.rank] : card.rank)
+            .replace('{1}', suits[card.suit]);
+
+          cardText = (card.hold) ? res.strings.IMAGE_HELD : '';
+          datasource.listTemplate2ListData.listPage.listItems[i]
+            .textContent.primaryText.text = cardText;
+          datasource.listTemplate2ListData.listPage.listItems[i]
+            .image.sources[0].url = url;
+          datasource.listTemplate2ListData.listPage.listItems[i]
+            .image.sources[1].url = url;
         }
-        datasource.listTemplate2Metadata.title = res.strings.IMAGE_TITLE_INGAME;
-      } else {
-        datasource.listTemplate2ListData.hintText = res.strings.IMAGE_HINT_DEAL;
-        datasource.listTemplate2Metadata.title = res.strings.IMAGE_TITLE_GAMEOVER;
-      }
-    } else {
-      // Remove the list items
-      datasource.listTemplate2ListData.listPage.listItems = [];
-      datasource.listTemplate2ListData.hintText = res.strings.IMAGE_HINT_SELECT;
-      datasource.listTemplate2Metadata.title = '';
-    }
 
-    return handlerInput.responseBuilder
-      .addDirective({
-        type: 'Alexa.Presentation.APL.RenderDocument',
-        version: '1.0',
-        document: main,
-        datasources: datasource,
-      });
+        // Give an appropriate hint
+        if (game.state === 'FIRSTDEAL') {
+          if (game.cards[0].hold) {
+            datasource.listTemplate2Metadata.properties.hintText = res.strings.IMAGE_HINT_DISCARD;
+          } else {
+            datasource.listTemplate2Metadata.properties.hintText = res.strings.IMAGE_HINT_HOLD;
+          }
+          datasource.listTemplate2Metadata.title = res.strings.IMAGE_TITLE_INGAME;
+        } else {
+          datasource.listTemplate2Metadata.properties.hintText = res.strings.IMAGE_HINT_DEAL;
+          datasource.listTemplate2Metadata.title = res.strings.IMAGE_TITLE_GAMEOVER;
+        }
+      } else {
+        // Remove the list items
+        datasource.listTemplate2ListData.listPage.listItems = [];
+        datasource.listTemplate2Metadata.properties.hintText = res.strings.IMAGE_HINT_SELECT;
+        datasource.listTemplate2Metadata.title = '';
+      }
+
+      return handlerInput.responseBuilder
+        .addDirective({
+          type: 'Alexa.Presentation.APL.RenderDocument',
+          version: '1.0',
+          document: main,
+          datasources: datasource,
+        });
+    } else {
+      return Promise.resolve();
+    }
   },
   determineWinner: function(attributes) {
     const game = attributes[attributes.currentGame];

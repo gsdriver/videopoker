@@ -190,7 +190,7 @@
                 "type": "Image",
                 "source": "${data.image.sources[0].url}",
                 "height": "40vh",
-                "width": "30vh"
+                "width": "17vw"
               },
               {
                 "type": "Text",
@@ -297,7 +297,7 @@
               },
               {
                 "type": "AlexaFooter",
-                "footerHint": "${payload.listTemplate2ListData.hintText}"
+                "footerHint": "${payload.listTemplate2Metadata.properties.hintText}"
               }
             ]
           }
@@ -313,7 +313,7 @@
           "type": "ListTemplate2",
           "backgroundImage": "${payload.listTemplate2Metadata.backgroundImage.sources[0].url}",
           "title": "${payload.listTemplate2Metadata.title}",
-          "hintText": "${payload.listTemplate2Metadata.hintText}",
+          "hintText": "${payload.listTemplate2Metadata.properties.hintText}",
           "logo": "${payload.listTemplate2Metadata.logoUrl}",
           "listData": "${payload.listTemplate2ListData.listPage.listItems}"
         }
