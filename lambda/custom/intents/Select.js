@@ -21,7 +21,7 @@ module.exports = {
         || (request.intent.name === 'AMAZON.YesIntent')
         || (request.intent.name === 'AMAZON.NoIntent')
         || (request.intent.name === 'AMAZON.NextIntent'));
-    } else {
+    } else if (request.type === 'IntentRequest') {
       const game = attributes[attributes.currentGame];
       return ((game.state === 'NEWGAME') && (request.intent.name === 'SelectIntent'));
     }

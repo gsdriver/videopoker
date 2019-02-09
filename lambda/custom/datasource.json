@@ -3,12 +3,23 @@
         "type": "object",
         "objectId": "lt1Metadata",
         "properties": {
-            "hintText": "say hold to hold the first card"
+            "hintText": "say hold to hold the first card",
+            "responseSSML": "Video Poker"
         },
         "transformers": [
             {
                 "inputPath": "hintText",
                 "transformer": "textToHint"
+            },
+            {
+                "inputPath": "responseSSML",
+                "outputName": "speech",
+                "transformer": "ssmlToSpeech"
+            },
+            {
+                "inputPath": "responseSSML",
+                "outputName": "response",
+                "transformer": "ssmlToText"
             }
         ],
         "backgroundImage": {

@@ -113,31 +113,103 @@ function BuildEvent(argv)
       "intent": {}
     },
     "version": "1.0",
-     "context": {
-       "AudioPlayer": {
-         "playerActivity": "IDLE"
-       },
-       "Display": {},
-       "System": {
-         "application": {
-           "applicationId": APPID
-         },
-         "user": {
-           "userId": "not-amazon",
-         },
-         "device": {
-           "deviceId": "not-amazon",
-           "supportedInterfaces": {
-             "AudioPlayer": {},
-             "Display": {
-               "templateVersion": "1.0",
-               "markupVersion": "1.0"
-             }
-           }
-         },
-         "apiEndpoint": "https://api.amazonalexa.com",
-         "apiAccessToken": APITOKEN,
-       }
+    "context": {
+        "Alexa.Presentation.APL": {
+            "token": "",
+            "version": "AriaRenderer-1.0.563.0",
+            "componentsVisibleOnScreen": [
+                {
+                    "id": "default",
+                    "position": "480x480+0+0:0",
+                    "type": "mixed",
+                    "tags": {
+                        "focused": false,
+                        "spoken": false,
+                        "disabled": false
+                    },
+                    "visibility": 1,
+                    "children": [
+                        {
+                            "id": "default",
+                            "position": "480x480+0+0:0",
+                            "type": "graphic",
+                            "tags": {
+                                "focused": false,
+                                "spoken": false,
+                                "disabled": false
+                            },
+                            "visibility": 1,
+                            "entities": []
+                        },
+                        {
+                            "id": "default",
+                            "position": "480x480+0+0:0",
+                            "type": "mixed",
+                            "tags": {
+                                "focused": false,
+                                "spoken": false,
+                                "disabled": false,
+                                "list": {
+                                    "itemCount": 0,
+                                    "lowestIndexSeen": 0,
+                                    "highestIndexSeen": 0,
+                                    "lowestOrdinalSeen": 1,
+                                    "highestOrdinalSeen": 1
+                                },
+                                "scrollable": {
+                                    "direction": "horizontal",
+                                    "allowForward": false,
+                                    "allowBackwards": false
+                                }
+                            },
+                            "visibility": 1,
+                            "entities": []
+                        }
+                    ],
+                    "entities": []
+                }
+            ]
+        },
+        "System": {
+            "application": {
+                "applicationId": "amzn1.ask.skill.8f0ddee1-51b3-496a-9424-524436770828"
+            },
+            "user": {
+                "userId": "amzn1.ask.account.AHAGAKR3UKYOM4KQKMADJMSVNYL3IDPBEMNT6OJDR22C2CICS2K243N7IHIP37ESQROUB5PKBF5WBTU7ZQWGWR4YQ5FNKEG4PIT65QFZ24CUH2MVFT7LWSXLCOH2I4Z3RRDGFVTJQGKFZMWPZ4EYVAWQ7FSX2CS52IFFSAEN3UG3RPDYWIK5XYFCIQ7SCHIUP7U5KCHEJZ5X4EQ"
+            },
+            "device": {
+                "deviceId": "amzn1.ask.device.AGGQ77T42RPYRUBVXQEZPPDFF4MP6ST2QTUV7I65AAWMKBMZC2AZNABCFGLCM3PWUCT23KZ76PDRZ6QRUYAKLYCRRANHM6BUFF44YAXSWYDCOO72RC2FID33AY5OR6J3NO6Q5FGM5RAKJTO2OI6QEAUN47DGQMTW63AMAOR7URC7ALO3HO67W",
+                "supportedInterfaces": {
+                    "Alexa.Presentation.APL": {
+                        "runtime": {
+                            "maxVersion": "1.0"
+                        }
+                    }
+                }
+            },
+            "apiEndpoint": "https://api.amazonalexa.com",
+            "apiAccessToken": "eyJ0eXAiOiJKV1QiLCJhbGciOiJSUzI1NiIsImtpZCI6IjEifQ.eyJhdWQiOiJodHRwczovL2FwaS5hbWF6b25hbGV4YS5jb20iLCJpc3MiOiJBbGV4YVNraWxsS2l0Iiwic3ViIjoiYW16bjEuYXNrLnNraWxsLjhmMGRkZWUxLTUxYjMtNDk2YS05NDI0LTUyNDQzNjc3MDgyOCIsImV4cCI6MTU0OTYyNjU1MSwiaWF0IjoxNTQ5NjI2MjUxLCJuYmYiOjE1NDk2MjYyNTEsInByaXZhdGVDbGFpbXMiOnsiY29uc2VudFRva2VuIjpudWxsLCJkZXZpY2VJZCI6ImFtem4xLmFzay5kZXZpY2UuQUdHUTc3VDQyUlBZUlVCVlhRRVpQUERGRjRNUDZTVDJRVFVWN0k2NUFBV01LQk1aQzJBWk5BQkNGR0xDTTNQV1VDVDIzS1o3NlBEUlo2UVJVWUFLTFlDUlJBTkhNNkJVRkY0NFlBWFNXWURDT083MlJDMkZJRDMzQVk1T1I2SjNOTzZRNUZHTTVSQUtKVE8yT0k2UUVBVU40N0RHUU1UVzYzQU1BT1I3VVJDN0FMTzNITzY3VyIsInVzZXJJZCI6ImFtem4xLmFzay5hY2NvdW50LkFIQUdBS1IzVUtZT000S1FLTUFESk1TVk5ZTDNJRFBCRU1OVDZPSkRSMjJDMkNJQ1MySzI0M043SUhJUDM3RVNRUk9VQjVQS0JGNVdCVFU3WlFXR1dSNFlRNUZOS0VHNFBJVDY1UUZaMjRDVUgyTVZGVDdMV1NYTENPSDJJNFozUlJER0ZWVEpRR0tGWk1XUFo0RVlWQVdRN0ZTWDJDUzUySUZGU0FFTjNVRzNSUERZV0lLNVhZRkNJUTdTQ0hJVVA3VTVLQ0hFSlo1WDRFUSJ9fQ.T20UcPbZ2snbew__YenT5W6x2Ear_Ekax4vEv3RoiSzb8fR7eOfTIIWdT4ObRtqevqUbtzJd0Qm52_VQmHzodEJtgEG3_wW7s6ERcP1bMTCaSclPOql7jaa_hgSnKvgR8guF4omEbSPaQNjlMA5cFI3eAwzATlzQ4ZR9EiVGPJ_NNAJuhQOnnB1GqyuCqhu0jmcc4ZycrsPS4ap9zxwVW_lhB5GUKYGd3U2mx6hltzovEK7l_RNljk6h4hYAbXn7UJV6H9P17oH4Bir7kl3oTGWbqEEtL6mNRD8C17KPBKcBf_dIFSiNgoJv-nHHGIZ5APXFMm6F_152zt6UfR940g"
+        },
+        "Viewport": {
+            "experiences": [
+                {
+                    "arcMinuteWidth": 144,
+                    "arcMinuteHeight": 144,
+                    "canRotate": false,
+                    "canResize": false
+                }
+            ],
+            "shape": "ROUND",
+            "pixelWidth": 480,
+            "pixelHeight": 480,
+            "dpi": 160,
+            "currentPixelWidth": 480,
+            "currentPixelHeight": 480,
+            "touch": [
+                "SINGLE"
+            ],
+            "keyboard": []
+        }
      },
   };
 
