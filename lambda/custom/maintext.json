@@ -126,7 +126,8 @@
       {
         "when": "${viewport.shape == 'round'}",
         "type": "Container",
-        "direction": "column",
+        "height": "100%",
+        "width": "100%",
         "items": [
           {
             "type": "Image",
@@ -151,7 +152,7 @@
               {
                 "type": "Text",
                 "text": "${payload.listTemplate2Metadata.properties.response}",
-                "fontSize": "@textSizeBody",
+                "fontSize": "@textSizeSecondary",
                 "spacing": "@spacingSmall",
                 "style": "textStyleBody"
               }
