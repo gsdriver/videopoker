@@ -29,7 +29,7 @@ module.exports = {
     let speech;
 
     const index = getCardIndex(handlerInput);
-    if (index !== undefined) {
+    if ((index !== undefined) && (index < game.cards.length)) {
       // OK, let's toggle this card
       game.cards[index].hold = !game.cards[index].hold;
 
@@ -42,7 +42,7 @@ module.exports = {
           .replace('{0}', res.sayCard(game.cards[index]));
       speech += reprompt;
     } else {
-      error = 'Something went wrong';
+      error = res.strings.TOGGLE_INVALID;
     }
 
     return handlerInput.responseBuilder
